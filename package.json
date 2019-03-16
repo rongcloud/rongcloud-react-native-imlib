@@ -1,0 +1,27 @@
+{
+  "name": "react-native-rongcloud-imlib",
+  "description": "React Native RongCloud IMLib",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "lib/js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "reload": "adb reverse tcp:8081 tcp:8081; adb shell input text rr",
+    "run-android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "log-android": "node node_modules/react-native/local-cli/cli.js log-android",
+    "run-ios": "node node_modules/react-native/local-cli/cli.js run-ios"
+  },
+  "devDependencies": {
+    "@types/react-navigation": "^3.0.4",
+    "prettier": "^1.16.4",
+    "react": "16.6.3",
+    "react-native": "0.58.4",
+    "react-native-gesture-handler": "^1.1.0",
+    "react-navigation": "^3.3.2",
+    "typescript": "^3.3.3333"
+  },
+  "prettier": {
+    "printWidth": 100
+  }
+}

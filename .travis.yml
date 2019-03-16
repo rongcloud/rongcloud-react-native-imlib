@@ -1,0 +1,53 @@
+aliases:
+  - &android
+    components:
+      - build-tools-28.0.3
+      - android-28
+      - extra-android-m2repository
+      - extra-android-support
+
+  - &android-cache
+    directories:
+      - ~/.cache/yarn
+      - ~/.gradle/caches/modules-2
+      - ~/.gradle/wrapper
+
+  - &ios-cache
+    directories:
+      - ~/.rncache
+      - ~/Library/Caches/Yarn
+
+jobs:
+  include:
+    - stage: "build test for example"
+      language: android
+      jdk: oraclejdk8
+      android: *android
+      before_cache:
+        - rm ~/.gradle/caches/modules-2/modules-2.lock
+      cache: *android-cache
+      script:
+        - nvm install node
+        - yarn
+        - yarn build
+        - cd android
+        - TERM=dumb ./gradlew build
+        - ls -lh app/build/outputs/apk/debug
+        - ls -lh app/build/outputs/apk/release
+
+    # - stage: "build test for example"
+    #   language: objective-c
+    #   osx_image: xcode10.1
+    #   cache: *ios-cache
+    #   before_install:
+    #   script:
+    #     - nvm install node
+    #     - brew install yarn
+    #     - yarn
+    #     - yarn build
+    #     - cd ios
+    #     - xcodebuild -project RongCloudIMLib.xcodeproj -scheme RongCloudIMLib -sdk iphonesimulator -quiet
+
+stages:
+  - name: "build test for example"
+    if: branch = master
