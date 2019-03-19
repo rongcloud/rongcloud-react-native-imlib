@@ -9,9 +9,7 @@ const style = StyleSheet.create({
 
 export default class extends React.PureComponent {
   static route = "ReceiveMessage";
-  static navigationOptions = {
-    title: "接收消息"
-  };
+  static navigationOptions = { title: "接收消息" };
 
   state = { messages: [] };
 

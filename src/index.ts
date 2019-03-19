@@ -20,19 +20,19 @@ export function init(appKey: string) {
  */
 export function connect(
   token: string,
-  success: (userId: string) => void,
-  error: (errorCode: number) => void,
-  tokenIncorrect: () => void
+  success: (userId: string) => void = null,
+  error: (errorCode: number) => void = null,
+  tokenIncorrect: () => void = null
 ) {
   const eventId = Math.random().toString();
   const listener = eventEmitter.addListener("rcimlib-connect", data => {
     if (data.eventId === eventId) {
       if (data.type === "success") {
-        success(data.userId);
+        success && success(data.userId);
       } else if (data.type === "error") {
-        error(data.errorCode);
+        error && error(data.errorCode);
       } else if (data.type === "tokenIncorrect") {
-        tokenIncorrect();
+        tokenIncorrect && tokenIncorrect();
       }
       listener.remove();
     }
@@ -60,14 +60,13 @@ export enum ConversationType {
   SYSTEM,
   APP_SERVICE,
   PUBLIC_SERVICE,
-  PUSH_SERVICE,
-  Encrypted
+  PUSH_SERVICE
 }
 
 export type TextMessage = {
   type: "text";
   content: string;
-  extra: string;
+  extra?: string;
 };
 
 export type ImageMessage = {
@@ -77,6 +76,8 @@ export type ImageMessage = {
   thumUri: string;
   isFull: string;
 };
+
+export type MessageContent = TextMessage | ImageMessage;
 
 export type Message = {
   /**
@@ -122,7 +123,7 @@ export type Message = {
   /**
    * 消息内容
    */
-  content: any;
+  content: MessageContent;
 
   /**
    * 附加信息
@@ -137,6 +138,36 @@ export function addReceiveMessageListener(listener: (message: Message) => void) 
   return eventEmitter.addListener("rcimlib-receive-message", message => {
     listener(message);
   });
+}
+
+/**
+ * 发送消息
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
+ * @param content 消息内容
+ * @param pushContent 推送内容，显示在通知栏
+ * @param pushData 推送数据
+ * @param success 发送成功回调函数
+ * @param error 发送失败回调函数
+ */
+export function sendMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  content: MessageContent,
+  pushContent: string,
+  pushData: string,
+  success: (messageId: number) => void,
+  error: (errorCode: number, messageId: number) => void
+) {
+  RCIMClient.sendMessage(
+    conversationType,
+    targetId,
+    content,
+    pushContent,
+    pushData,
+    success,
+    error
+  );
 }
 
 export enum ConnectionStatus {
@@ -156,7 +187,7 @@ export enum ConnectionStatus {
   SignUp = 12,
   TOKEN_INCORRECT = 31004,
   DISCONN_EXCEPTION = 31011
-};
+}
 
 /**
  * 添加消息监听函数

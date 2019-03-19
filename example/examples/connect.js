@@ -9,9 +9,7 @@ const style = StyleSheet.create({
 
 export default class extends React.PureComponent {
   static route = "Connect";
-  static navigationOptions = {
-    title: "连接服务器"
-  };
+  static navigationOptions = { title: "连接服务器" };
 
   state = {
     message: "",
@@ -45,9 +43,7 @@ export default class extends React.PureComponent {
         <TextInput value={token} onChangeText={this.setToken} placeholder="请提供 Token" />
         <Button title="连接服务器" onPress={this.connect} />
         <Text style={style.message}>{message}</Text>
-        {status !== null && (
-          <Text style={style.message}>ConnectionStatusChange: {status}</Text>
-        )}
+        {status !== null && <Text style={style.message}>ConnectionStatusChange: {status}</Text>}
       </View>
     );
   }

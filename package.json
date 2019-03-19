@@ -5,6 +5,7 @@
   "license": "MIT",
   "main": "lib/js",
   "scripts": {
+    "dev": "tsc -w",
     "build": "tsc",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "reload": "adb reverse tcp:8081 tcp:8081; adb shell input text rr",

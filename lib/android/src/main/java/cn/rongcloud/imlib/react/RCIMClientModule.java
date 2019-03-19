@@ -2,10 +2,13 @@ package cn.rongcloud.imlib.react;
 
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import io.rong.imlib.IRongCallback.ISendMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
+import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
+import io.rong.imlib.model.MessageContent;
 import io.rong.message.TextMessage;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
@@ -96,5 +99,31 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 eventEmitter.emit("rcimlib-connect", map);
             }
         });
+    }
+
+    @ReactMethod
+    public void sendMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
+        String contentType = content.getString("type");
+        MessageContent messageContent = null;
+        if (contentType.equals("text")) {
+            messageContent = TextMessage.obtain(content.getString("content"));
+        }
+        if (messageContent != null) {
+            RongIMClient.getInstance().sendMessage(ConversationType.setValue(type), targetId, messageContent, pushContent, pushData, new ISendMessageCallback() {
+                @Override
+                public void onAttached(Message message) {
+                }
+
+                @Override
+                public void onSuccess(Message message) {
+                    success.invoke(message.getMessageId());
+                }
+
+                @Override
+                public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                    error.invoke(errorCode, message.getMessageId());
+                }
+            });
+        }
     }
 }

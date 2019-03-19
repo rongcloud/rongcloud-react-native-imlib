@@ -3,8 +3,9 @@ import { ScrollView } from "react-native";
 import Example from "./example";
 import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
+import SendMessage from "./send-message";
 
-const examples = [Connect, ReceiveMessage];
+const examples = [Connect, ReceiveMessage, SendMessage];
 
 export default class extends React.PureComponent {
   static navigationOptions = {
@@ -22,4 +23,4 @@ export default class extends React.PureComponent {
   }
 }
 
-export { Connect, ReceiveMessage };
+export { Connect, ReceiveMessage, SendMessage };
