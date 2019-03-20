@@ -5,8 +5,9 @@ import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
 import SendImageMessage from "./send-message-image";
+import SendFileMessage from "./send-message-file";
 
-const examples = [Connect, ReceiveMessage, SendMessage, SendImageMessage];
+const examples = [Connect, ReceiveMessage, SendMessage, SendImageMessage, SendFileMessage];
 
 export default class extends React.PureComponent {
   static navigationOptions = { title: "RongCloud IMLib Examples" };
@@ -22,4 +23,4 @@ export default class extends React.PureComponent {
   }
 }
 
-export { Connect, ReceiveMessage, SendMessage, SendImageMessage };
+export { Connect, ReceiveMessage, SendMessage, SendImageMessage, SendFileMessage };

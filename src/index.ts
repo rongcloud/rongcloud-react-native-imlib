@@ -77,6 +77,11 @@ export type ImageMessage = {
   isFull: string;
 };
 
+export type FileMessage = {
+  type: "file";
+  localUrl: string;
+};
+
 export type MessageContent = TextMessage | ImageMessage;
 
 export type Message = {
@@ -142,6 +147,7 @@ export function addReceiveMessageListener(listener: (message: Message) => void) 
 
 /**
  * 发送消息
+ *
  * @param conversationType 会话类型
  * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
  * @param content 消息内容
@@ -171,7 +177,8 @@ export function sendMessage(
 }
 
 /**
- * 发送消息
+ * 发送图片消息
+ *
  * @param conversationType 会话类型
  * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
  * @param content 消息内容
@@ -200,7 +207,38 @@ export function sendImageMessage(
   );
 }
 
-export enum ConnectionStatus {
+/**
+ * 发送文件消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
+ * @param content 消息内容
+ * @param pushContent 推送内容，显示在通知栏
+ * @param pushData 推送数据
+ * @param success 发送成功回调函数
+ * @param error 发送失败回调函数
+ */
+export function sendMediaMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  content: FileMessage,
+  pushContent: string,
+  pushData: string,
+  success: (messageId: number) => void,
+  error: (errorCode: number, messageId: number) => void
+) {
+  RCIMClient.sendMediaMessage(
+    conversationType,
+    targetId,
+    content,
+    pushContent,
+    pushData,
+    success,
+    error
+  );
+}
+
+export enum ConnectionStatusIOS {
   UNKNOWN = -1,
   Connected = 0,
   NETWORK_UNAVAILABLE = 1,
@@ -218,6 +256,18 @@ export enum ConnectionStatus {
   TOKEN_INCORRECT = 31004,
   DISCONN_EXCEPTION = 31011
 }
+
+export enum ConnectionStatusAndroid {
+  NETWORK_UNAVAILABLE = -1,
+  CONNECTED,
+  CONNECTING,
+  DISCONNECTED,
+  KICKED_OFFLINE_BY_OTHER_CLIENT,
+  TOKEN_INCORRECT,
+  SERVER_INVALID
+}
+
+export type ConnectionStatus = ConnectionStatusIOS | ConnectionStatusAndroid;
 
 /**
  * 添加消息监听函数

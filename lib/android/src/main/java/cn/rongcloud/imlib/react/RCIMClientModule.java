@@ -3,9 +3,9 @@ package cn.rongcloud.imlib.react;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
@@ -14,6 +14,7 @@ import io.rong.imlib.RongIMClient.SendImageMessageCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
+import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
@@ -133,13 +134,13 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         }
     }
 
-    private Uri getImageUri(String s) {
+    private Uri getFileUri(String s) {
         Uri uri = Uri.parse(s);
         if (s.startsWith("content://")) {
-            String[] projection = {MediaStore.Images.Media.DATA};
+            String[] projection = {MediaStore.Files.FileColumns.DATA};
             Cursor cursor = reactContext.getContentResolver().query(uri, projection, null, null, null);
             if (cursor != null) {
-                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                int index = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
                 cursor.moveToFirst();
                 String path = cursor.getString(index);
                 cursor.close();
@@ -151,9 +152,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void sendImageMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
-        Uri uri = getImageUri(content.getString("localUri"));
-        ImageMessage imageMessage = ImageMessage.obtain(uri, uri);
-        RongIMClient.getInstance().sendImageMessage(ConversationType.setValue(type), targetId, imageMessage, pushContent, pushData, new SendImageMessageCallback() {
+        Uri uri = getFileUri(content.getString("localUri"));
+        ImageMessage message = ImageMessage.obtain(uri, uri);
+        RongIMClient.getInstance().sendImageMessage(ConversationType.setValue(type), targetId, message, pushContent, pushData, new SendImageMessageCallback() {
             @Override
             public void onAttached(Message message) {
             }
@@ -165,12 +166,40 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onProgress(Message message, int i) {
-                Log.i("onProgress", i + "");
+                // TODO
             }
 
             @Override
             public void onError(Message message, RongIMClient.ErrorCode errorCode) {
                 error.invoke(errorCode.getValue(), message.getMessageId());
+            }
+        });
+    }
+
+    @ReactMethod
+    public void sendMediaMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
+        Uri uri = getFileUri(content.getString("localUrl"));
+        Message message = Message.obtain(targetId, ConversationType.setValue(type), FileMessage.obtain(uri));
+        RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, new ISendMediaMessageCallback() {
+            @Override
+            public void onAttached(Message message) {
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+            }
+
+            @Override
+            public void onProgress(Message message, int i) {
+                // TODO
+            }
+
+            @Override
+            public void onCanceled(Message message) {
             }
         });
     }
