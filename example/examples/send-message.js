@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Text, View, TextInput, Button, Picker, StyleSheet } from "react-native";
+import { Image, Text, View, TextInput, Button, Picker, StyleSheet } from "react-native";
+import ImagePicker from "react-native-image-picker";
 import { sendMessage, ConversationType } from "react-native-rongcloud-imlib";
 
 const conversations = {
@@ -17,25 +18,45 @@ const messageTypes = {
 
 const style = StyleSheet.create({
   body: { padding: 16 },
-  item: { marginTop: 16 }
+  item: { marginTop: 16 },
+  image: { height: 100, marginTop: 16, marginBottom: 16 }
 });
 
 export default class extends React.PureComponent {
   static route = "SendMessage";
   static navigationOptions = { title: "发送消息" };
 
-  state = { conversationType: 1, messageType: "text", targetId: "", textContent: "", result: "" };
-
-  componentDidMount() {}
+  state = {
+    conversationType: 1,
+    messageType: "text",
+    targetId: "",
+    textContent: "",
+    thumUri: "",
+    localUri: "",
+    result: ""
+  };
 
   setTargetId = targetId => this.setState({ targetId });
   setTextContent = textContent => this.setState({ textContent });
+  setThumUri = thumUri => this.setState({ thumUri });
+  setLocalUri = localUri => this.setState({ localUri });
+
+  pickImage = () => {
+    ImagePicker.showImagePicker(null, response => {
+      if (response.uri) {
+        this.setState({ localUri: "file://" + response.path });
+      }
+    });
+  };
 
   send = () => {
-    const { conversationType, targetId, messageType, textContent } = this.state;
+    const { conversationType, targetId, messageType, textContent, thumUri, localUri } = this.state;
     const content = { type: messageType };
     if (messageType === "text") {
       content.content = textContent;
+    } else if (messageType === "image") {
+      content.thumUri = thumUri;
+      content.localUri = localUri;
     }
     sendMessage(
       conversationType,
@@ -55,7 +76,28 @@ export default class extends React.PureComponent {
   renderMessage() {
     const { messageType } = this.state;
     if (messageType === "text") {
-      return <TextInput onChangeText={this.setTextContent} placeholder="请输入文本内容" />;
+      return (
+        <TextInput
+          defaultValue="vh6a0VoDJ"
+          onChangeText={this.setTextContent}
+          placeholder="请输入文本内容"
+        />
+      );
+    } else if (messageType === "image") {
+      return (
+        <View>
+          <TextInput
+            defaultValue="https://placeimg.com/80/80"
+            onChangeText={this.setThumUri}
+            placeholder="请输入预览图片 URI"
+          />
+          <TextInput
+            defaultValue="https://placeimg.com/800/800"
+            onChangeText={this.setLocalUri}
+            placeholder="请输入本地图片 URI"
+          />
+        </View>
+      );
     }
   }
 

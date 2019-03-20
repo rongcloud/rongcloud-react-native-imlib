@@ -1,5 +1,6 @@
 package cn.rongcloud.imlib.react;
 
+import android.net.Uri;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 import io.rong.imlib.IRongCallback.ISendMessageCallback;
@@ -9,6 +10,7 @@ import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
+import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
@@ -107,6 +109,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         MessageContent messageContent = null;
         if (contentType.equals("text")) {
             messageContent = TextMessage.obtain(content.getString("content"));
+        } else if (contentType.equals("image")) {
+            String thumUri = content.getString("thumUri");
+            String localUri = content.getString("localUri");
+            messageContent = ImageMessage.obtain(Uri.parse(thumUri), Uri.parse(localUri));
         }
         if (messageContent != null) {
             RongIMClient.getInstance().sendMessage(ConversationType.setValue(type), targetId, messageContent, pushContent, pushData, new ISendMessageCallback() {
