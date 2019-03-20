@@ -153,13 +153,43 @@ export function addReceiveMessageListener(listener: (message: Message) => void) 
 export function sendMessage(
   conversationType: ConversationType,
   targetId: string,
-  content: MessageContent,
+  content: TextMessage,
   pushContent: string,
   pushData: string,
   success: (messageId: number) => void,
   error: (errorCode: number, messageId: number) => void
 ) {
   RCIMClient.sendMessage(
+    conversationType,
+    targetId,
+    content,
+    pushContent,
+    pushData,
+    success,
+    error
+  );
+}
+
+/**
+ * 发送消息
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
+ * @param content 消息内容
+ * @param pushContent 推送内容，显示在通知栏
+ * @param pushData 推送数据
+ * @param success 发送成功回调函数
+ * @param error 发送失败回调函数
+ */
+export function sendImageMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  content: ImageMessage,
+  pushContent: string,
+  pushData: string,
+  success: (messageId: number) => void,
+  error: (errorCode: number, messageId: number) => void
+) {
+  RCIMClient.sendImageMessage(
     conversationType,
     targetId,
     content,

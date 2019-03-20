@@ -1,12 +1,16 @@
 package cn.rongcloud.imlib.react;
 
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 import io.rong.imlib.IRongCallback.ISendMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
+import io.rong.imlib.RongIMClient.SendImageMessageCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
@@ -109,10 +113,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         MessageContent messageContent = null;
         if (contentType.equals("text")) {
             messageContent = TextMessage.obtain(content.getString("content"));
-        } else if (contentType.equals("image")) {
-            String thumUri = content.getString("thumUri");
-            String localUri = content.getString("localUri");
-            messageContent = ImageMessage.obtain(Uri.parse(thumUri), Uri.parse(localUri));
         }
         if (messageContent != null) {
             RongIMClient.getInstance().sendMessage(ConversationType.setValue(type), targetId, messageContent, pushContent, pushData, new ISendMessageCallback() {
@@ -127,9 +127,51 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
                 @Override
                 public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                    error.invoke(errorCode, message.getMessageId());
+                    error.invoke(errorCode.getValue(), message.getMessageId());
                 }
             });
         }
+    }
+
+    private Uri getImageUri(String s) {
+        Uri uri = Uri.parse(s);
+        if (s.startsWith("content://")) {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            Cursor cursor = reactContext.getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null) {
+                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                String path = cursor.getString(index);
+                cursor.close();
+                return Uri.parse("file://" + path);
+            }
+        }
+        return uri;
+    }
+
+    @ReactMethod
+    public void sendImageMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
+        Uri uri = getImageUri(content.getString("localUri"));
+        ImageMessage imageMessage = ImageMessage.obtain(uri, uri);
+        RongIMClient.getInstance().sendImageMessage(ConversationType.setValue(type), targetId, imageMessage, pushContent, pushData, new SendImageMessageCallback() {
+            @Override
+            public void onAttached(Message message) {
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+                success.invoke(message.getMessageId());
+            }
+
+            @Override
+            public void onProgress(Message message, int i) {
+                Log.i("onProgress", i + "");
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                error.invoke(errorCode.getValue(), message.getMessageId());
+            }
+        });
     }
 }

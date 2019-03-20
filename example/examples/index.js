@@ -4,13 +4,12 @@ import Example from "./example";
 import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
+import SendImageMessage from "./send-message-image";
 
-const examples = [Connect, ReceiveMessage, SendMessage];
+const examples = [Connect, ReceiveMessage, SendMessage, SendImageMessage];
 
 export default class extends React.PureComponent {
-  static navigationOptions = {
-    title: "RongCloud IMLib Examples"
-  };
+  static navigationOptions = { title: "RongCloud IMLib Examples" };
 
   render() {
     return (
@@ -23,4 +22,4 @@ export default class extends React.PureComponent {
   }
 }
 
-export { Connect, ReceiveMessage, SendMessage };
+export { Connect, ReceiveMessage, SendMessage, SendImageMessage };
