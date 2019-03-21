@@ -5,12 +5,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
-import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
-import io.rong.imlib.RongIMClient.SendImageMessageCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
@@ -28,29 +26,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setOnReceiveMessageListener(new OnReceiveMessageListener() {
             @Override
             public boolean onReceived(Message message, int left) {
-                WritableMap map = Arguments.createMap();
-                map.putInt("conversationType", message.getConversationType().getValue());
-                map.putString("targetId", message.getTargetId());
-                map.putString("messageUId", message.getUId());
-                map.putInt("messageId", message.getMessageId());
-                map.putInt("messageDirection", message.getMessageDirection().getValue());
-                map.putString("senderUserId", message.getSenderUserId());
-                map.putDouble("sentTime", (double) message.getSentTime());
-                map.putDouble("receivedTime", (double) message.getReceivedTime());
-                map.putString("content", new String(message.getContent().encode()));
-                map.putString("extra", message.getExtra());
-                String objectName = message.getObjectName();
-                WritableMap content = Arguments.createMap();
-                if (objectName.equals("RC:TxtMsg")) {
-                    TextMessage text = (TextMessage) message.getContent();
-                    content.putString("type", "text");
-                    content.putString("content", text.getContent());
-                    content.putString("extra", text.getExtra());
-                } else if (objectName.equals("RC:ImgMsg")) {
-                    content.putString("type", "image");
-                }
-                map.putMap("content", content);
-                eventEmitter.emit("rcimlib-receive-message", map);
+                eventEmitter.emit("rcimlib-receive-message", messageToMap(message));
                 return false;
             }
         });
@@ -73,9 +49,86 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.init(reactContext, key);
     }
 
-    private WritableMap createEventMap(String eventId) {
+    private WritableMap createEventMap(String eventId, String type) {
         WritableMap map = Arguments.createMap();
         map.putString("eventId", eventId);
+        map.putString("type", type);
+        return map;
+    }
+
+    private WritableMap messageToMap(Message message) {
+        WritableMap map = Arguments.createMap();
+        map.putInt("conversationType", message.getConversationType().getValue());
+        map.putString("targetId", message.getTargetId());
+        map.putString("messageUId", message.getUId());
+        map.putInt("messageId", message.getMessageId());
+        map.putInt("messageDirection", message.getMessageDirection().getValue());
+        map.putString("senderUserId", message.getSenderUserId());
+        map.putDouble("sentTime", (double) message.getSentTime());
+        map.putDouble("receivedTime", (double) message.getReceivedTime());
+        map.putString("content", new String(message.getContent().encode()));
+        map.putString("extra", message.getExtra());
+        String objectName = message.getObjectName();
+        map.putMap("content", messageContentToMap(objectName, message.getContent()));
+        return map;
+    }
+
+    private WritableMap messageContentToMap(String objectName, MessageContent content) {
+        WritableMap map = Arguments.createMap();
+        switch (objectName) {
+            case "RC:TxtMsg":
+                TextMessage text = (TextMessage) content;
+                map.putString("type", "text");
+                map.putString("content", text.getContent());
+                map.putString("extra", text.getExtra());
+                break;
+            case "RC:ImgMsg": {
+                ImageMessage image = (ImageMessage) content;
+                String local = "";
+                Uri localUri = image.getLocalUri();
+                if (localUri != null) {
+                    local = localUri.toString();
+                }
+                String remote = "";
+                Uri remoteUri = image.getRemoteUri();
+                if (remoteUri != null) {
+                    remote = remoteUri.toString();
+                }
+                String thumbnail = "";
+                Uri thumbnailUri = image.getThumUri();
+                if (remoteUri != null) {
+                    thumbnail = thumbnailUri.toString();
+                }
+                map.putString("type", "image");
+                map.putString("local", local);
+                map.putString("remote", remote);
+                map.putString("thumbnail", thumbnail);
+                map.putBoolean("isFull", image.isFull());
+                map.putString("extra", image.getExtra());
+                break;
+            }
+            case "RC:FileMsg": {
+                FileMessage file = (FileMessage) content;
+                String local = "";
+                Uri localUri = file.getLocalPath();
+                if (localUri != null) {
+                    local = localUri.toString();
+                }
+                String remote = "";
+                Uri remoteUri = file.getFileUrl();
+                if (remoteUri != null) {
+                    remote = remoteUri.toString();
+                }
+                map.putString("type", "file");
+                map.putString("local", local);
+                map.putString("remote", remote);
+                map.putString("name", file.getName());
+                map.putDouble("size", file.getSize());
+                map.putString("fileType", file.getType());
+                map.putString("extra", file.getExtra());
+                break;
+            }
+        }
         return map;
     }
 
@@ -84,16 +137,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.connect(token, new RongIMClient.ConnectCallback() {
             @Override
             public void onSuccess(String userId) {
-                WritableMap map = createEventMap(eventId);
-                map.putString("type", "success");
+                WritableMap map = createEventMap(eventId, "success");
                 map.putString("userId", userId);
                 eventEmitter.emit("rcimlib-connect", map);
             }
 
             @Override
             public void onError(RongIMClient.ErrorCode error) {
-                WritableMap map = createEventMap(eventId);
-                map.putString("type", "error");
+                WritableMap map = createEventMap(eventId, "error");
                 map.putInt("errorCode", error.getValue());
                 map.putString("errorMessage", error.getMessage());
                 eventEmitter.emit("rcimlib-connect", map);
@@ -101,34 +152,62 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onTokenIncorrect() {
-                WritableMap map = createEventMap(eventId);
-                map.putString("type", "tokenIncorrect");
-                eventEmitter.emit("rcimlib-connect", map);
+                eventEmitter.emit("rcimlib-connect", createEventMap(eventId, "tokenIncorrect"));
             }
         });
     }
 
     @ReactMethod
-    public void sendMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
+    public void sendMessage(ReadableMap data, final String eventId) {
+        ReadableMap content = data.getMap("content");
         String contentType = content.getString("type");
         MessageContent messageContent = null;
-        if (contentType.equals("text")) {
-            messageContent = TextMessage.obtain(content.getString("content"));
+        switch (contentType) {
+            case "text":
+                messageContent = TextMessage.obtain(content.getString("content"));
+                break;
+            case "image":
+                Uri uri = getFileUri(content.getString("local"));
+                messageContent = ImageMessage.obtain(uri, uri);
+                break;
+            case "file":
+                messageContent = FileMessage.obtain(getFileUri(content.getString("local")));
+                break;
         }
+
+        String targetId = data.getString("targetId");
+        ConversationType conversationType = ConversationType.setValue(data.getInt("conversationType"));
+        Message message = Message.obtain(targetId, conversationType, messageContent);
+
+        String pushContent = "";
+        if (data.hasKey("pushContent")) {
+            pushContent = data.getString("pushContent");
+        }
+
+        String pushData = "";
+        if (data.hasKey("pushData")) {
+            pushData = data.getString("pushData");
+        }
+
         if (messageContent != null) {
-            RongIMClient.getInstance().sendMessage(ConversationType.setValue(type), targetId, messageContent, pushContent, pushData, new ISendMessageCallback() {
+            RongIMClient.getInstance().sendMessage(message, pushContent, pushData, new ISendMessageCallback() {
                 @Override
                 public void onAttached(Message message) {
                 }
 
                 @Override
                 public void onSuccess(Message message) {
-                    success.invoke(message.getMessageId());
+                    WritableMap map = createEventMap(eventId, "success");
+                    map.putMap("message", messageToMap(message));
+                    eventEmitter.emit("rcimlib-send-message", map);
                 }
 
                 @Override
                 public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                    error.invoke(errorCode.getValue(), message.getMessageId());
+                    WritableMap map = createEventMap(eventId, "error");
+                    map.putInt("errorCode", errorCode.getValue());
+                    map.putMap("message", messageToMap(message));
+                    eventEmitter.emit("rcimlib-send-message", map);
                 }
             });
         }
@@ -148,59 +227,5 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         }
         return uri;
-    }
-
-    @ReactMethod
-    public void sendImageMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
-        Uri uri = getFileUri(content.getString("localUri"));
-        ImageMessage message = ImageMessage.obtain(uri, uri);
-        RongIMClient.getInstance().sendImageMessage(ConversationType.setValue(type), targetId, message, pushContent, pushData, new SendImageMessageCallback() {
-            @Override
-            public void onAttached(Message message) {
-            }
-
-            @Override
-            public void onSuccess(Message message) {
-                success.invoke(message.getMessageId());
-            }
-
-            @Override
-            public void onProgress(Message message, int i) {
-                // TODO
-            }
-
-            @Override
-            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                error.invoke(errorCode.getValue(), message.getMessageId());
-            }
-        });
-    }
-
-    @ReactMethod
-    public void sendMediaMessage(int type, String targetId, ReadableMap content, String pushContent, String pushData, final Callback success, final Callback error) {
-        Uri uri = getFileUri(content.getString("localUrl"));
-        Message message = Message.obtain(targetId, ConversationType.setValue(type), FileMessage.obtain(uri));
-        RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, new ISendMediaMessageCallback() {
-            @Override
-            public void onAttached(Message message) {
-            }
-
-            @Override
-            public void onSuccess(Message message) {
-            }
-
-            @Override
-            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-            }
-
-            @Override
-            public void onProgress(Message message, int i) {
-                // TODO
-            }
-
-            @Override
-            public void onCanceled(Message message) {
-            }
-        });
     }
 }

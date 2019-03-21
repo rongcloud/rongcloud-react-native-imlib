@@ -31,7 +31,7 @@ export default class extends React.PureComponent {
         {messages.length === 0 && <Text style={style.item}>No messages.</Text>}
         {messages.map(message => (
           <Text style={style.item} key={message.messageId}>
-            {JSON.stringify(message)}
+            {JSON.stringify(message, null, 2)}
           </Text>
         ))}
       </ScrollView>

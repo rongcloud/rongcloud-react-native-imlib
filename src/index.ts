@@ -1,4 +1,5 @@
-import { NativeEventEmitter, NativeModules } from "react-native";
+import { Animated, NativeEventEmitter, NativeModules } from "react-native";
+import event = Animated.event;
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -71,18 +72,24 @@ export type TextMessage = {
 
 export type ImageMessage = {
   type: "image";
-  localUri: string;
-  remoteUri: string;
-  thumUri: string;
-  isFull: string;
+  local: string;
+  remote?: string;
+  thumbnail?: string;
+  isFull?: string;
+  extra?: string;
 };
 
 export type FileMessage = {
   type: "file";
-  localUrl: string;
+  local: string;
+  remote?: string;
+  name?: string;
+  size?: number;
+  fileType?: string;
+  extra?: string;
 };
 
-export type MessageContent = TextMessage | ImageMessage;
+export type MessageContent = TextMessage | ImageMessage | FileMessage;
 
 export type Message = {
   /**
@@ -133,7 +140,7 @@ export type Message = {
   /**
    * 附加信息
    */
-  extra: string;
+  extra?: string;
 };
 
 /**
@@ -145,35 +152,42 @@ export function addReceiveMessageListener(listener: (message: Message) => void) 
   });
 }
 
+export type SentMessage = {
+  conversationType: ConversationType;
+  targetId: string;
+  content: TextMessage;
+  pushContent: string;
+  pushData: string;
+};
+
+export type SentMessageCallback = {
+  success?: (message: Message) => void;
+  error?: (errorCode: number) => void;
+};
+
 /**
  * 发送消息
  *
- * @param conversationType 会话类型
- * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
- * @param content 消息内容
- * @param pushContent 推送内容，显示在通知栏
- * @param pushData 推送数据
- * @param success 发送成功回调函数
- * @param error 发送失败回调函数
+ * @param message 消息
+ * @param callback 回调
  */
-export function sendMessage(
-  conversationType: ConversationType,
-  targetId: string,
-  content: TextMessage,
-  pushContent: string,
-  pushData: string,
-  success: (messageId: number) => void,
-  error: (errorCode: number, messageId: number) => void
-) {
-  RCIMClient.sendMessage(
-    conversationType,
-    targetId,
-    content,
-    pushContent,
-    pushData,
-    success,
-    error
-  );
+export function sendMessage(message: SentMessage, callback: SentMessageCallback = null) {
+  const eventId = Math.random().toString();
+  if (callback) {
+    const listener = eventEmitter.addListener("rcimlib-send-message", data => {
+      if (data.eventId === eventId) {
+        const { success, error } = callback;
+        if (data.type === "success") {
+          success && success(data.message);
+          listener.remove();
+        } else if (data.type === "error") {
+          error && error(data.errorCode);
+          listener.remove();
+        }
+      }
+    });
+  }
+  RCIMClient.sendMessage(message, eventId);
 }
 
 /**
