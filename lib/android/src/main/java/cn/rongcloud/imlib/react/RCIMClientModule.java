@@ -9,12 +9,15 @@ import io.rong.imlib.IRongCallback.ISendMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
+import io.rong.imlib.RongIMClient.ResultCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
+
+import java.util.List;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
     private RCTDeviceEventEmitter eventEmitter;
@@ -66,8 +69,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         map.putString("senderUserId", message.getSenderUserId());
         map.putDouble("sentTime", (double) message.getSentTime());
         map.putDouble("receivedTime", (double) message.getReceivedTime());
-        map.putString("content", new String(message.getContent().encode()));
         map.putString("extra", message.getExtra());
+        map.putString("objectName", message.getObjectName());
         String objectName = message.getObjectName();
         map.putMap("content", messageContentToMap(objectName, message.getContent()));
         return map;
@@ -227,5 +230,33 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         }
         return uri;
+    }
+
+    @ReactMethod
+    public void getHistoryMessages(int conversationType, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
+        ResultCallback<List<Message>> callback = new ResultCallback<List<Message>>() {
+            @Override
+            public void onSuccess(List<Message> messages) {
+                WritableArray array = Arguments.createArray();
+                if (messages != null) {
+                    for (Message message : messages) {
+                        array.pushMap(messageToMap(message));
+                    }
+                }
+                promise.resolve(array);
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+                promise.reject(errorCode + "", "");
+            }
+        };
+        if (objectName.isEmpty()) {
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(conversationType), targetId, oldestMessageId, count, callback);
+        } else {
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(conversationType), targetId, objectName, oldestMessageId, count, callback);
+        }
     }
 }

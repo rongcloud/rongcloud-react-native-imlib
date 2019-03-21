@@ -1,5 +1,4 @@
-import { Animated, NativeEventEmitter, NativeModules } from "react-native";
-import event = Animated.event;
+import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -165,6 +164,14 @@ export type SentMessageCallback = {
   error?: (errorCode: number) => void;
 };
 
+export enum MessageObjectNamesAndroid {
+  text = "RC:TxtMsg",
+  image = "RC:ImgMsg",
+  file = "RC:FileMsg"
+}
+
+export const MessageObjectNames = Platform.select({ android: MessageObjectNamesAndroid });
+
 /**
  * 发送消息
  *
@@ -188,68 +195,6 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
     });
   }
   RCIMClient.sendMessage(message, eventId);
-}
-
-/**
- * 发送图片消息
- *
- * @param conversationType 会话类型
- * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
- * @param content 消息内容
- * @param pushContent 推送内容，显示在通知栏
- * @param pushData 推送数据
- * @param success 发送成功回调函数
- * @param error 发送失败回调函数
- */
-export function sendImageMessage(
-  conversationType: ConversationType,
-  targetId: string,
-  content: ImageMessage,
-  pushContent: string,
-  pushData: string,
-  success: (messageId: number) => void,
-  error: (errorCode: number, messageId: number) => void
-) {
-  RCIMClient.sendImageMessage(
-    conversationType,
-    targetId,
-    content,
-    pushContent,
-    pushData,
-    success,
-    error
-  );
-}
-
-/**
- * 发送文件消息
- *
- * @param conversationType 会话类型
- * @param targetId 目标 ID，可能是用户 ID、讨论组 ID、群组 ID 或聊天室 ID
- * @param content 消息内容
- * @param pushContent 推送内容，显示在通知栏
- * @param pushData 推送数据
- * @param success 发送成功回调函数
- * @param error 发送失败回调函数
- */
-export function sendMediaMessage(
-  conversationType: ConversationType,
-  targetId: string,
-  content: FileMessage,
-  pushContent: string,
-  pushData: string,
-  success: (messageId: number) => void,
-  error: (errorCode: number, messageId: number) => void
-) {
-  RCIMClient.sendMediaMessage(
-    conversationType,
-    targetId,
-    content,
-    pushContent,
-    pushData,
-    success,
-    error
-  );
 }
 
 export enum ConnectionStatusIOS {
@@ -288,4 +233,20 @@ export type ConnectionStatus = ConnectionStatusIOS | ConnectionStatusAndroid;
  */
 export function addConnectionStatusListener(listener: (status: ConnectionStatus) => void) {
   return eventEmitter.addListener("rcimlib-connection-status", listener);
+}
+
+export function getHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  objectName = "",
+  oldestMessageId = -1,
+  count = 10
+) {
+  return RCIMClient.getHistoryMessages(
+    conversationType,
+    targetId,
+    objectName,
+    oldestMessageId,
+    count
+  );
 }
