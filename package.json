@@ -14,14 +14,14 @@
     "run-ios": "node node_modules/react-native/local-cli/cli.js run-ios"
   },
   "devDependencies": {
-    "@types/react-navigation": "^3.0.4",
+    "@types/react-navigation": "^3.0.5",
     "prettier": "^1.16.4",
-    "react": "16.6.3",
-    "react-native": "0.58.4",
+    "react": "16.8.4",
+    "react-native": "0.59.1",
     "react-native-document-picker": "^2.3.0",
     "react-native-gesture-handler": "^1.1.0",
-    "react-navigation": "^3.3.2",
-    "typescript": "^3.3.3333"
+    "react-navigation": "^3.5.1",
+    "typescript": "^3.3.4000"
   },
   "prettier": {
     "printWidth": 100
