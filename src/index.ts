@@ -63,6 +63,19 @@ export enum ConversationType {
   PUSH_SERVICE
 }
 
+/**
+ * 发送状态
+ */
+export enum SentStatus {
+  SENDING = 10,
+  FAILED = 20,
+  SENT = 30,
+  RECEIVED = 40,
+  READ = 50,
+  DESTROYED = 60,
+  CANCELED = 70
+}
+
 export type TextMessage = {
   type: "text";
   content: string;
@@ -235,18 +248,43 @@ export function addConnectionStatusListener(listener: (status: ConnectionStatus)
   return eventEmitter.addListener("rcimlib-connection-status", listener);
 }
 
+/**
+ * 获取历史消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param objectName 消息对象名称，可以用 MessageObjectNames 获取消息类型对应的对象名称
+ * @param oldestMessageId 最近一条消息的 ID
+ * @param count 数量
+ */
 export function getHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
   objectName = "",
   oldestMessageId = -1,
   count = 10
-) {
+): Promise<Message[]> {
   return RCIMClient.getHistoryMessages(
     conversationType,
     targetId,
     objectName,
     oldestMessageId,
     count
+  );
+}
+
+export function insertOutgoingMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  sentStatus: SentStatus,
+  messageContent: MessageContent,
+  sentTime = 0
+): Promise<any> {
+  return RCIMClient.insertOutgoingMessage(
+    conversationType,
+    targetId,
+    sentStatus,
+    messageContent,
+    sentTime
   );
 }

@@ -1,4 +1,4 @@
-import { ConversationType } from "react-native-rongcloud-imlib";
+import { ConversationType, SentStatus } from "react-native-rongcloud-imlib";
 
 export const conversations = {
   [ConversationType.PRIVATE]: "私聊",
@@ -9,3 +9,13 @@ export const conversations = {
 };
 
 export const messageTypes = { text: "文本消息", image: "图片消息", file: "文件消息" };
+
+export const sentStatus = {
+  [SentStatus.SENDING]: "发送中",
+  [SentStatus.FAILED]: "发送失败",
+  [SentStatus.SENT]: "已发送",
+  [SentStatus.RECEIVED]: "对方已接收",
+  [SentStatus.READ]: "对方已读",
+  [SentStatus.DESTROYED]: "对方已销毁",
+  [SentStatus.CANCELED]: "发送已取消"
+};

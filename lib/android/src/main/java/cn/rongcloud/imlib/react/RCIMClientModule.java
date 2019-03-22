@@ -12,11 +12,13 @@ import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
 import io.rong.imlib.RongIMClient.ResultCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
+import io.rong.imlib.model.Message.SentStatus;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
@@ -41,6 +43,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         });
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "RCIMClient";
@@ -69,6 +72,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         map.putString("senderUserId", message.getSenderUserId());
         map.putDouble("sentTime", (double) message.getSentTime());
         map.putDouble("receivedTime", (double) message.getReceivedTime());
+        map.putInt("sentStatus", message.getSentStatus().getValue());
         map.putString("extra", message.getExtra());
         map.putString("objectName", message.getObjectName());
         String objectName = message.getObjectName();
@@ -163,21 +167,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void sendMessage(ReadableMap data, final String eventId) {
         ReadableMap content = data.getMap("content");
-        String contentType = content.getString("type");
-        MessageContent messageContent = null;
-        switch (contentType) {
-            case "text":
-                messageContent = TextMessage.obtain(content.getString("content"));
-                break;
-            case "image":
-                Uri uri = getFileUri(content.getString("local"));
-                messageContent = ImageMessage.obtain(uri, uri);
-                break;
-            case "file":
-                messageContent = FileMessage.obtain(getFileUri(content.getString("local")));
-                break;
+        if (content == null) {
+            eventEmitter.emit("rcimlib-send-message", createEventMap(eventId, "error"));
+            return;
         }
-
+        MessageContent messageContent = mapToMessageContent(content);
         String targetId = data.getString("targetId");
         ConversationType conversationType = ConversationType.setValue(data.getInt("conversationType"));
         Message message = Message.obtain(targetId, conversationType, messageContent);
@@ -214,6 +208,26 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 }
             });
         }
+    }
+
+    private MessageContent mapToMessageContent(ReadableMap map) {
+        String contentType = map.getString("type");
+        MessageContent messageContent = null;
+        if (contentType != null) {
+            switch (contentType) {
+                case "text":
+                    messageContent = TextMessage.obtain(map.getString("content"));
+                    break;
+                case "image":
+                    Uri uri = getFileUri(map.getString("local"));
+                    messageContent = ImageMessage.obtain(uri, uri);
+                    break;
+                case "file":
+                    messageContent = FileMessage.obtain(getFileUri(map.getString("local")));
+                    break;
+            }
+        }
+        return messageContent;
     }
 
     private Uri getFileUri(String s) {
@@ -258,5 +272,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().getHistoryMessages(
                 ConversationType.setValue(conversationType), targetId, objectName, oldestMessageId, count, callback);
         }
+    }
+
+    @ReactMethod
+    public void insertOutgoingMessage(int conversationType, String targetId, SentStatus sentStatus, ReadableMap content, final Promise promise) {
+        MessageContent messageContent = mapToMessageContent(content);
     }
 }
