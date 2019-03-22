@@ -6,11 +6,12 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 23
     }
 }
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'cn.rongcloud.android:IMLib:2.8.6'
+    implementation files('libs/Rong_IMLib.jar')
+    implementation 'com.google.code.gson:gson:2.8.1'
 }

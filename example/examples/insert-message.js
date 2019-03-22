@@ -1,15 +1,5 @@
 import * as React from "react";
-import {
-  Button,
-  Image,
-  Picker,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from "react-native";
+import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { insertOutgoingMessage } from "react-native-rongcloud-imlib";
 import FormItem from "./form-item";
 import { conversations, sentStatus } from "./constants";
@@ -27,8 +17,8 @@ export default class extends React.PureComponent {
   state = {
     conversationType: 1,
     targetId: "vh6a0VoDJ",
-    sentStatus: 10,
-    content: {},
+    status: 10,
+    content: { type: "text", content: "😀" },
     result: ""
   };
 
@@ -37,45 +27,17 @@ export default class extends React.PureComponent {
 
   insert = async () => {
     const { conversationType, targetId, content, status } = this.state;
-    const result = await insertOutgoingMessage(conversationType, targetId, content, status);
-    console.log(result);
+    try {
+      const message = await insertOutgoingMessage(conversationType, targetId, status, content);
+      this.setState({ result: "消息插入成功：" + JSON.stringify(message, null, 2) });
+    } catch (e) {
+      console.error(e);
+      this.setState({ result: "消息插入失败" });
+    }
   };
 
-  renderContent() {
-    const { messageType, content } = this.state;
-    if (messageType === "text") {
-      return (
-        <FormItem label="文本内容">
-          <TextInput onChangeText={this.setTextContent} placeholder="请输入文本内容" />
-        </FormItem>
-      );
-    } else if (messageType === "image") {
-      return (
-        <FormItem>
-          <Button title="选择图片" onPress={this.pickImage} />
-          {content.local && (
-            <Image style={style.image} resizeMode="contain" source={{ uri: content.local }} />
-          )}
-        </FormItem>
-      );
-    } else if (messageType === "file") {
-      return (
-        <View>
-          <FormItem>
-            <Button title="选择文件" onPress={this.pickFile} />
-          </FormItem>
-          {content.local && (
-            <FormItem>
-              <Text>{content.local}</Text>
-            </FormItem>
-          )}
-        </View>
-      );
-    }
-  }
-
   render() {
-    const { targetId, conversationType, status, result } = this.state;
+    const { targetId, conversationType, status, result, content } = this.state;
     return (
       <ScrollView contentContainerStyle={style.body}>
         <FormItem label="会话类型">
@@ -99,7 +61,11 @@ export default class extends React.PureComponent {
           </Picker>
         </FormItem>
         <FormItem label="文本内容">
-          <TextInput onChangeText={this.setTextContent} placeholder="请输入文本内容" />
+          <TextInput
+            value={content.content}
+            onChangeText={this.setTextContent}
+            placeholder="请输入文本内容"
+          />
         </FormItem>
         <FormItem>
           <Button title="插入消息" onPress={this.insert} />

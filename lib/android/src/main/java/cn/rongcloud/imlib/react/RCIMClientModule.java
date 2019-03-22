@@ -247,7 +247,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getHistoryMessages(int conversationType, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
+    public void getHistoryMessages(int type, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
         ResultCallback<List<Message>> callback = new ResultCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {
@@ -265,17 +265,34 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 promise.reject(errorCode + "", "");
             }
         };
+        ConversationType conversationType = ConversationType.setValue(type);
         if (objectName.isEmpty()) {
-            RongIMClient.getInstance().getHistoryMessages(
-                ConversationType.setValue(conversationType), targetId, oldestMessageId, count, callback);
+            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, oldestMessageId, count, callback);
         } else {
-            RongIMClient.getInstance().getHistoryMessages(
-                ConversationType.setValue(conversationType), targetId, objectName, oldestMessageId, count, callback);
+            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, objectName, oldestMessageId, count, callback);
         }
     }
 
     @ReactMethod
-    public void insertOutgoingMessage(int conversationType, String targetId, SentStatus sentStatus, ReadableMap content, final Promise promise) {
+    public void insertOutgoingMessage(int type, String targetId, int status, ReadableMap content, int sentTime, final Promise promise) {
         MessageContent messageContent = mapToMessageContent(content);
+        SentStatus sentStatus = SentStatus.setValue(status);
+        ConversationType conversationType = ConversationType.setValue(type);
+        ResultCallback<Message> callback = new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                promise.resolve(messageToMap(message));
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+                promise.reject(errorCode + "", "");
+            }
+        };
+        if (sentTime == 0) {
+            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, sentStatus, messageContent, callback);
+        } else {
+            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, sentStatus, messageContent, sentTime, callback);
+        }
     }
 }
