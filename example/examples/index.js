@@ -6,8 +6,16 @@ import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
 import GetHistoryMessages from "./get-history-messages";
 import InsertMessage from "./insert-message";
+import DeleteMessages from "./delete-messages";
 
-const examples = [Connect, ReceiveMessage, SendMessage, GetHistoryMessages, InsertMessage];
+const examples = [
+  Connect,
+  ReceiveMessage,
+  SendMessage,
+  GetHistoryMessages,
+  InsertMessage,
+  DeleteMessages
+];
 
 export default class extends React.PureComponent {
   static navigationOptions = { title: "RongCloud IMLib Examples" };
@@ -23,4 +31,4 @@ export default class extends React.PureComponent {
   }
 }
 
-export { Connect, ReceiveMessage, SendMessage, GetHistoryMessages, InsertMessage };
+export { Connect, ReceiveMessage, SendMessage, GetHistoryMessages, InsertMessage, DeleteMessages };

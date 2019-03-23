@@ -326,4 +326,30 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, sentStatus, messageContent, sentTime, callback);
         }
     }
+
+    @ReactMethod
+    public void clearMessages(int type, String targetId, final Promise promise) {
+        RongIMClient.getInstance().clearMessages(
+                ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+    }
+
+    @ReactMethod
+    public void deleteMessages(int type, String targetId, final Promise promise) {
+        RongIMClient.getInstance().deleteMessages(
+                ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+    }
+
+    private ResultCallback<Boolean> createDeleteMessagesCallback(final Promise promise) {
+        return new ResultCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                promise.resolve(result);
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+                promise.reject(errorCode + "", "");
+            }
+        };
+    }
 }

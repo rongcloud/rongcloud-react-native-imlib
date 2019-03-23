@@ -306,13 +306,22 @@ export function getHistoryMessages(
   );
 }
 
+/**
+ * 向本地会话插入一条发送消息
+ *
+ * @param conversationType
+ * @param targetId
+ * @param sentStatus
+ * @param messageContent
+ * @param sentTime
+ */
 export function insertOutgoingMessage(
   conversationType: ConversationType,
   targetId: string,
   sentStatus: SentStatus,
   messageContent: MessageContent,
   sentTime = 0
-): Promise<any> {
+): Promise<Message> {
   return RCIMClient.insertOutgoingMessage(
     conversationType,
     targetId,
@@ -320,4 +329,24 @@ export function insertOutgoingMessage(
     messageContent,
     sentTime
   );
+}
+
+/**
+ * 清空某一会话的所有消息
+ *
+ * @param conversationType
+ * @param targetId
+ */
+export function clearMessages(conversationType: ConversationType, targetId: string): Promise<boolean> {
+  return RCIMClient.clearMessages(conversationType, targetId);
+}
+
+/**
+ * 删除某一会话的所有消息，同时清理数据库空间
+ *
+ * @param conversationType
+ * @param targetId
+ */
+export function deleteMessages(conversationType: ConversationType, targetId: string): Promise<boolean> {
+  return RCIMClient.deleteMessages(conversationType, targetId);
 }
