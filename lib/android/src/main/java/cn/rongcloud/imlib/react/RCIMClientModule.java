@@ -339,6 +339,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
     }
 
+    @ReactMethod
+    public void deleteMessagesByIds(ReadableArray ids, final Promise promise) {
+        int[] array = new int[ids.size()];
+        for (int i = 0; i < ids.size(); i += 1) {
+            array[i] = ids.getInt(i);
+        }
+        RongIMClient.getInstance().deleteMessages(array, createDeleteMessagesCallback(promise));
+    }
+
     private ResultCallback<Boolean> createDeleteMessagesCallback(final Promise promise) {
         return new ResultCallback<Boolean>() {
             @Override

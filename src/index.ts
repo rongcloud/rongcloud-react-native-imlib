@@ -347,6 +347,18 @@ export function clearMessages(conversationType: ConversationType, targetId: stri
  * @param conversationType
  * @param targetId
  */
-export function deleteMessages(conversationType: ConversationType, targetId: string): Promise<boolean> {
-  return RCIMClient.deleteMessages(conversationType, targetId);
+export function deleteMessages(conversationType: ConversationType, targetId: string): Promise<boolean>
+
+/**
+ * 根据消息 ID 删除消息
+ *
+ * @param ids 消息 ID 列表
+ */
+export function deleteMessages(ids: number[]): Promise<boolean>;
+
+export function deleteMessages(typeOrIds: ConversationType | number[], targetId = ""): Promise<boolean> {
+  if (Array.isArray(typeOrIds)) {
+    return RCIMClient.deleteMessagesByIds(typeOrIds);
+  }
+  return RCIMClient.deleteMessages(typeOrIds, targetId);
 }

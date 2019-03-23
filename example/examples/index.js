@@ -7,6 +7,7 @@ import SendMessage from "./send-message";
 import GetHistoryMessages from "./get-history-messages";
 import InsertMessage from "./insert-message";
 import DeleteMessages from "./delete-messages";
+import DeleteMessagesByIds from "./delete-messages-by-ids";
 
 const examples = [
   Connect,
@@ -14,7 +15,8 @@ const examples = [
   SendMessage,
   GetHistoryMessages,
   InsertMessage,
-  DeleteMessages
+  DeleteMessages,
+  DeleteMessagesByIds
 ];
 
 export default class extends React.PureComponent {
@@ -31,4 +33,12 @@ export default class extends React.PureComponent {
   }
 }
 
-export { Connect, ReceiveMessage, SendMessage, GetHistoryMessages, InsertMessage, DeleteMessages };
+export {
+  Connect,
+  ReceiveMessage,
+  SendMessage,
+  GetHistoryMessages,
+  InsertMessage,
+  DeleteMessages,
+  DeleteMessagesByIds
+};
