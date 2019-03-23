@@ -1,15 +1,14 @@
 package cn.rongcloud.imlib.react;
 
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
-import io.rong.imlib.IRongCallback.ISendMessageCallback;
+import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
 import io.rong.imlib.RongIMClient.ResultCallback;
+import io.rong.imlib.RongIMClient.SendImageMessageCallback;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.Message.SentStatus;
@@ -186,28 +185,76 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             pushData = data.getString("pushData");
         }
 
-        if (messageContent != null) {
-            RongIMClient.getInstance().sendMessage(message, pushContent, pushData, new ISendMessageCallback() {
+        ISendMediaMessageCallback callback = new ISendMediaMessageCallback() {
+            @Override
+            public void onAttached(Message message) {
+            }
+
+            @Override
+            public void onCanceled(Message message) {
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+                onSendMessageSuccess(eventId, message);
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+                onSendMessageError(eventId, message, errorCode);
+            }
+
+            @Override
+            public void onProgress(Message message, int i) {
+                onSendMessageProgress(eventId, i);
+            }
+        };
+
+        if (messageContent instanceof ImageMessage) {
+            RongIMClient.getInstance().sendImageMessage(message, pushContent, pushData, new SendImageMessageCallback() {
                 @Override
                 public void onAttached(Message message) {
                 }
 
                 @Override
                 public void onSuccess(Message message) {
-                    WritableMap map = createEventMap(eventId, "success");
-                    map.putMap("message", messageToMap(message));
-                    eventEmitter.emit("rcimlib-send-message", map);
+                    onSendMessageSuccess(eventId, message);
                 }
 
                 @Override
                 public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                    WritableMap map = createEventMap(eventId, "error");
-                    map.putInt("errorCode", errorCode.getValue());
-                    map.putMap("message", messageToMap(message));
-                    eventEmitter.emit("rcimlib-send-message", map);
+                    onSendMessageError(eventId, message, errorCode);
+                }
+
+                @Override
+                public void onProgress(Message message, int i) {
+                    onSendMessageProgress(eventId, i);
                 }
             });
+        } else if (messageContent instanceof FileMessage) {
+            RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, callback);
+        } else {
+            RongIMClient.getInstance().sendMessage(message, pushContent, pushData, callback);
         }
+    }
+
+    private void onSendMessageProgress(String eventId, int i) {
+        WritableMap map = createEventMap(eventId, "progress");
+        map.putInt("progress", i);
+        eventEmitter.emit("rcimlib-send-message", map);
+    }
+
+    private void onSendMessageSuccess(String eventId, Message message) {
+        WritableMap map = createEventMap(eventId, "success");
+        map.putMap("message", messageToMap(message));
+        eventEmitter.emit("rcimlib-send-message", map);
+    }
+
+    private void onSendMessageError(String eventId, Message message, RongIMClient.ErrorCode errorCode) {
+        WritableMap map = createEventMap(eventId, "error");
+        map.putInt("errorCode", errorCode.getValue());
+        map.putMap("message", messageToMap(message));
+        eventEmitter.emit("rcimlib-send-message", map);
     }
 
     private MessageContent mapToMessageContent(ReadableMap map) {
@@ -219,31 +266,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     messageContent = TextMessage.obtain(map.getString("content"));
                     break;
                 case "image":
-                    Uri uri = getFileUri(map.getString("local"));
+                    Uri uri = Utils.getFileUri(reactContext, map.getString("local"));
                     messageContent = ImageMessage.obtain(uri, uri);
                     break;
                 case "file":
-                    messageContent = FileMessage.obtain(getFileUri(map.getString("local")));
+                    messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
                     break;
             }
         }
         return messageContent;
-    }
-
-    private Uri getFileUri(String s) {
-        Uri uri = Uri.parse(s);
-        if (s.startsWith("content://")) {
-            String[] projection = {MediaStore.Files.FileColumns.DATA};
-            Cursor cursor = reactContext.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null) {
-                int index = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(index);
-                cursor.close();
-                return Uri.parse("file://" + path);
-            }
-        }
-        return uri;
     }
 
     @ReactMethod
