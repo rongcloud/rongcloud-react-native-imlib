@@ -11,14 +11,13 @@ import {
   View
 } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
-import { showImagePicker, launchImageLibrary } from "react-native-image-picker";
+import { showImagePicker } from "react-native-image-picker";
 import { sendMessage } from "react-native-rongcloud-imlib";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
 
 const style = StyleSheet.create({
   body: { padding: 16 },
-  result: { fontFamily: Platform.OS === "ios" ? "menlo" : "monospace" },
   image: { height: 100, marginTop: 16, marginBottom: 16 }
 });
 
@@ -58,8 +57,7 @@ export default class extends React.PureComponent {
     sendMessage(
       { conversationType, targetId, content },
       {
-        success: message =>
-          this.setState({ result: "消息发送成功：" + JSON.stringify(message, null, 2) }),
+        success: messageId => this.setState({ result: "消息发送成功：" + messageId }),
         error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
       }
     );
@@ -130,7 +128,7 @@ export default class extends React.PureComponent {
           <Button title="发送" onPress={this.send} />
         </FormItem>
         <FormItem>
-          <Text style={style.result}>{result}</Text>
+          <Text>{result}</Text>
         </FormItem>
       </ScrollView>
     );

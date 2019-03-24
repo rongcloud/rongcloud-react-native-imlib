@@ -1,4 +1,5 @@
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
+import console = require("console");
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -173,8 +174,8 @@ export type SentMessage = {
 };
 
 export type SentMessageCallback = {
-  success?: (message: Message) => void;
-  error?: (errorCode: number) => void;
+  success?: (messageId: number) => void;
+  error?: (errorCode: ErrorCode) => void;
 };
 
 export enum MessageObjectNamesAndroid {
@@ -198,7 +199,7 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
       if (data.eventId === eventId) {
         const { success, error } = callback;
         if (data.type === "success") {
-          success && success(data.message);
+          success && success(data.messageId);
           listener.remove();
         } else if (data.type === "error") {
           error && error(data.errorCode);
