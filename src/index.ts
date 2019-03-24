@@ -178,13 +178,11 @@ export type SentMessageCallback = {
   error?: (errorCode: ErrorCode) => void;
 };
 
-export enum MessageObjectNamesAndroid {
+export enum MessageObjectNames {
   text = "RC:TxtMsg",
   image = "RC:ImgMsg",
   file = "RC:FileMsg"
 }
-
-export const MessageObjectNames = Platform.select({ android: MessageObjectNamesAndroid });
 
 /**
  * 发送消息

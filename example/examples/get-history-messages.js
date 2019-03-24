@@ -28,6 +28,7 @@ export default class extends React.PureComponent {
 
   getHistoryMessages = async () => {
     const { conversationType, targetId, messageType, oldestMessageId, count } = this.state;
+    console.log(messageType);
     const messages = await getHistoryMessages(
       conversationType,
       targetId,
@@ -35,6 +36,7 @@ export default class extends React.PureComponent {
       parseInt(oldestMessageId),
       parseInt(count)
     );
+    console.log(messages);
     this.setState({ messages });
   };
 

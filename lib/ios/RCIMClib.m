@@ -109,6 +109,61 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message eventId : (NSString *)ev
   }
 }
 
+RCT_EXPORT_METHOD(getHistoryMessages
+                  : (int)conversationType targetId
+                  : (NSString *)targetId objectName
+                  : (NSString *)objectName baseMessageId
+                  : (double)baseMessageId count
+                  : (int)count resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *messages;
+  if (objectName && objectName.length > 0) {
+    messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
+                                                      targetId:targetId
+                                                    objectName:objectName
+                                               oldestMessageId:baseMessageId
+                                                         count:count];
+  } else {
+    messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
+                                                      targetId:targetId
+                                               oldestMessageId:baseMessageId
+                                                         count:count];
+  }
+
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+  for (int i = 0; i < messages.count; i += 1) {
+    array[i] = [self dictionaryFromMessage:messages[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(insertOutgoingMessage
+                  : (int)conversationType targetId
+                  : (NSString *)targetId sentStatus
+                  : (int)sentStatus content
+                  : (NSDictionary *)content sentTime
+                  : (double)sentTime resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message;
+  if (sentTime) {
+    message = [RCIMClient.sharedRCIMClient
+        insertOutgoingMessage:conversationType
+                     targetId:targetId
+                   sentStatus:sentStatus
+                      content:[self messageContentFromDictionary:content]
+                     sentTime:sentTime];
+  } else {
+    message = [RCIMClient.sharedRCIMClient
+        insertOutgoingMessage:conversationType
+                     targetId:targetId
+                   sentStatus:sentStatus
+                      content:[self messageContentFromDictionary:content]];
+  }
+  resolve([self dictionaryFromMessage:message]);
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
@@ -117,23 +172,23 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message eventId : (NSString *)ev
   [self sendEventWithName:@"rcimlib-receive-message" body:[self dictionaryFromMessage:message]];
 }
 
-- (id)dictionaryFromMessage:(RCMessage *)message {
+- (NSDictionary *)dictionaryFromMessage:(RCMessage *)message {
   return @{
     @"conversationType" : @(message.conversationType),
     @"objectName" : message.objectName,
     @"targetId" : message.targetId,
-    @"messageUId" : message.messageUId,
+    @"messageUId" : message.messageUId ? message.messageUId : @"",
     @"messageId" : @(message.messageId),
     @"messageDirection" : @(message.messageDirection),
     @"senderUserId" : message.senderUserId,
     @"sentTime" : @(message.sentTime),
     @"receivedTime" : @(message.receivedTime),
     @"content" : [self dictionaryFromMessageContent:message.content],
-    @"extra" : message.extra,
+    @"extra" : message.extra ? message.extra : @"",
   };
 }
 
-- (id)dictionaryFromMessageContent:(RCMessageContent *)content {
+- (NSDictionary *)dictionaryFromMessageContent:(RCMessageContent *)content {
   if ([content isKindOfClass:[RCImageMessage class]]) {
     RCImageMessage *image = (RCImageMessage *)content;
     return @{
@@ -145,7 +200,8 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message eventId : (NSString *)ev
     };
   } else if ([content isKindOfClass:[RCTextMessage class]]) {
     RCTextMessage *text = (RCTextMessage *)content;
-    return @{@"type" : @"text", @"content" : text.content, @"extra" : text.extra};
+    return
+        @{@"type" : @"text", @"content" : text.content, @"extra" : text.extra ? text.extra : @""};
   } else if ([content isKindOfClass:[RCFileMessage class]]) {
     RCFileMessage *file = (RCFileMessage *)content;
     return @{
