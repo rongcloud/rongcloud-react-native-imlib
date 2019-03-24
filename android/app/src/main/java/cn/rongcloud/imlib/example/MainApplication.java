@@ -3,6 +3,7 @@ package cn.rongcloud.imlib.example;
 import android.app.Application;
 import cn.rongcloud.imlib.react.RCIMLibPackage;
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -25,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
                 new MainReactPackage(),
+            new ImagePickerPackage(),
                 new ReactNativeDocumentPicker(),
                 new RNGestureHandlerPackage(),
                 new RCIMLibPackage()

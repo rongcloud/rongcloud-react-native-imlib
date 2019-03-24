@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		397A3E1F224754EC006B4F36 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 397A3E1E224754EC006B4F36 /* libopencore-amrnb.a */; };
 		39850E58222BC2F900485C14 /* RCIMClib.h in Headers */ = {isa = PBXBuildFile; fileRef = 39ED574F1F3CAC2200B440CD /* RCIMClib.h */; };
-		39850F79222BE48300485C14 /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39850F78222BE48300485C14 /* RongIMLib.framework */; };
 		B3E7B58A1CC2AC0600A0062D /* RCIMClib.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCIMClib.m */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRCIMLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCIMLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		39850F78222BE48300485C14 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
+		397A3E1E224754EC006B4F36 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
 		39ED574F1F3CAC2200B440CD /* RCIMClib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCIMClib.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RCIMClib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCIMClib.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -36,7 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39850F79222BE48300485C14 /* RongIMLib.framework in Frameworks */,
+				397A3E1F224754EC006B4F36 /* libopencore-amrnb.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,7 +54,7 @@
 		39850F75222BE33800485C14 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				39850F78222BE48300485C14 /* RongIMLib.framework */,
+				397A3E1E224754EC006B4F36 /* libopencore-amrnb.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -223,17 +223,13 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../../ios",
+					"$(PROJECT_DIR)/../../../ios",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../RongIMLib.framework",
+					"$(PROJECT_DIR)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RCIMLib;
@@ -246,17 +242,13 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../../ios",
+					"$(PROJECT_DIR)/../../../ios",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../RongIMLib.framework",
+					"$(PROJECT_DIR)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RCIMLib;

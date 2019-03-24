@@ -11,6 +11,7 @@ import {
   View
 } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
+import { showImagePicker, launchImageLibrary } from "react-native-image-picker";
 import { sendMessage } from "react-native-rongcloud-imlib";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
@@ -37,9 +38,9 @@ export default class extends React.PureComponent {
   setTextContent = content => this.setState({ content: { type: "text", content } });
 
   pickImage = () => {
-    DocumentPicker.show({ filetype: [DocumentPickerUtil.images()] }, (error, response) => {
-      if (response) {
-        this.setState({ content: { type: "image", local: response.uri } });
+    showImagePicker({}, ({ uri }) => {
+      if (uri) {
+        this.setState({ content: { type: "image", local: uri } });
       }
     });
   };

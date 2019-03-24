@@ -5,11 +5,10 @@ build/
 lib/js/
 node_modules/
 xcuserdata/
+RongIMLib.framework
 
 *.iml
 gradle.properties
 local.properties
 yarn.lock
 package-lock.json
-RongIMLib.framework
-libopencore-amrnb.a

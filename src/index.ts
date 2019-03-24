@@ -7,7 +7,7 @@ const eventEmitter = new NativeEventEmitter(RCIMClient);
  * 初始化 SDK，只需要调用一次
  */
 export function init(appKey: string) {
-  RCIMClient.init(appKey);
+  return RCIMClient.init(appKey);
 }
 
 /**
@@ -21,7 +21,7 @@ export function init(appKey: string) {
 export function connect(
   token: string,
   success: (userId: string) => void = null,
-  error: (errorCode: number) => void = null,
+  error: (errorCode: ConnectErrorCode) => void = null,
   tokenIncorrect: () => void = null
 ) {
   const eventId = Math.random().toString();
@@ -210,6 +210,38 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
   RCIMClient.sendMessage(message, eventId);
 }
 
+export enum ConnectErrorCode {
+  RC_NET_CHANNEL_INVALID = 30001,
+  RC_NET_UNAVAILABLE = 30002,
+  RC_NAVI_REQUEST_FAIL = 30004,
+  RC_NAVI_RESPONSE_ERROR = 30007,
+  RC_NODE_NOT_FOUND = 30008,
+  RC_SOCKET_NOT_CONNECTED = 30010,
+  RC_SOCKET_DISCONNECTED = 30011,
+  RC_PING_SEND_FAIL = 30012,
+  RC_PONG_RECV_FAIL = 30013,
+  RC_MSG_SEND_FAIL = 30014,
+  RC_CONN_OVERFREQUENCY = 30015,
+  RC_CONN_ACK_TIMEOUT = 31000,
+  RC_CONN_PROTO_VERSION_ERROR = 31001,
+  RC_CONN_ID_REJECT = 31002,
+  RC_CONN_SERVER_UNAVAILABLE = 31003,
+  RC_CONN_TOKEN_INCORRECT = 31004,
+  RC_CONN_NOT_AUTHRORIZED = 31005,
+  RC_CONN_REDIRECTED = 31006,
+  RC_CONN_PACKAGE_NAME_INVALID = 31007,
+  RC_CONN_APP_BLOCKED_OR_DELETED = 31008,
+  RC_CONN_USER_BLOCKED = 31009,
+  RC_DISCONN_KICK = 31010,
+  RC_CONN_OTHER_DEVICE_LOGIN = 31023,
+  RC_CONN_REFUSED = 32061,
+  RC_CLIENT_NOT_INIT = 33001,
+  RC_INVALID_PARAMETER = 33003,
+  RC_CONNECTION_EXIST = 34001,
+  RC_BACKGROUND_CONNECT = 34002,
+  RC_INVALID_ARGUMENT = -1000
+}
+
 export enum ErrorCode {
   ERRORCODE_UNKNOWN = -1,
   REJECTED_BY_BLACKLIST = 405,
@@ -286,7 +318,8 @@ export function addConnectionStatusListener(listener: (status: ConnectionStatus)
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
- * @param objectName 消息对象名称，可以用 MessageObjectNames 获取消息类型对应的对象名称
+ * @param objectName 消息对象名称，可以用 MessageObjectNames
+ *     获取消息类型对应的对象名称
  * @param oldestMessageId 最近一条消息的 ID
  * @param count 数量
  */
@@ -337,7 +370,10 @@ export function insertOutgoingMessage(
  * @param conversationType
  * @param targetId
  */
-export function clearMessages(conversationType: ConversationType, targetId: string): Promise<boolean> {
+export function clearMessages(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<boolean> {
   return RCIMClient.clearMessages(conversationType, targetId);
 }
 
@@ -347,7 +383,10 @@ export function clearMessages(conversationType: ConversationType, targetId: stri
  * @param conversationType
  * @param targetId
  */
-export function deleteMessages(conversationType: ConversationType, targetId: string): Promise<boolean>
+export function deleteMessages(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<boolean>;
 
 /**
  * 根据消息 ID 删除消息
@@ -356,7 +395,10 @@ export function deleteMessages(conversationType: ConversationType, targetId: str
  */
 export function deleteMessages(ids: number[]): Promise<boolean>;
 
-export function deleteMessages(typeOrIds: ConversationType | number[], targetId = ""): Promise<boolean> {
+export function deleteMessages(
+  typeOrIds: ConversationType | number[],
+  targetId = ""
+): Promise<boolean> {
   if (Array.isArray(typeOrIds)) {
     return RCIMClient.deleteMessagesByIds(typeOrIds);
   }
