@@ -11,7 +11,7 @@ RCT_EXPORT_METHOD(init : (NSString *)key) {
   [RCIMClient.sharedRCIMClient setReceiveMessageDelegate:self object:nil];
 }
 
-RCT_EXPORT_METHOD(connect : (NSString *)token eventId : (NSString *)eventId) {
+RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient connectWithToken:token
       success:^(NSString *userId) {
         [self sendEventWithName:@"rcimlib-connect"
@@ -37,7 +37,7 @@ RCT_EXPORT_METHOD(connect : (NSString *)token eventId : (NSString *)eventId) {
 /**
  * 发送消息
  */
-RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message eventId : (NSString *)eventId) {
+RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   NSDictionary *content = message[@"content"];
   if (!content) {
     [self sendEventWithName:@"rcimlib-connect"
@@ -110,12 +110,12 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message eventId : (NSString *)ev
 }
 
 RCT_EXPORT_METHOD(getHistoryMessages
-                  : (int)conversationType targetId
-                  : (NSString *)targetId objectName
-                  : (NSString *)objectName baseMessageId
-                  : (double)baseMessageId count
-                  : (int)count resolver
-                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSString *)objectName
+                  : (double)baseMessageId
+                  : (int)count
+                  : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
   NSArray *messages;
   if (objectName && objectName.length > 0) {
@@ -139,12 +139,12 @@ RCT_EXPORT_METHOD(getHistoryMessages
 }
 
 RCT_EXPORT_METHOD(insertOutgoingMessage
-                  : (int)conversationType targetId
-                  : (NSString *)targetId sentStatus
-                  : (int)sentStatus content
-                  : (NSDictionary *)content sentTime
-                  : (double)sentTime resolver
-                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (int)sentStatus
+                  : (NSDictionary *)content
+                  : (double)sentTime
+                  : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
   RCMessage *message;
   if (sentTime) {
@@ -162,6 +162,36 @@ RCT_EXPORT_METHOD(insertOutgoingMessage
                       content:[self messageContentFromDictionary:content]];
   }
   resolve([self dictionaryFromMessage:message]);
+}
+
+RCT_EXPORT_METHOD(clearMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient clearMessages:conversationType targetId:targetId]));
+}
+
+RCT_EXPORT_METHOD(deleteMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient deleteMessages:conversationType
+      targetId:targetId
+      success:^{
+        resolve(@(true));
+      }
+      error:^(RCErrorCode status) {
+        reject(@"", @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(deleteMessagesByIds
+                  : (NSArray *)ids
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient deleteMessages:ids]));
 }
 
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
