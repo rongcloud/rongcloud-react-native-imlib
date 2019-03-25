@@ -246,14 +246,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     private void onSendMessageSuccess(String eventId, Message message) {
         WritableMap map = createEventMap(eventId, "success");
-        map.putMap("message", messageToMap(message));
+        map.putInt("messageId", message.getMessageId());
         eventEmitter.emit("rcimlib-send-message", map);
     }
 
     private void onSendMessageError(String eventId, Message message, RongIMClient.ErrorCode errorCode) {
         WritableMap map = createEventMap(eventId, "error");
         map.putInt("errorCode", errorCode.getValue());
-        map.putMap("message", messageToMap(message));
+        map.putInt("messageId", message.getMessageId());
         eventEmitter.emit("rcimlib-send-message", map);
     }
 
