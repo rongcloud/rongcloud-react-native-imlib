@@ -11,7 +11,7 @@ const style = StyleSheet.create({
 
 export default class extends React.PureComponent {
   static route = "DeleteMessagesByIds";
-  static navigationOptions = { title: "删除消息（通过消息 ID 列表）" };
+  static navigationOptions = { title: "通过消息 ID 列表删除消息" };
 
   state = { ids: "", result: "" };
 

@@ -39,6 +39,8 @@
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		394F1FA72247503500814C29 /* libRCIMLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 394F1FA622474FFE00814C29 /* libRCIMLib.a */; };
 		397A3E5F22475577006B4F36 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 397A3DF52247546D006B4F36 /* libsqlite3.tbd */; };
+		39BCF13A2249219E00A219E6 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39BCF10F2249219D00A219E6 /* libopencore-amrnb.a */; };
+		39BCF13C2249225E00A219E6 /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39BCF13B2249225E00A219E6 /* RongIMLib.framework */; };
 		525430D0415D4EA29E5525ED /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 879231949E594E3396802714 /* libRNGestureHandler-tvOS.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		98E913EF5BA945B0B33535CC /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BD8B97C6DD9470492E9CC11 /* libRNGestureHandler.a */; };
@@ -385,6 +387,8 @@
 		394F1FA122474FFE00814C29 /* RCIMLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCIMLib.xcodeproj; path = ../lib/ios/RCIMLib.xcodeproj; sourceTree = "<group>"; };
 		397A3DF52247546D006B4F36 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		397A3E64224778CD006B4F36 /* RongCloudIMLib.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RongCloudIMLib.entitlements; path = RongCloudIMLib/RongCloudIMLib.entitlements; sourceTree = "<group>"; };
+		39BCF10F2249219D00A219E6 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libopencore-amrnb.a"; path = "IMLib/libopencore-amrnb.a"; sourceTree = "<group>"; };
+		39BCF13B2249225E00A219E6 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RongIMLib.framework; path = IMLib/RongIMLib.framework; sourceTree = "<group>"; };
 		5717F2089EF64ED6927E309F /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		71535B571A454EC193B0F050 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
@@ -411,11 +415,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39BCF13A2249219E00A219E6 /* libopencore-amrnb.a in Frameworks */,
 				397A3E5F22475577006B4F36 /* libsqlite3.tbd in Frameworks */,
 				394F1FA72247503500814C29 /* libRCIMLib.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
+				39BCF13C2249225E00A219E6 /* RongIMLib.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -579,6 +585,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39BCF13B2249225E00A219E6 /* RongIMLib.framework */,
+				39BCF10F2249219D00A219E6 /* libopencore-amrnb.a */,
 				397A3DF52247546D006B4F36 /* libsqlite3.tbd */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
@@ -1410,12 +1418,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/IMLib",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-document-picker/ios/RNDocumentPicker",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
-					"$(SRCROOT)/RongIMLib.framework/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 				INFOPLIST_FILE = RongCloudIMLib/Info.plist;
@@ -1445,12 +1453,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/IMLib",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-document-picker/ios/RNDocumentPicker",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
-					"$(SRCROOT)/RongIMLib.framework/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 				INFOPLIST_FILE = RongCloudIMLib/Info.plist;

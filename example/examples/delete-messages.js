@@ -21,7 +21,7 @@ const style = StyleSheet.create({
 
 export default class extends React.PureComponent {
   static route = "DeleteMessages";
-  static navigationOptions = { title: "删除消息" };
+  static navigationOptions = { title: "清除会话消息" };
 
   state = {
     conversationType: 1,
@@ -73,7 +73,7 @@ export default class extends React.PureComponent {
           />
         </FormItem>
         <FormItem>
-          <Button title="删除消息" onPress={this.deleteMessages} />
+          <Button title="清除会话消息" onPress={this.deleteMessages} />
         </FormItem>
         <FormItem>
           <Text style={style.result}>{result}</Text>

@@ -8,6 +8,12 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
     }
+
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 }
 
 dependencies {

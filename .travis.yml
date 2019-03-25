@@ -35,19 +35,22 @@ jobs:
         - ls -lh app/build/outputs/apk/debug
         - ls -lh app/build/outputs/apk/release
 
-    # - stage: "build test for example"
-    #   language: objective-c
-    #   osx_image: xcode10.1
-    #   cache: *ios-cache
-    #   before_install:
-    #   script:
-    #     - nvm install node
-    #     - brew install yarn
-    #     - yarn
-    #     - yarn build
-    #     - cd ios
-    #     - xcodebuild -project RongCloudIMLib.xcodeproj -scheme RongCloudIMLib -sdk iphonesimulator -quiet
+    - stage: "build test for example"
+      language: objective-c
+      osx_image: xcode10.1
+      cache: *ios-cache
+      before_install:
+      script:
+        - nvm install node
+        - brew install yarn
+        - yarn
+        - yarn build
+        - cd ios
+        - wget http://downloads.rongcloud.cn/Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev.zip
+        - unzip -q Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev.zip
+        - mv Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev/IMLib IMLib
+        - xcodebuild -project RongCloudIMLib.xcodeproj -scheme RongCloudIMLib -sdk iphonesimulator -quiet
 
 stages:
   - name: "build test for example"
-    if: branch = master
+    # if: branch = master

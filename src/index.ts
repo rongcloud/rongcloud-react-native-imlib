@@ -178,6 +178,8 @@ export type SentMessageCallback = {
   error?: (errorCode: ErrorCode) => void;
 };
 
+export type MessageObjectName = "RC:TxtMsg" | "RC:FileMsg" | "RC:ImgMsg" | string;
+
 export enum MessageObjectNames {
   text = "RC:TxtMsg",
   image = "RC:ImgMsg",
@@ -402,4 +404,59 @@ export function deleteMessages(
     return RCIMClient.deleteMessagesByIds(typeOrIds);
   }
   return RCIMClient.deleteMessages(typeOrIds, targetId);
+}
+
+export type Conversation = {
+  conversationType: ConversationType;
+  conversationTitle: string;
+  isTop: boolean;
+  unreadMessageCount: number;
+  draft: string;
+  targetId: string;
+  objectName: string;
+  lastestMessageId: number;
+  lastestMessage: MessageContent;
+  receivedStatus: number;
+  receivedTime: number;
+  sentStatus: SentStatus;
+  senderUserId: string;
+};
+
+export type SearchConversationResult = {
+  conversation: Conversation;
+  matchCount: number;
+};
+
+/**
+ * 根据关键字搜索会话
+ *
+ * @param keyword 关键字
+ * @param conversationTypes 会话类型数组
+ * @param objectNames 对象名称数组
+ */
+export function searchConversations(
+  keyword: string,
+  conversationTypes: ConversationType[],
+  objectNames: MessageObjectName[]
+): Promise<SearchConversationResult[]> {
+  return RCIMClient.searchConversations(keyword, conversationTypes, objectNames);
+}
+
+/**
+ * 搜索消息
+ *
+ * @param conversationType
+ * @param targetId
+ * @param keyword
+ * @param count
+ * @param startTime
+ */
+export function searchMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  keyword: string,
+  count: number,
+  startTime = 0
+): Promise<Message[]> {
+  return RCIMClient.searchMessages(conversationType, targetId, keyword, count, startTime);
 }

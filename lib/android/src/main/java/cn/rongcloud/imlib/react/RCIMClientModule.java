@@ -9,10 +9,12 @@ import io.rong.imlib.RongIMClient.ConnectionStatusListener;
 import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
 import io.rong.imlib.RongIMClient.ResultCallback;
 import io.rong.imlib.RongIMClient.SendImageMessageCallback;
+import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.imlib.model.MessageContent;
+import io.rong.imlib.model.SearchConversationResult;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
@@ -279,16 +281,20 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getHistoryMessages(int type, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
-        ResultCallback<List<Message>> callback = new ResultCallback<List<Message>>() {
+        ResultCallback<List<Message>> callback = createMessagesCallback(promise);
+        ConversationType conversationType = ConversationType.setValue(type);
+        if (objectName.isEmpty()) {
+            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, oldestMessageId, count, callback);
+        } else {
+            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, objectName, oldestMessageId, count, callback);
+        }
+    }
+
+    ResultCallback<List<Message>> createMessagesCallback(final Promise promise) {
+        return new ResultCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {
-                WritableArray array = Arguments.createArray();
-                if (messages != null) {
-                    for (Message message : messages) {
-                        array.pushMap(messageToMap(message));
-                    }
-                }
-                promise.resolve(array);
+                promise.resolve(messagesToArray(messages));
             }
 
             @Override
@@ -296,12 +302,16 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 promise.reject(errorCode + "", "");
             }
         };
-        ConversationType conversationType = ConversationType.setValue(type);
-        if (objectName.isEmpty()) {
-            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, oldestMessageId, count, callback);
-        } else {
-            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, objectName, oldestMessageId, count, callback);
+    }
+
+    private ReadableArray messagesToArray(List<Message> messages) {
+        WritableArray array = Arguments.createArray();
+        if (messages != null) {
+            for (Message message : messages) {
+                array.pushMap(messageToMap(message));
+            }
         }
+        return array;
     }
 
     @ReactMethod
@@ -360,5 +370,62 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 promise.reject(errorCode + "", "");
             }
         };
+    }
+
+    @ReactMethod
+    public void searchConversations(String keyword, ReadableArray conversationTypes, ReadableArray objectNames, final Promise promise) {
+        ConversationType[] conversationTypesArray = new ConversationType[conversationTypes.size()];
+        for (int i = 0; i < conversationTypes.size(); i += 1) {
+            conversationTypesArray[i] = ConversationType.setValue(conversationTypes.getInt(i));
+        }
+
+        String[] objectNamesArray = new String[objectNames.size()];
+        for (int i = 0; i < objectNames.size(); i += 1) {
+            objectNamesArray[i] = objectNames.getString(i);
+        }
+
+        RongIMClient.getInstance().searchConversations(
+                keyword, conversationTypesArray, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
+                    @Override
+                    public void onSuccess(List<SearchConversationResult> conversations) {
+                        WritableArray result = Arguments.createArray();
+                        for (SearchConversationResult item : conversations) {
+                            WritableMap map = Arguments.createMap();
+                            map.putMap("conversation", conversationToMap(item.getConversation()));
+                            map.putInt("matchCount", item.getMatchCount());
+                        }
+                        promise.resolve(result);
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject(errorCode + "", "");
+                    }
+                });
+    }
+
+    private WritableMap conversationToMap(Conversation conversation) {
+        WritableMap map = Arguments.createMap();
+        map.putInt("conversationType", conversation.getConversationType().getValue());
+        map.putString("conversationTitle", conversation.getConversationTitle());
+        map.putBoolean("isTop", conversation.isTop());
+        map.putInt("unreadMessageCount", conversation.getUnreadMessageCount());
+        map.putString("draft", conversation.getDraft());
+        map.putString("targetId", conversation.getTargetId());
+        map.putString("objectName", conversation.getObjectName());
+        map.putInt("lastestMessageId", conversation.getLatestMessageId());
+        map.putMap("lastestMessage", messageContentToMap(conversation.getObjectName(), conversation.getLatestMessage()));
+        map.putInt("receivedStatus", conversation.getReceivedStatus().getFlag());
+        map.putDouble("receivedTime", conversation.getReceivedTime());
+        map.putInt("sentStatus", conversation.getSentStatus().getValue());
+        map.putString("senderUserId", conversation.getSenderUserId());
+        return map;
+    }
+
+    @ReactMethod
+    public void searchMessages(int conversationType, String targetId, String keyword, int count, double startTime, final Promise promise) {
+        ResultCallback<List<Message>> callback = createMessagesCallback(promise);
+        RongIMClient.getInstance().searchMessages(
+                ConversationType.setValue(conversationType), targetId, keyword, count, (long) startTime, callback);
     }
 }
