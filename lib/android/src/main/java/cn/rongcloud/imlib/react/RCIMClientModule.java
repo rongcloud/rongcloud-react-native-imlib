@@ -5,10 +5,7 @@ import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
-import io.rong.imlib.RongIMClient.ConnectionStatusListener;
-import io.rong.imlib.RongIMClient.OnReceiveMessageListener;
-import io.rong.imlib.RongIMClient.ResultCallback;
-import io.rong.imlib.RongIMClient.SendImageMessageCallback;
+import io.rong.imlib.RongIMClient.*;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
@@ -279,6 +276,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return messageContent;
     }
 
+    private Message mapToMessage(ReadableMap map) {
+        ConversationType conversationType = ConversationType.setValue(map.getInt("conversationType"));
+        ReadableMap content = map.getMap("content");
+        if (content == null) {
+            return null;
+        }
+        return Message.obtain(map.getString("targetId"), conversationType, mapToMessageContent(content));
+    }
+
     @ReactMethod
     public void getHistoryMessages(int type, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
         ResultCallback<List<Message>> callback = createMessagesCallback(promise);
@@ -363,6 +369,31 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             array[i] = ids.getInt(i);
         }
         RongIMClient.getInstance().deleteMessages(array, createDeleteMessagesCallback(promise));
+    }
+
+    @ReactMethod
+    public void deleteMessages(int type, String targetId, ReadableArray messages, final Promise promise) {
+        Message[] array = new Message[messages.size()];
+        for (int i = 0; i < messages.size(); i += 1) {
+            ReadableMap message = messages.getMap(i);
+            if (message == null) {
+                array[i] = null;
+            } else {
+                array[i] = mapToMessage(message);
+            }
+        }
+        RongIMClient.getInstance().deleteRemoteMessages(
+                ConversationType.setValue(type), targetId, array, new OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+                        promise.resolve(null);
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+                        promise.reject(errorCode + "", "");
+                    }
+                });
     }
 
     private ResultCallback<Boolean> createDeleteMessagesCallback(final Promise promise) {

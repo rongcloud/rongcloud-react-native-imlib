@@ -1,5 +1,4 @@
-import { NativeEventEmitter, NativeModules, Platform } from "react-native";
-import console = require("console");
+import { NativeEventEmitter, NativeModules } from "react-native";
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -8,7 +7,7 @@ const eventEmitter = new NativeEventEmitter(RCIMClient);
  * 初始化 SDK，只需要调用一次
  */
 export function init(appKey: string) {
-  return RCIMClient.init(appKey);
+  RCIMClient.init(appKey);
 }
 
 /**
@@ -464,10 +463,10 @@ export function searchMessages(
 /**
  * 获取服务端历史消息
  *
- * @param conversationType
- * @param targetId
- * @param sentTime
- * @param count
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param sentTime 清除消息截止时间戳，为 0 则清除会话所有服务端历史消息
+ * @param count 删除数量
  */
 export function getRemoteHistoryMessages(
   conversationType: ConversationType,
@@ -476,4 +475,34 @@ export function getRemoteHistoryMessages(
   count: number
 ): Promise<Message[]> {
   return RCIMClient.getRemoteHistoryMessages(conversationType, targetId, sentTime, count);
+}
+
+/**
+ * 清除服务端历史消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param sentTime 清除消息截止时间戳，为 0 则清除会话所有服务端历史消息
+ */
+export function cleanRemoteHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  sentTime: number
+): Promise<boolean> {
+  return RCIMClient.cleanRemoteHistoryMessages(conversationType, targetId, sentTime);
+}
+
+/**
+ * 清除服务端历史消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param messages 要删除的消息数组，数组大小不能超过 100 条
+ */
+export function deleteRemoteMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  messages: Message[]
+): Promise<boolean> {
+  return RCIMClient.deleteRemoteMessages(conversationType, targetId, messages);
 }
