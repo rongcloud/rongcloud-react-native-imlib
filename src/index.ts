@@ -530,3 +530,16 @@ export function getConversationList(
 ): Promise<Conversation[]> {
   return RCIMClient.getConversationList(conversationTypes);
 }
+
+/**
+ * 从会话列表中移除某一会话，但是不删除会话内的消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function removeConversation(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<Conversation> {
+  return RCIMClient.removeConversation(conversationType, targetId);
+}

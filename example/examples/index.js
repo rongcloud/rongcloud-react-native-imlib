@@ -13,6 +13,7 @@ import SearchConversations from "./search-conversations";
 import SearchMessages from "./search-messages";
 import GetConversation from "./get-conversation";
 import GetConversations from "./get-conversations";
+import RemoveConversation from "./remove-conversation";
 
 const examples = [
   Connect,
@@ -26,7 +27,8 @@ const examples = [
   SearchConversations,
   SearchMessages,
   GetConversation,
-  GetConversations
+  GetConversations,
+  RemoveConversation
 ];
 
 export default class extends React.PureComponent {
@@ -55,5 +57,6 @@ export {
   SearchConversations,
   SearchMessages,
   GetConversation,
-  GetConversations
+  GetConversations,
+  RemoveConversation
 };

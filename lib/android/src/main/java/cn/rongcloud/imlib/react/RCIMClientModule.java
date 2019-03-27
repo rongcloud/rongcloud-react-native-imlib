@@ -516,4 +516,20 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().getConversationList(callback);
         }
     }
+
+    @ReactMethod
+    public void removeConversation(int conversationType, String targetId, final Promise promise) {
+        RongIMClient.getInstance().removeConversation(
+                ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        promise.resolve(result);
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
 }
