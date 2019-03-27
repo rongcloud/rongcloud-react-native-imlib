@@ -290,7 +290,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         }
     }
 
-    ResultCallback<List<Message>> createMessagesCallback(final Promise promise) {
+    @ReactMethod
+    public void getRemoteHistoryMessages(int type, String targetId, double sentTime, int count, final Promise promise) {
+        ResultCallback<List<Message>> callback = createMessagesCallback(promise);
+        ConversationType conversationType = ConversationType.setValue(type);
+        RongIMClient.getInstance().getRemoteHistoryMessages(conversationType, targetId, (long) sentTime, count, callback);
+    }
+
+    private ResultCallback<List<Message>> createMessagesCallback(final Promise promise) {
         return new ResultCallback<List<Message>>() {
             @Override
             public void onSuccess(List<Message> messages) {

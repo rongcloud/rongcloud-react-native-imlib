@@ -5,6 +5,7 @@ import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
 import GetHistoryMessages from "./get-history-messages";
+import GetRemoteHistoryMessages from "./get-remote-history-messages";
 import InsertMessage from "./insert-message";
 import DeleteMessages from "./delete-messages";
 import DeleteMessagesByIds from "./delete-messages-by-ids";
@@ -16,6 +17,7 @@ const examples = [
   ReceiveMessage,
   SendMessage,
   GetHistoryMessages,
+  GetRemoteHistoryMessages,
   InsertMessage,
   DeleteMessages,
   DeleteMessagesByIds,
@@ -42,6 +44,7 @@ export {
   ReceiveMessage,
   SendMessage,
   GetHistoryMessages,
+  GetRemoteHistoryMessages,
   InsertMessage,
   DeleteMessages,
   DeleteMessagesByIds,

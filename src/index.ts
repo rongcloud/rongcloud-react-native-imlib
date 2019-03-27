@@ -460,3 +460,20 @@ export function searchMessages(
 ): Promise<Message[]> {
   return RCIMClient.searchMessages(conversationType, targetId, keyword, count, startTime);
 }
+
+/**
+ * 获取服务端历史消息
+ *
+ * @param conversationType
+ * @param targetId
+ * @param sentTime
+ * @param count
+ */
+export function getRemoteHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  sentTime: number,
+  count: number
+): Promise<Message[]> {
+  return RCIMClient.getRemoteHistoryMessages(conversationType, targetId, sentTime, count);
+}
