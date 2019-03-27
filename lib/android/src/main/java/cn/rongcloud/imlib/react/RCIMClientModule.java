@@ -7,6 +7,7 @@ import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
 import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.Message.SentStatus;
@@ -524,6 +525,41 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onSuccess(Boolean result) {
                         promise.resolve(result);
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void setConversationNotificationStatus(int conversationType, String targetId, int status, final Promise promise) {
+        RongIMClient.getInstance().setConversationNotificationStatus(
+                ConversationType.setValue(conversationType),
+                targetId,
+                ConversationNotificationStatus.setValue(status),
+                new ResultCallback<ConversationNotificationStatus>() {
+                    @Override
+                    public void onSuccess(ConversationNotificationStatus status) {
+                        promise.resolve(status.getValue());
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void getConversationNotificationStatus(int conversationType, String targetId, final Promise promise) {
+        RongIMClient.getInstance().getConversationNotificationStatus(
+                ConversationType.setValue(conversationType), targetId, new ResultCallback<ConversationNotificationStatus>() {
+                    @Override
+                    public void onSuccess(ConversationNotificationStatus status) {
+                        promise.resolve(status.getValue());
                     }
 
                     @Override

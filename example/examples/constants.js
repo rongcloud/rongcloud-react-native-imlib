@@ -1,4 +1,8 @@
-import { ConversationType, SentStatus } from "react-native-rongcloud-imlib";
+import {
+  ConversationType,
+  SentStatus,
+  ConversationNotificationStatus
+} from "react-native-rongcloud-imlib";
 
 export const conversations = {
   [ConversationType.PRIVATE]: "私聊",
@@ -18,4 +22,9 @@ export const sentStatus = {
   [SentStatus.READ]: "对方已读",
   [SentStatus.DESTROYED]: "对方已销毁",
   [SentStatus.CANCELED]: "发送已取消"
+};
+
+export const conversationNotificationStatus = {
+  [ConversationNotificationStatus.DO_NOT_DISTURB]: "免打扰",
+  [ConversationNotificationStatus.NOTIFY]: "消息提醒"
 };

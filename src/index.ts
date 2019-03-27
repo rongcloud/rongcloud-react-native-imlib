@@ -543,3 +543,43 @@ export function removeConversation(
 ): Promise<Conversation> {
   return RCIMClient.removeConversation(conversationType, targetId);
 }
+
+/**
+ * 会话提醒状态
+ */
+export enum ConversationNotificationStatus {
+  DO_NOT_DISTURB,
+  NOTIFY
+}
+
+/**
+ * 设置会话消息提醒状态
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param notificationStatus 会话提醒状态
+ */
+export function setConversationNotificationStatus(
+  conversationType: ConversationType,
+  targetId: string,
+  notificationStatus: ConversationNotificationStatus
+): Promise<Conversation> {
+  return RCIMClient.setConversationNotificationStatus(
+    conversationType,
+    targetId,
+    notificationStatus
+  );
+}
+
+/**
+ * 获取会话消息提醒状态
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getConversationNotificationStatus(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<Conversation> {
+  return RCIMClient.getConversationNotificationStatus(conversationType, targetId);
+}
