@@ -11,6 +11,8 @@ import DeleteMessages from "./delete-messages";
 import DeleteMessagesByIds from "./delete-messages-by-ids";
 import SearchConversations from "./search-conversations";
 import SearchMessages from "./search-messages";
+import GetConversation from "./get-conversation";
+import GetConversations from "./get-conversations";
 
 const examples = [
   Connect,
@@ -22,7 +24,9 @@ const examples = [
   DeleteMessages,
   DeleteMessagesByIds,
   SearchConversations,
-  SearchMessages
+  SearchMessages,
+  GetConversation,
+  GetConversations
 ];
 
 export default class extends React.PureComponent {
@@ -49,5 +53,7 @@ export {
   DeleteMessages,
   DeleteMessagesByIds,
   SearchConversations,
-  SearchMessages
+  SearchMessages,
+  GetConversation,
+  GetConversations
 };

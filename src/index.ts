@@ -506,3 +506,27 @@ export function deleteRemoteMessages(
 ): Promise<boolean> {
   return RCIMClient.deleteRemoteMessages(conversationType, targetId, messages);
 }
+
+/**
+ * 获取会话
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getConversation(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<Conversation> {
+  return RCIMClient.getConversation(conversationType, targetId);
+}
+
+/**
+ * 获取会话列表
+ *
+ * @param conversationTypes 会话类型
+ */
+export function getConversationList(
+  conversationTypes: ConversationType[] = []
+): Promise<Conversation[]> {
+  return RCIMClient.getConversationList(conversationTypes);
+}

@@ -412,10 +412,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void searchConversations(String keyword, ReadableArray conversationTypes, ReadableArray objectNames, final Promise promise) {
-        ConversationType[] conversationTypesArray = new ConversationType[conversationTypes.size()];
-        for (int i = 0; i < conversationTypes.size(); i += 1) {
-            conversationTypesArray[i] = ConversationType.setValue(conversationTypes.getInt(i));
-        }
+        ConversationType[] conversationTypesArray = arrayToConversationTypes(conversationTypes);
 
         String[] objectNamesArray = new String[objectNames.size()];
         for (int i = 0; i < objectNames.size(); i += 1) {
@@ -460,10 +457,63 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return map;
     }
 
+    private void reject(Promise promise, ErrorCode errorcode) {
+        promise.reject(errorcode.getValue() + "", errorcode.getMessage());
+    }
+
     @ReactMethod
     public void searchMessages(int conversationType, String targetId, String keyword, int count, double startTime, final Promise promise) {
         ResultCallback<List<Message>> callback = createMessagesCallback(promise);
         RongIMClient.getInstance().searchMessages(
                 ConversationType.setValue(conversationType), targetId, keyword, count, (long) startTime, callback);
+    }
+
+    @ReactMethod
+    public void getConversation(int conversationType, String targetId, final Promise promise) {
+        RongIMClient.getInstance().getConversation(
+                ConversationType.setValue(conversationType), targetId, new ResultCallback<Conversation>() {
+                    @Override
+                    public void onSuccess(Conversation conversation) {
+                        promise.resolve(conversationToMap(conversation));
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    private ConversationType[] arrayToConversationTypes(ReadableArray array) {
+        ConversationType[] conversationTypesArray = new ConversationType[array.size()];
+        for (int i = 0; i < array.size(); i += 1) {
+            conversationTypesArray[i] = ConversationType.setValue(array.getInt(i));
+        }
+        return conversationTypesArray;
+    }
+
+    @ReactMethod
+    public void getConversationList(ReadableArray conversationTypes, final Promise promise) {
+        ConversationType[] types = arrayToConversationTypes(conversationTypes);
+        ResultCallback<List<Conversation>> callback = new ResultCallback<List<Conversation>>() {
+            @Override
+            public void onSuccess(List<Conversation> conversations) {
+                WritableArray array = Arguments.createArray();
+                for (Conversation conversation : conversations) {
+                    array.pushMap(conversationToMap(conversation));
+                }
+                promise.resolve(array);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        };
+        if (types.length > 0) {
+            RongIMClient.getInstance().getConversationList(callback, types);
+        } else {
+            RongIMClient.getInstance().getConversationList(callback);
+        }
     }
 }
