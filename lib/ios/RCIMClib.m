@@ -194,12 +194,137 @@ RCT_EXPORT_METHOD(deleteMessagesByIds
   resolve(@([RCIMClient.sharedRCIMClient deleteMessages:ids]));
 }
 
+RCT_EXPORT_METHOD(searchConversations
+                  : (NSString *)keyword
+                  : (NSArray<NSNumber *> *)conversationTypes
+                  : (NSArray<NSString *> *)messageTypes
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray<RCSearchConversationResult *> *results =
+      [RCIMClient.sharedRCIMClient searchConversations:conversationTypes
+                                           messageType:messageTypes
+                                               keyword:keyword];
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:results.count];
+  for (int i = 0; i < results.count; i += 1) {
+    array[i] = @{
+      @"matchCount" : @(results[i].matchCount),
+      @"conversation" : [self dictionaryFromConversation:results[i].conversation]
+    };
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(searchMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSString *)keyword
+                  : (int)count
+                  : (double)startTime
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *messages = [RCIMClient.sharedRCIMClient searchMessages:conversationType
+                                                         targetId:targetId
+                                                          keyword:keyword
+                                                            count:count
+                                                        startTime:startTime];
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+  for (int i = 0; i < messages.count; i += 1) {
+    array[i] = [self dictionaryFromMessage:messages[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(getConversation
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCConversation *conversation = [RCIMClient.sharedRCIMClient getConversation:conversationType
+                                                                     targetId:targetId];
+  resolve([self dictionaryFromConversation:conversation]);
+}
+
+RCT_EXPORT_METHOD(removeConversation
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient removeConversation:conversationType targetId:targetId]));
+}
+
+RCT_EXPORT_METHOD(getConversationList
+                  : (NSArray<NSNumber *> *)conversationTypes
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes];
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
+  for (int i = 0; i < list.count; i += 1) {
+    array[i] = [self dictionaryFromConversation:list[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(setConversationNotificationStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (int)status
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient setConversationNotificationStatus:conversationType
+      targetId:targetId
+      isBlocked:!status
+      success:^(RCConversationNotificationStatus status) {
+        resolve(@(status));
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getConversationNotificationStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getConversationNotificationStatus:conversationType
+      targetId:targetId
+      success:^(RCConversationNotificationStatus status) {
+        resolve(@(status));
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
 
 - (void)onReceived:(RCMessage *)message left:(int)left object:(id)object {
   [self sendEventWithName:@"rcimlib-receive-message" body:[self dictionaryFromMessage:message]];
+}
+
+- (void)reject:(RCTPromiseRejectBlock)reject error:(RCErrorCode)error {
+  reject([@(error) stringValue], @"", nil);
+}
+
+- (NSDictionary *)dictionaryFromConversation:(RCConversation *)conversation {
+  return @{
+    @"conversationType" : @(conversation.conversationType),
+    @"conversationTitle" : conversation.conversationTitle,
+    @"isTop" : @(conversation.isTop),
+    @"unreadMessageCount" : @(conversation.unreadMessageCount),
+    @"draft" : conversation.draft,
+    @"targetId" : conversation.targetId,
+    @"objectName" : conversation.objectName,
+    @"lastestMessageId" : @(conversation.lastestMessageId),
+    @"lastestMessage" : [self dictionaryFromMessageContent:conversation.lastestMessage],
+    @"receivedStatus" : @(conversation.receivedStatus),
+    @"receivedTime" : @(conversation.receivedTime),
+    @"sentTime" : @(conversation.sentTime),
+    @"sentStatus" : @(conversation.sentStatus),
+    @"senderUserId" : conversation.senderUserId,
+  };
 }
 
 - (NSDictionary *)dictionaryFromMessage:(RCMessage *)message {

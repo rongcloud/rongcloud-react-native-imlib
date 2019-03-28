@@ -33,13 +33,13 @@ export default class extends React.PureComponent {
       targetId,
       parseInt(status)
     );
-    this.setState({ result: "消息提醒状态：" + result });
+    this.setState({ result: "设置消息提醒状态：" + result });
   };
 
   getStatus = async () => {
     const { conversationType, targetId } = this.state;
     const result = await getConversationNotificationStatus(parseInt(conversationType), targetId);
-    this.setState({ result: "消息提醒状态：" + result });
+    this.setState({ result: "获取消息提醒状态：" + result });
   };
 
   render() {
