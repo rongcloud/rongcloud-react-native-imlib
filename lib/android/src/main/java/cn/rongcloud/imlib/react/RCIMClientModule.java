@@ -454,6 +454,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         map.putInt("receivedStatus", conversation.getReceivedStatus().getFlag());
         map.putDouble("receivedTime", conversation.getReceivedTime());
         map.putInt("sentStatus", conversation.getSentStatus().getValue());
+        map.putDouble("sentTime", conversation.getSentTime());
         map.putString("senderUserId", conversation.getSenderUserId());
         return map;
     }
@@ -567,5 +568,73 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                         reject(promise, errorCode);
                     }
                 });
+    }
+
+    @ReactMethod
+    public void saveTextMessageDraft(int conversationType, String targetId, String content, final Promise promise) {
+        RongIMClient.getInstance().saveTextMessageDraft(
+                ConversationType.setValue(conversationType), targetId, content, new ResultCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        promise.resolve(result);
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void getTextMessageDraft(int conversationType, String targetId, final Promise promise) {
+        RongIMClient.getInstance().getTextMessageDraft(
+                ConversationType.setValue(conversationType), targetId, new ResultCallback<String>() {
+                    @Override
+                    public void onSuccess(String content) {
+                        promise.resolve(content);
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void getTotalUnreadCount(final Promise promise) {
+        RongIMClient.getInstance().getTotalUnreadCount(new ResultCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer count) {
+                promise.resolve(count);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getUnreadCount(int conversationType, String targetId, ReadableArray conversationTypes, final Promise promise) {
+        ResultCallback<Integer> callback = new ResultCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer count) {
+                promise.resolve(count);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        };
+        if (conversationType == 0) {
+            ConversationType[] types = arrayToConversationTypes(conversationTypes);
+            RongIMClient.getInstance().getUnreadCount(callback, types);
+        } else {
+            RongIMClient.getInstance().getUnreadCount(ConversationType.setValue(conversationType), targetId, callback);
+        }
     }
 }

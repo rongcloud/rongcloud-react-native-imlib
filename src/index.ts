@@ -580,6 +580,69 @@ export function setConversationNotificationStatus(
 export function getConversationNotificationStatus(
   conversationType: ConversationType,
   targetId: string
-): Promise<Conversation> {
+): Promise<ConversationNotificationStatus> {
   return RCIMClient.getConversationNotificationStatus(conversationType, targetId);
+}
+
+/**
+ * 保存某一会话的文本消息草稿
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param content 草稿内容
+ */
+export function saveTextMessageDraft(
+  conversationType: ConversationType,
+  targetId: string,
+  content: string
+): Promise<boolean> {
+  return RCIMClient.saveTextMessageDraft(conversationType, targetId, content);
+}
+
+/**
+ * 获取某一会话的文本消息草稿
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getTextMessageDraft(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<string> {
+  return RCIMClient.getTextMessageDraft(conversationType, targetId);
+}
+
+/**
+ * 获取所有未读消息数
+ */
+export function getTotalUnreadCount(): Promise<number> {
+  return RCIMClient.getTotalUnreadCount();
+}
+
+/**
+ * 获取指定会话的未读消息数
+ *
+ * @param conversationTypes 会话类型列表
+ */
+export function getUnreadCount(conversationTypes: ConversationType[]): Promise<number>;
+
+/**
+ * 获取指定会话的未读消息数
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getUnreadCount(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<number>;
+
+export function getUnreadCount(
+  conversationType: ConversationType | ConversationType[],
+  targetId = ""
+): Promise<number> {
+  if (Array.isArray(conversationType)) {
+    return RCIMClient.getUnreadCount(0, "", conversationType);
+  }
+  return RCIMClient.getUnreadCount(conversationType, targetId, []);
 }

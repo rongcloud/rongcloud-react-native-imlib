@@ -15,6 +15,8 @@ import GetConversation from "./get-conversation";
 import GetConversations from "./get-conversations";
 import RemoveConversation from "./remove-conversation";
 import ConversationNotificationStatus from "./conversation-notification-status";
+import TextMessageDraft from "./text-message-draft";
+import GetUnreadCount from "./get-unread-count";
 
 const examples = [
   Connect,
@@ -30,7 +32,9 @@ const examples = [
   GetConversation,
   GetConversations,
   RemoveConversation,
-  ConversationNotificationStatus
+  ConversationNotificationStatus,
+  TextMessageDraft,
+  GetUnreadCount
 ];
 
 export default class extends React.PureComponent {
@@ -61,5 +65,7 @@ export {
   GetConversation,
   GetConversations,
   RemoveConversation,
-  ConversationNotificationStatus
+  ConversationNotificationStatus,
+  TextMessageDraft,
+  GetUnreadCount
 };

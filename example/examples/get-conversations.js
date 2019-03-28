@@ -24,6 +24,7 @@ export default class extends React.PureComponent {
     const conversations = await getConversationList(
       conversationTypes.split(",").map(i => parseInt(i))
     );
+    console.log(conversations);
     this.setState({ conversations });
   };
 
@@ -43,7 +44,7 @@ export default class extends React.PureComponent {
         </FormItem>
         {conversations.length === 0 && <Text style={style.item}>No messages.</Text>}
         {conversations.map(item => (
-          <Text style={style.item} key={item.conversation.receivedTime}>
+          <Text style={style.item} key={item.receivedTime}>
             {JSON.stringify(item, null, 2)}
           </Text>
         ))}
