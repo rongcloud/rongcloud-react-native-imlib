@@ -9,7 +9,7 @@ const style = StyleSheet.create({
 });
 
 export default class extends React.PureComponent {
-  static route = "BlackList";
+  static route = "Blacklist";
   static navigationOptions = { title: "黑名单" };
 
   state = { userId: "vh6a0VoDJ", result: "" };

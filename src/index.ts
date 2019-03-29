@@ -698,3 +698,73 @@ export function getBlacklistStatus(userId: string): Promise<boolean> {
 export function getBlacklist(): Promise<string[]> {
   return RCIMClient.getBlacklist();
 }
+
+/**
+ * 加入聊天室，如果已存在，直接加入，否则创建并加入
+ *
+ * @param targetId 聊天室 ID
+ * @param messageCount 默认获取的消息数量，最多 50
+ */
+export function joinChatRoom(targetId: string, messageCount = 10): Promise<void> {
+  return RCIMClient.joinChatRoom(targetId, messageCount);
+}
+
+/**
+ * 加入已存在的聊天室，如果不存在则加入失败
+ *
+ * @param targetId 聊天室 ID
+ * @param messageCount 默认获取的消息数量，最多 50
+ */
+export function joinExistChatRoom(targetId: string, messageCount = 10): Promise<void> {
+  return RCIMClient.joinExistChatRoom(targetId, messageCount);
+}
+
+/**
+ * 退出聊天室
+ *
+ * @param targetId 聊天室 ID
+ */
+export function quitChatRoom(targetId: string): Promise<void> {
+  return RCIMClient.quitChatRoom(targetId);
+}
+
+/**
+ * 聊天室成员排序，按加入时间
+ */
+export enum ChatRoomMemberOrder {
+  ASC = 1, // 升序
+  DESC // 降序
+}
+
+/**
+ * 聊天室成员信息
+ */
+export type MemberInfo = {
+  userId: string;
+  joinTime: number;
+};
+
+/**
+ * 聊天室信息
+ */
+export type ChatRoomInfo = {
+  targetId: string;
+  memberOrder: ChatRoomMemberOrder;
+  totalMemberCount: number;
+  members: MemberInfo[];
+};
+
+/**
+ * 获取聊天室信息
+ *
+ * @param targetId 聊天室 ID
+ * @param memberCount 聊天室成员数量，最多获取 20 个
+ * @param order 返回的聊天室成员排序方式
+ */
+export function getChatRoomInfo(
+  targetId: string,
+  memberCount: number = 20,
+  order: ChatRoomMemberOrder = ChatRoomMemberOrder.ASC
+): Promise<ChatRoomInfo> {
+  return RCIMClient.getChatRoomInfo(targetId, memberCount, order);
+}

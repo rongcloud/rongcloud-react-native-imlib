@@ -6,13 +6,11 @@ import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEm
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
-import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.*;
+import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
-import io.rong.imlib.model.Message;
 import io.rong.imlib.model.Message.SentStatus;
-import io.rong.imlib.model.MessageContent;
-import io.rong.imlib.model.SearchConversationResult;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
@@ -690,7 +688,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void removeFromBlacklist(String userId, final Promise promise) {
-        RongIMClient.getInstance().addToBlacklist(userId, createOperationCallback(promise));
+        RongIMClient.getInstance().removeFromBlacklist(userId, createOperationCallback(promise));
     }
 
     @ReactMethod
@@ -718,6 +716,50 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     array.pushString(string);
                 }
                 promise.resolve(array);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void joinChatRoom(String targetId, int messageCount, final Promise promise) {
+        RongIMClient.getInstance().joinChatRoom(targetId, messageCount, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void joinExistChatRoom(String targetId, int messageCount, final Promise promise) {
+        RongIMClient.getInstance().joinExistChatRoom(targetId, messageCount, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void quitChatRoom(String targetId, final Promise promise) {
+        RongIMClient.getInstance().quitChatRoom(targetId, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getChatRoomInfo(String targetId, int memberCount, int order, final Promise promise) {
+        ChatRoomMemberOrder memberOrder = order == ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_ASC.getValue() ?
+                ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_ASC : ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_DESC;
+        RongIMClient.getInstance().getChatRoomInfo(targetId, memberCount, memberOrder, new ResultCallback<ChatRoomInfo>() {
+            @Override
+            public void onSuccess(ChatRoomInfo chatRoomInfo) {
+                WritableMap map = Arguments.createMap();
+                map.putString("targetId", chatRoomInfo.getChatRoomId());
+                map.putInt("totalMemberCount", chatRoomInfo.getTotalMemberCount());
+                map.putInt("memberOrder", chatRoomInfo.getMemberOrder().getValue());
+                WritableArray array = Arguments.createArray();
+                for (ChatRoomMemberInfo member : chatRoomInfo.getMemberInfo()) {
+                    WritableMap item = Arguments.createMap();
+                    item.putString("userId", member.getUserId());
+                    item.putDouble("joinTime", member.getJoinTime());
+                    array.pushMap(item);
+                }
+                map.putArray("members", array);
+                promise.resolve(map);
             }
 
             @Override

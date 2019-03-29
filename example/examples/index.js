@@ -18,8 +18,8 @@ import ConversationNotificationStatus from "./conversation-notification-status";
 import TextMessageDraft from "./text-message-draft";
 import GetUnreadCount from "./get-unread-count";
 import Blacklist from "./blacklist";
+import ChatRoom from "./chat-room";
 
-console.log(Blacklist)
 const examples = [
   Connect,
   ReceiveMessage,
@@ -37,7 +37,8 @@ const examples = [
   ConversationNotificationStatus,
   TextMessageDraft,
   GetUnreadCount,
-  Blacklist
+  Blacklist,
+  ChatRoom
 ];
 
 export default class extends React.PureComponent {
@@ -71,5 +72,6 @@ export {
   ConversationNotificationStatus,
   TextMessageDraft,
   GetUnreadCount,
-  Blacklist
+  Blacklist,
+  ChatRoom
 };
