@@ -296,6 +296,270 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
       }];
 }
 
+RCT_EXPORT_METHOD(saveTextMessageDraft
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSString *)content
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient saveTextMessageDraft:conversationType
+                                                     targetId:targetId
+                                                      content:content]));
+}
+
+RCT_EXPORT_METHOD(getTextMessageDraft
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve([RCIMClient.sharedRCIMClient getTextMessageDraft:conversationType targetId:targetId]);
+}
+
+RCT_EXPORT_METHOD(getTotalUnreadCount
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient getTotalUnreadCount]));
+}
+
+RCT_EXPORT_METHOD(getUnreadCount
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSArray<NSNumber *> *)conversationTypes
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  if (conversationType == 0) {
+    resolve(@([RCIMClient.sharedRCIMClient getUnreadCount:conversationTypes]));
+  } else {
+    resolve(@([RCIMClient.sharedRCIMClient getUnreadCount:conversationType targetId:targetId]));
+  }
+}
+
+RCT_EXPORT_METHOD(clearMessagesUnreadStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)time
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  if (time == 0) {
+    resolve(@([RCIMClient.sharedRCIMClient clearMessagesUnreadStatus:conversationType
+                                                            targetId:targetId]));
+  } else {
+    resolve(@([RCIMClient.sharedRCIMClient clearMessagesUnreadStatus:conversationType
+                                                            targetId:targetId
+                                                                time:time]));
+  }
+}
+
+RCT_EXPORT_METHOD(addToBlacklist
+                  : (NSString *)userId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient addToBlacklist:userId
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(removeFromBlacklist
+                  : (NSString *)userId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient removeFromBlacklist:userId
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getBlacklistStatus
+                  : (NSString *)userId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getBlacklistStatus:userId
+      success:^(int status) {
+        resolve(@(status == 0));
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getBlacklist : (RCTPromiseResolveBlock)resolve : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient
+      getBlacklist:^(NSArray *ids) {
+        resolve(ids);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(joinChatRoom
+                  : (NSString *)targetId
+                  : (int)messageCount
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient joinChatRoom:targetId
+      messageCount:messageCount
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(joinExistChatRoom
+                  : (NSString *)targetId
+                  : (int)messageCount
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient joinExistChatRoom:targetId
+      messageCount:messageCount
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(quitChatRoom
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient quitChatRoom:targetId
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getChatRoomInfo
+                  : (NSString *)targetId
+                  : (int)count
+                  : (int)order
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getChatRoomInfo:targetId
+      count:count
+      order:order
+      success:^(RCChatRoomInfo *chatRoomInfo) {
+        resolve([self fromChatRoomInfo:chatRoomInfo]);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(createDiscussion
+                  : (NSString *)name
+                  : (NSArray<NSString *> *)userList
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient createDiscussion:name
+      userIdList:userList
+      success:^(RCDiscussion *discussion) {
+        resolve(discussion.discussionId);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getDiscussion
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getDiscussion:targetId
+      success:^(RCDiscussion *discussion) {
+        resolve([self fromDiscussion:discussion]);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(quitDiscussion
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient quitChatRoom:targetId
+      success:^(void) {
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(addMemberToDiscussion
+                  : (NSString *)targetId
+                  : (NSArray<NSString *> *)userList
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient addMemberToDiscussion:targetId
+      userIdList:userList
+      success:^(RCDiscussion *discussion) {
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(removeMemberFromDiscussion
+                  : (NSString *)targetId
+                  : (NSString *)userId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient removeMemberFromDiscussion:targetId
+      userId:userId
+      success:^(RCDiscussion *discussion) {
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(setDiscussionName
+                  : (NSString *)targetId
+                  : (NSString *)name
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient setDiscussionName:targetId
+      name:name
+      success:^(void) {
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(setDiscussionInviteStatus
+                  : (NSString *)targetId
+                  : (BOOL)isOpen
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient setDiscussionInviteStatus:targetId
+      isOpen:isOpen
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
@@ -306,6 +570,36 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
 
 - (void)reject:(RCTPromiseRejectBlock)reject error:(RCErrorCode)error {
   reject([@(error) stringValue], @"", nil);
+}
+
+- (NSDictionary *)fromDiscussion:(RCDiscussion *)discussion {
+  return @{
+    @"id" : discussion.discussionId,
+    @"name" : discussion.discussionName,
+    @"creatorId" : discussion.creatorId,
+    @"isOpen" : @((BOOL)(discussion.inviteStatus == 0)),
+    @"memberIdList" : discussion.memberIdList,
+  };
+}
+
+- (NSArray *)fromMemberInfoArray:(NSArray<RCChatRoomMemberInfo *> *)list {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
+  for (int i = 0; i < list.count; i += 1) {
+    array[i] = @{
+      @"userId" : list[i].userId,
+      @"joinTime" : @(list[i].joinTime),
+    };
+  }
+  return array;
+}
+
+- (NSDictionary *)fromChatRoomInfo:(RCChatRoomInfo *)chatRoomInfo {
+  return @{
+    @"targetId" : chatRoomInfo.targetId,
+    @"memberOrder" : @(chatRoomInfo.memberOrder),
+    @"totalMemberCount" : @(chatRoomInfo.totalMemberCount),
+    @"members" : [self fromMemberInfoArray:chatRoomInfo.memberInfoArray],
+  };
 }
 
 - (NSDictionary *)dictionaryFromConversation:(RCConversation *)conversation {
@@ -368,8 +662,15 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
       @"size" : @(file.size),
       @"extra" : file.extra ? file.extra : @"",
     };
+  } else if ([content isKindOfClass:[RCDiscussionNotificationMessage class]]) {
+    RCDiscussionNotificationMessage *message = (RCDiscussionNotificationMessage *)content;
+    return @{
+      @"type" : @(message.type),
+      @"operatorId" : message.operatorId,
+      @"extension" : message.extension,
+    };
   }
-  return nil;
+  return @{@"error" : @"Content type not yet supported"};
 }
 
 - (RCMessageContent *)messageContentFromDictionary:(NSDictionary *)content {

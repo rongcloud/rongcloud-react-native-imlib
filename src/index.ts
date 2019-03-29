@@ -684,7 +684,7 @@ export function removeFromBlacklist(userId: string): Promise<void> {
  * 获取某用户是否在黑名单中
  *
  * @param userId 用户 ID
- * @return 是否在黑名单种
+ * @return 是否在黑名单中
  */
 export function getBlacklistStatus(userId: string): Promise<boolean> {
   return RCIMClient.getBlacklistStatus(userId);
@@ -804,7 +804,7 @@ export function getDiscussion(targetId: string): Promise<Discussion> {
  *
  * @param targetId 讨论组 ID
  */
-export function quitDiscussion(targetId: string): Promise<Discussion> {
+export function quitDiscussion(targetId: string): Promise<void> {
   return RCIMClient.quitDiscussion(targetId);
 }
 
