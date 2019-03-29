@@ -19,6 +19,7 @@ import TextMessageDraft from "./text-message-draft";
 import GetUnreadCount from "./get-unread-count";
 import Blacklist from "./blacklist";
 import ChatRoom from "./chat-room";
+import CreateDiscussion from "./create-discussion";
 
 const examples = [
   Connect,
@@ -38,7 +39,8 @@ const examples = [
   TextMessageDraft,
   GetUnreadCount,
   Blacklist,
-  ChatRoom
+  ChatRoom,
+  CreateDiscussion
 ];
 
 export default class extends React.PureComponent {
@@ -73,5 +75,6 @@ export {
   TextMessageDraft,
   GetUnreadCount,
   Blacklist,
-  ChatRoom
+  ChatRoom,
+  CreateDiscussion
 };

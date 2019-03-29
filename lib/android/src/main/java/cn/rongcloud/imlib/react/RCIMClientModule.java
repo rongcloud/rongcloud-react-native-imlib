@@ -16,6 +16,7 @@ import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
@@ -760,6 +761,26 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 }
                 map.putArray("members", array);
                 promise.resolve(map);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void createDiscussion(String name, ReadableArray userList, final Promise promise) {
+        userList.toArrayList();
+        ArrayList<String> array = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i += 1) {
+            array.add(userList.getString(i));
+        }
+        RongIMClient.getInstance().createDiscussion(name, array, new CreateDiscussionCallback() {
+            @Override
+            public void onSuccess(String targetId) {
+                promise.resolve(targetId);
             }
 
             @Override

@@ -1,4 +1,5 @@
 import { NativeEventEmitter, NativeModules } from "react-native";
+import { func } from "prop-types";
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -767,4 +768,14 @@ export function getChatRoomInfo(
   order: ChatRoomMemberOrder = ChatRoomMemberOrder.ASC
 ): Promise<ChatRoomInfo> {
   return RCIMClient.getChatRoomInfo(targetId, memberCount, order);
+}
+
+/**
+ * 创建讨论组
+ *
+ * @param name 讨论组名称
+ * @param userList 用户 ID 列表
+ */
+export function createDiscussion(name: string, userList: string[]) {
+  return RCIMClient.createDiscussion(name, userList);
 }
