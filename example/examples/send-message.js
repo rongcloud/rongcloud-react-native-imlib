@@ -29,12 +29,14 @@ export default class extends React.PureComponent {
     conversationType: 1,
     messageType: "text",
     targetId: "vh6a0VoDJ",
+    pushContent: "",
     content: {},
     result: ""
   };
 
   setTargetId = targetId => this.setState({ targetId });
   setTextContent = content => this.setState({ content: { type: "text", content } });
+  setPushContent = pushContent => this.setState({ pushContent });
 
   pickImage = () => {
     showImagePicker({}, ({ uri }) => {
@@ -53,9 +55,9 @@ export default class extends React.PureComponent {
   };
 
   send = () => {
-    const { conversationType, targetId, content } = this.state;
+    const { conversationType, targetId, content, pushContent } = this.state;
     sendMessage(
-      { conversationType, targetId, content },
+      { conversationType, targetId, content, pushContent },
       {
         success: messageId => this.setState({ result: "消息发送成功：" + messageId }),
         error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
@@ -97,7 +99,7 @@ export default class extends React.PureComponent {
   }
 
   render() {
-    const { targetId, conversationType, messageType, result } = this.state;
+    const { targetId, conversationType, messageType, pushContent, result } = this.state;
     return (
       <ScrollView contentContainerStyle={style.body}>
         <FormItem label="会话类型">
@@ -124,6 +126,9 @@ export default class extends React.PureComponent {
           <TextInput value={targetId} onChangeText={this.setTargetId} placeholder="请输入目标 ID" />
         </FormItem>
         {this.renderContent()}
+        <FormItem label="推送内容">
+          <TextInput value={pushContent} onChangeText={this.setPushContent} placeholder="请输入推送内容" />
+        </FormItem>
         <FormItem>
           <Button title="发送" onPress={this.send} />
         </FormItem>

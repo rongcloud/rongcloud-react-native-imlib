@@ -34,9 +34,6 @@ RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
       }];
 }
 
-/**
- * 发送消息
- */
 RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   NSDictionary *content = message[@"content"];
   if (!content) {
