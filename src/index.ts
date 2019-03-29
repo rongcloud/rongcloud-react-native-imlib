@@ -1,5 +1,4 @@
 import { NativeEventEmitter, NativeModules } from "react-native";
-import { func } from "prop-types";
 
 const { RCIMClient } = NativeModules;
 const eventEmitter = new NativeEventEmitter(RCIMClient);
@@ -776,6 +775,75 @@ export function getChatRoomInfo(
  * @param name 讨论组名称
  * @param userList 用户 ID 列表
  */
-export function createDiscussion(name: string, userList: string[]) {
+export function createDiscussion(name: string, userList: string[]): Promise<string> {
   return RCIMClient.createDiscussion(name, userList);
+}
+
+/**
+ * 讨论组
+ */
+export type Discussion = {
+  id: string;
+  name: string;
+  creatorId: string;
+  memberIdList: string[];
+  isOpen: boolean;
+};
+
+/**
+ * 获取讨论组信息
+ *
+ * @param targetId 讨论组 ID
+ */
+export function getDiscussion(targetId: string): Promise<Discussion> {
+  return RCIMClient.getDiscussion(targetId);
+}
+
+/**
+ * 退出讨论组
+ *
+ * @param targetId 讨论组 ID
+ */
+export function quitDiscussion(targetId: string): Promise<Discussion> {
+  return RCIMClient.quitDiscussion(targetId);
+}
+
+/**
+ * 把用户加入讨论组
+ *
+ * @param targetId 讨论组 ID
+ * @param userList 用户 ID 列表
+ */
+export function addMemberToDiscussion(targetId: string, userList: string[]): Promise<void> {
+  return RCIMClient.addMemberToDiscussion(targetId, userList);
+}
+
+/**
+ * 把用户从讨论组移出
+ *
+ * @param targetId 讨论组 ID
+ * @param user 用户 ID
+ */
+export function removeMemberFromDiscussion(targetId: string, user: string): Promise<void> {
+  return RCIMClient.removeMemberFromDiscussion(targetId, user);
+}
+
+/**
+ * 设置讨论组名称
+ *
+ * @param targetId 讨论组 ID
+ * @param name 讨论组名称
+ */
+export function setDiscussionName(targetId: string, name: string): Promise<void> {
+  return RCIMClient.setDiscussionName(targetId, name);
+}
+
+/**
+ * 设置讨论组拉人权限
+ *
+ * @param targetId 讨论组 ID
+ * @param isOpen 是否开放拉人权限
+ */
+export function setDiscussionInviteStatus(targetId: string, isOpen: boolean): Promise<void> {
+  return RCIMClient.setDiscussionInviteStatus(targetId, isOpen);
 }

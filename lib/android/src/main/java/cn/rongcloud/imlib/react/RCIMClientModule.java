@@ -789,4 +789,59 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         });
     }
+
+    @ReactMethod
+    public void getDiscussion(String targetId, final Promise promise) {
+        RongIMClient.getInstance().getDiscussion(targetId, new ResultCallback<Discussion>() {
+            @Override
+            public void onSuccess(Discussion discussion) {
+                WritableMap map = Arguments.createMap();
+                map.putString("id", discussion.getId());
+                map.putString("name", discussion.getName());
+                map.putString("creatorId", discussion.getCreatorId());
+                WritableArray members = Arguments.createArray();
+                for (String member : discussion.getMemberIdList()) {
+                    members.pushString(member);
+                }
+                map.putArray("memberIdList", members);
+                map.putBoolean("isOpen", discussion.isOpen());
+                promise.resolve(map);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void quitDiscussion(String targetId, final Promise promise) {
+        RongIMClient.getInstance().quitDiscussion(targetId, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void setDiscussionName(String targetId, String name, final Promise promise) {
+        RongIMClient.getInstance().setDiscussionName(targetId, name, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void setDiscussionInviteStatus(String targetId, Boolean isOpen, final Promise promise) {
+        RongIMClient.getInstance().setDiscussionInviteStatus(
+                targetId, isOpen ? DiscussionInviteStatus.OPENED : DiscussionInviteStatus.CLOSED, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void addMemberToDiscussion(String targetId, ReadableArray userList, final Promise promise) {
+        ArrayList<String> array = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i += 1) {
+            array.add(userList.getString(i));
+        }
+        RongIMClient.getInstance().addMemberToDiscussion(targetId, array, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void removeMemberFromDiscussion(String targetId, String userId, final Promise promise) {
+        RongIMClient.getInstance().removeMemberFromDiscussion(targetId, userId, createOperationCallback(promise));
+    }
 }
