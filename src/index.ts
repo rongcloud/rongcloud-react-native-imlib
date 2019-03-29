@@ -646,3 +646,55 @@ export function getUnreadCount(
   }
   return RCIMClient.getUnreadCount(conversationType, targetId, []);
 }
+
+/**
+ * 清除某个会话中的未读消息数
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param time 该会话已阅读的最后一条消息的发送时间戳
+ */
+export function clearMessagesUnreadStatus(
+  conversationType: ConversationType,
+  targetId: string,
+  time = 0
+): Promise<boolean> {
+  return RCIMClient.clearMessagesUnreadStatus(conversationType, targetId, time);
+}
+
+/**
+ * 把用户加入黑名单
+ *
+ * @param userId 用户 ID
+ */
+export function addToBlacklist(userId: string): Promise<void> {
+  return RCIMClient.addToBlacklist(userId);
+}
+
+/**
+ * 把用户从黑名单种移除
+ *
+ * @param userId 用户 ID
+ */
+export function removeFromBlacklist(userId: string): Promise<void> {
+  return RCIMClient.removeFromBlacklist(userId);
+}
+
+/**
+ * 获取某用户是否在黑名单中
+ *
+ * @param userId 用户 ID
+ * @return 是否在黑名单种
+ */
+export function getBlacklistStatus(userId: string): Promise<boolean> {
+  return RCIMClient.getBlacklistStatus(userId);
+}
+
+/**
+ * 获取黑名单列表
+ *
+ * @return 黑名单列表
+ */
+export function getBlacklist(): Promise<string[]> {
+  return RCIMClient.getBlacklist();
+}

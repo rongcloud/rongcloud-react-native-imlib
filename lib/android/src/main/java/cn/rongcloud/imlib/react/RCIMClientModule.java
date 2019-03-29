@@ -637,4 +637,93 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().getUnreadCount(ConversationType.setValue(conversationType), targetId, callback);
         }
     }
+
+    @ReactMethod
+    public void clearMessagesUnreadStatus(int conversationType, String targetId, double time, final Promise promise) {
+        if (time == 0) {
+            RongIMClient.getInstance().clearMessagesUnreadStatus(
+                    ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean result) {
+                            promise.resolve(result);
+                        }
+
+                        @Override
+                        public void onError(ErrorCode errorCode) {
+                            reject(promise, errorCode);
+                        }
+                    });
+        } else {
+            RongIMClient.getInstance().clearMessagesUnreadStatus(
+                    ConversationType.setValue(conversationType), targetId, (long) time, new OperationCallback() {
+                        @Override
+                        public void onSuccess() {
+                            promise.resolve(true);
+                        }
+
+                        @Override
+                        public void onError(ErrorCode errorCode) {
+                            reject(promise, errorCode);
+                        }
+                    });
+        }
+    }
+
+    private OperationCallback createOperationCallback(final Promise promise) {
+        return new OperationCallback() {
+            @Override
+            public void onSuccess() {
+                promise.resolve(null);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        };
+    }
+
+    @ReactMethod
+    public void addToBlacklist(String userId, final Promise promise) {
+        RongIMClient.getInstance().addToBlacklist(userId, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void removeFromBlacklist(String userId, final Promise promise) {
+        RongIMClient.getInstance().addToBlacklist(userId, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getBlacklistStatus(String userId, final Promise promise) {
+        RongIMClient.getInstance().getBlacklistStatus(userId, new ResultCallback<BlacklistStatus>() {
+            @Override
+            public void onSuccess(BlacklistStatus status) {
+                promise.resolve(status == BlacklistStatus.IN_BLACK_LIST);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getBlacklist(final Promise promise) {
+        RongIMClient.getInstance().getBlacklist(new GetBlacklistCallback() {
+            @Override
+            public void onSuccess(String[] strings) {
+                WritableArray array = Arguments.createArray();
+                for (String string : strings) {
+                    array.pushString(string);
+                }
+                promise.resolve(array);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
 }
