@@ -1,6 +1,6 @@
 import { createAppContainer, createStackNavigator } from "react-navigation";
 import { PermissionsAndroid } from "react-native";
-import { init, connect } from "react-native-rongcloud-imlib";
+import { init, connect } from "rongcloud-react-native-imlib";
 import * as examples from "./examples";
 
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE).catch(() => {});

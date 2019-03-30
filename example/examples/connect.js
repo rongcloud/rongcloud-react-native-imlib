@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { addConnectionStatusListener, connect, disconnect } from "react-native-rongcloud-imlib";
+import { addConnectionStatusListener, connect, disconnect } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({ body: { padding: 16 }, message: { marginTop: 16 } });

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text, ScrollView, StyleSheet, Platform } from "react-native";
-import * as IMClient from "react-native-rongcloud-imlib";
+import * as IMClient from "rongcloud-react-native-imlib";
 
 const style = StyleSheet.create({
   body: { padding: 16 },

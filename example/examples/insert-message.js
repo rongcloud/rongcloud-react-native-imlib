@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { insertOutgoingMessage } from "react-native-rongcloud-imlib";
+import { insertOutgoingMessage } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 import { conversations, sentStatus } from "./constants";
 

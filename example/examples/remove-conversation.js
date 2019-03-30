@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { removeConversation } from "react-native-rongcloud-imlib";
+import { removeConversation } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 import { conversations } from "./constants";
 

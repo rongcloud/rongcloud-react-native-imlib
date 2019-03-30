@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
 import { showImagePicker } from "react-native-image-picker";
-import { sendMessage } from "react-native-rongcloud-imlib";
+import { sendMessage } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
 

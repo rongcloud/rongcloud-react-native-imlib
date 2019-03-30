@@ -3,7 +3,7 @@ import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } fro
 import {
   getConversationNotificationStatus,
   setConversationNotificationStatus
-} from "react-native-rongcloud-imlib";
+} from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 import { conversations, conversationNotificationStatus } from "./constants";
 
