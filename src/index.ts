@@ -33,12 +33,27 @@ export function init(appKey: string) {
  *   获取到的deviceToken，转为NSString类型，并去掉其中的空格和尖括号，作为参数传入此方法。
  */
 export function setDeviceToken(deviceToken: string) {
+  RCIMClient.setDeviceToken(deviceToken);
+}
+
+/**
+ * 设置导航服务器和上传文件服务器信息，要在 [[init]] 前使用
+ * 
+ * @param naviServer 导航服务器地址
+ * @param fileServer 文件服务器地址
+ */
+export function setServerInfo(naviServer: string, fileServer: string) {
+  RCIMClient.setServerInfo(naviServer, fileServer);
 }
 
 /**
  * 连接融云服务器，只需要调用一次
+ * 
+ * 在 App 整个生命周期，您只需要调用一次此方法与融云服务器建立连接。
+ * 之后无论是网络出现异常或者App有前后台的切换等，SDK都会负责自动重连。
+ * 除非您已经手动将连接断开，否则您不需要自己再手动重连。
  *
- * @param token
+ * @param token 从服务端获取的用户身份令牌（Token）
  * @param success 成功回调函数
  * @param error 失败回调函数
  * @param tokenIncorrect token 错误或过期回调函数

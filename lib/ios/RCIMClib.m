@@ -11,6 +11,14 @@ RCT_EXPORT_METHOD(init : (NSString *)key) {
   [RCIMClient.sharedRCIMClient setReceiveMessageDelegate:self object:nil];
 }
 
+RCT_EXPORT_METHOD(setDeviceToken : (NSString *)token) {
+  [RCIMClient.sharedRCIMClient setDeviceToken:token];
+}
+
+RCT_EXPORT_METHOD(setServerInfo : (NSString *)naviServer : (NSString *)fileServer) {
+  [RCIMClient.sharedRCIMClient setServerInfo:naviServer fileServer:fileServer];
+}
+
 RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient connectWithToken:token
       success:^(NSString *userId) {
