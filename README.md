@@ -1,4 +1,5 @@
 # rongcloud-react-native-imlib
+融云 IMLib 的 React Native 原生模块，支持 Android + iOS
 
 ## 安装
 
@@ -37,7 +38,7 @@ yarn add rongcloud-react-native-imlib
 
 ### Android
 
-运行 react-native link rongcloud-react-native-imlib 进行自动配置（推荐），或按以下步骤进行手动配置：
+运行 `react-native link rongcloud-react-native-imlib` 进行自动配置（推荐），或按以下步骤进行手动配置：
 
 1. 编辑 `android/settings.gradle` 新增：
 
