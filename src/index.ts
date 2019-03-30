@@ -1,13 +1,38 @@
+/**
+ * @module RCIMClient
+ */
+
 import { NativeEventEmitter, NativeModules } from "react-native";
 
-const { RCIMClient } = NativeModules;
+/**
+ * @hidden
+ */
+const RCIMClient = NativeModules.RCIMClient;
+
+/**
+ * @hidden
+ */
 const eventEmitter = new NativeEventEmitter(RCIMClient);
 
 /**
  * 初始化 SDK，只需要调用一次
+ * 
+ * @param appKey 从融云开发者平台创建应用后获取到的 App Key
  */
 export function init(appKey: string) {
   RCIMClient.init(appKey);
+}
+
+/**
+ * 设置 deviceToken，用于远程推送
+ * 
+ * @param deviceToken 从系统获取到的设备号 deviceToken（需要去掉空格和尖括号）
+ * 
+ *   deviceToken是系统提供的，从苹果服务器获取的，用于APNs远程推送必须使用的设备唯一值。
+ *   您需要将 `-application:didRegisterForRemoteNotificationsWithDeviceToken:`
+ *   获取到的deviceToken，转为NSString类型，并去掉其中的空格和尖括号，作为参数传入此方法。
+ */
+export function setDeviceToken(deviceToken: string) {
 }
 
 /**
@@ -732,8 +757,15 @@ export function quitChatRoom(targetId: string): Promise<void> {
  * 聊天室成员排序，按加入时间
  */
 export enum ChatRoomMemberOrder {
-  ASC = 1, // 升序
-  DESC // 降序
+  /**
+   * 生序
+   */
+  ASC = 1,
+
+  /**
+   * 降序
+   */
+  DESC
 }
 
 /**
