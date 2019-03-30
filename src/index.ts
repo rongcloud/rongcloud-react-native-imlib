@@ -81,6 +81,15 @@ export function connect(
 }
 
 /**
+ * 断开与融云服务器的连接
+ * 
+ * @param isReceivePush 是否还接收推送
+ */
+export function disconnect(isReceivePush = true) {
+  RCIMClient.disconnect(isReceivePush);
+}
+
+/**
  * 消息方向
  */
 export enum MessageDirection {

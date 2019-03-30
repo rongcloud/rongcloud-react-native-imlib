@@ -42,6 +42,10 @@ RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
       }];
 }
 
+RCT_EXPORT_METHOD(disconnect : (BOOL)isReceivePush) {
+  [RCIMClient.sharedRCIMClient disconnect:isReceivePush];
+}
+
 RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   NSDictionary *content = message[@"content"];
   if (!content) {
