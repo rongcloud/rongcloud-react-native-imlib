@@ -1417,7 +1417,6 @@
 				DEVELOPMENT_TEAM = K4M4A3343U;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IMLib",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1452,7 +1451,6 @@
 				DEVELOPMENT_TEAM = K4M4A3343U;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IMLib",
 				);
 				HEADER_SEARCH_PATHS = (
