@@ -4,6 +4,13 @@
   "version": "0.0.1",
   "license": "MIT",
   "main": "lib/js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rongcloud/rongcloud-react-native-imlib"
+  },
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
@@ -25,6 +32,11 @@
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.0.0",
     "typescript": "^3.3.4000"
+  },
+  "rnpm": {
+    "android": {
+      "sourceDir": "lib/android"
+    }
   },
   "prettier": {
     "printWidth": 100
