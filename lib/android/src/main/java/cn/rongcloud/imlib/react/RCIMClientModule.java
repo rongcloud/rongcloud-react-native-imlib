@@ -14,6 +14,7 @@ import io.rong.imlib.model.Conversation.PublicServiceType;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
 
 import javax.annotation.Nonnull;
@@ -132,6 +133,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 map.putDouble("size", file.getSize());
                 map.putString("fileType", file.getType());
                 map.putString("extra", file.getExtra());
+                break;
+            }
+            case "RC:LBSMsg": {
+                LocationMessage location = (LocationMessage) content;
+                map.putString("name", location.getPoi());
+                map.putString("thumbnail", location.getImgUri().toString());
+                map.putDouble("latitude", location.getLat());
+                map.putDouble("longitude", location.getLng());
+                map.putString("extra", location.getExtra());
                 break;
             }
         }
@@ -286,6 +296,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 case "file":
                     messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
                     break;
+                case "location":
+                    Uri thumbnail = Utils.getFileUri(reactContext, map.getString("thumbnail"));
+                    messageContent = LocationMessage.obtain(
+                        map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
+                    break;
             }
         }
         return messageContent;
@@ -368,13 +383,13 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void clearMessages(int type, String targetId, final Promise promise) {
         RongIMClient.getInstance().clearMessages(
-                ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+            ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
     }
 
     @ReactMethod
     public void deleteMessages(int type, String targetId, final Promise promise) {
         RongIMClient.getInstance().deleteMessages(
-                ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+            ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
     }
 
     @ReactMethod
@@ -398,17 +413,17 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         }
         RongIMClient.getInstance().deleteRemoteMessages(
-                ConversationType.setValue(type), targetId, array, new OperationCallback() {
-                    @Override
-                    public void onSuccess() {
-                        promise.resolve(null);
-                    }
+            ConversationType.setValue(type), targetId, array, new OperationCallback() {
+                @Override
+                public void onSuccess() {
+                    promise.resolve(null);
+                }
 
-                    @Override
-                    public void onError(RongIMClient.ErrorCode errorCode) {
-                        promise.reject(errorCode + "", "");
-                    }
-                });
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    promise.reject(errorCode + "", "");
+                }
+            });
     }
 
     private ResultCallback<Boolean> createDeleteMessagesCallback(final Promise promise) {
@@ -435,23 +450,23 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         }
 
         RongIMClient.getInstance().searchConversations(
-                keyword, conversationTypesArray, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
-                    @Override
-                    public void onSuccess(List<SearchConversationResult> conversations) {
-                        WritableArray result = Arguments.createArray();
-                        for (SearchConversationResult item : conversations) {
-                            WritableMap map = Arguments.createMap();
-                            map.putMap("conversation", conversationToMap(item.getConversation()));
-                            map.putInt("matchCount", item.getMatchCount());
-                        }
-                        promise.resolve(result);
+            keyword, conversationTypesArray, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
+                @Override
+                public void onSuccess(List<SearchConversationResult> conversations) {
+                    WritableArray result = Arguments.createArray();
+                    for (SearchConversationResult item : conversations) {
+                        WritableMap map = Arguments.createMap();
+                        map.putMap("conversation", conversationToMap(item.getConversation()));
+                        map.putInt("matchCount", item.getMatchCount());
                     }
+                    promise.resolve(result);
+                }
 
-                    @Override
-                    public void onError(RongIMClient.ErrorCode errorCode) {
-                        promise.reject(errorCode + "", "");
-                    }
-                });
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    promise.reject(errorCode + "", "");
+                }
+            });
     }
 
     private WritableMap conversationToMap(Conversation conversation) {
@@ -481,23 +496,23 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void searchMessages(int conversationType, String targetId, String keyword, int count, double startTime, final Promise promise) {
         ResultCallback<List<Message>> callback = createMessagesCallback(promise);
         RongIMClient.getInstance().searchMessages(
-                ConversationType.setValue(conversationType), targetId, keyword, count, (long) startTime, callback);
+            ConversationType.setValue(conversationType), targetId, keyword, count, (long) startTime, callback);
     }
 
     @ReactMethod
     public void getConversation(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().getConversation(
-                ConversationType.setValue(conversationType), targetId, new ResultCallback<Conversation>() {
-                    @Override
-                    public void onSuccess(Conversation conversation) {
-                        promise.resolve(conversationToMap(conversation));
-                    }
+            ConversationType.setValue(conversationType), targetId, new ResultCallback<Conversation>() {
+                @Override
+                public void onSuccess(Conversation conversation) {
+                    promise.resolve(conversationToMap(conversation));
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     private ConversationType[] arrayToConversationTypes(ReadableArray array) {
@@ -536,84 +551,84 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void removeConversation(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().removeConversation(
-                ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        promise.resolve(result);
-                    }
+            ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    promise.resolve(result);
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod
     public void setConversationNotificationStatus(int conversationType, String targetId, int status, final Promise promise) {
         RongIMClient.getInstance().setConversationNotificationStatus(
-                ConversationType.setValue(conversationType),
-                targetId,
-                ConversationNotificationStatus.setValue(status),
-                new ResultCallback<ConversationNotificationStatus>() {
-                    @Override
-                    public void onSuccess(ConversationNotificationStatus status) {
-                        promise.resolve(status.getValue());
-                    }
+            ConversationType.setValue(conversationType),
+            targetId,
+            ConversationNotificationStatus.setValue(status),
+            new ResultCallback<ConversationNotificationStatus>() {
+                @Override
+                public void onSuccess(ConversationNotificationStatus status) {
+                    promise.resolve(status.getValue());
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod
     public void getConversationNotificationStatus(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().getConversationNotificationStatus(
-                ConversationType.setValue(conversationType), targetId, new ResultCallback<ConversationNotificationStatus>() {
-                    @Override
-                    public void onSuccess(ConversationNotificationStatus status) {
-                        promise.resolve(status.getValue());
-                    }
+            ConversationType.setValue(conversationType), targetId, new ResultCallback<ConversationNotificationStatus>() {
+                @Override
+                public void onSuccess(ConversationNotificationStatus status) {
+                    promise.resolve(status.getValue());
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod
     public void saveTextMessageDraft(int conversationType, String targetId, String content, final Promise promise) {
         RongIMClient.getInstance().saveTextMessageDraft(
-                ConversationType.setValue(conversationType), targetId, content, new ResultCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        promise.resolve(result);
-                    }
+            ConversationType.setValue(conversationType), targetId, content, new ResultCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    promise.resolve(result);
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod
     public void getTextMessageDraft(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().getTextMessageDraft(
-                ConversationType.setValue(conversationType), targetId, new ResultCallback<String>() {
-                    @Override
-                    public void onSuccess(String content) {
-                        promise.resolve(content);
-                    }
+            ConversationType.setValue(conversationType), targetId, new ResultCallback<String>() {
+                @Override
+                public void onSuccess(String content) {
+                    promise.resolve(content);
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod
@@ -656,30 +671,30 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void clearMessagesUnreadStatus(int conversationType, String targetId, double time, final Promise promise) {
         if (time == 0) {
             RongIMClient.getInstance().clearMessagesUnreadStatus(
-                    ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
-                        @Override
-                        public void onSuccess(Boolean result) {
-                            promise.resolve(result);
-                        }
+                ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        promise.resolve(result);
+                    }
 
-                        @Override
-                        public void onError(ErrorCode errorCode) {
-                            reject(promise, errorCode);
-                        }
-                    });
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
         } else {
             RongIMClient.getInstance().clearMessagesUnreadStatus(
-                    ConversationType.setValue(conversationType), targetId, (long) time, new OperationCallback() {
-                        @Override
-                        public void onSuccess() {
-                            promise.resolve(true);
-                        }
+                ConversationType.setValue(conversationType), targetId, (long) time, new OperationCallback() {
+                    @Override
+                    public void onSuccess() {
+                        promise.resolve(true);
+                    }
 
-                        @Override
-                        public void onError(ErrorCode errorCode) {
-                            reject(promise, errorCode);
-                        }
-                    });
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
         }
     }
 
@@ -759,7 +774,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getChatRoomInfo(String targetId, int memberCount, int order, final Promise promise) {
         ChatRoomMemberOrder memberOrder = order == ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_ASC.getValue() ?
-                ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_ASC : ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_DESC;
+            ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_ASC : ChatRoomMemberOrder.RC_CHAT_ROOM_MEMBER_DESC;
         RongIMClient.getInstance().getChatRoomInfo(targetId, memberCount, memberOrder, new ResultCallback<ChatRoomInfo>() {
             @Override
             public void onSuccess(ChatRoomInfo chatRoomInfo) {
@@ -921,36 +936,36 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().searchPublicService(type, keyword, callback);
         } else {
             RongIMClient.getInstance().searchPublicServiceByType(
-                    PublicServiceType.setValue(publicServiceType), type, keyword, callback);
+                PublicServiceType.setValue(publicServiceType), type, keyword, callback);
         }
     }
 
     @ReactMethod
     public void subscribePublicService(int type, String id, final Promise promise) {
         RongIMClient.getInstance().subscribePublicService(
-                PublicServiceType.setValue(type), id, createOperationCallback(promise));
+            PublicServiceType.setValue(type), id, createOperationCallback(promise));
     }
 
     @ReactMethod
     public void unsubscribePublicService(int type, String id, final Promise promise) {
         RongIMClient.getInstance().unsubscribePublicService(
-                PublicServiceType.setValue(type), id, createOperationCallback(promise));
+            PublicServiceType.setValue(type), id, createOperationCallback(promise));
     }
 
     @ReactMethod
     public void getPublicServiceProfile(int type, String id, final Promise promise) {
         RongIMClient.getInstance().getPublicServiceProfile(
-                PublicServiceType.setValue(type), id, new ResultCallback<PublicServiceProfile>() {
-                    @Override
-                    public void onSuccess(PublicServiceProfile profile) {
-                        promise.resolve(publicServiceProfileToMap(profile));
-                    }
+            PublicServiceType.setValue(type), id, new ResultCallback<PublicServiceProfile>() {
+                @Override
+                public void onSuccess(PublicServiceProfile profile) {
+                    promise.resolve(publicServiceProfileToMap(profile));
+                }
 
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                @Override
+                public void onError(ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 
     @ReactMethod

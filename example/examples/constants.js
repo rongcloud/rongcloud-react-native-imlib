@@ -1,9 +1,9 @@
 import {
-  ConversationType,
-  SentStatus,
   ConversationNotificationStatus,
+  ConversationType,
+  PublicServiceType,
   SearchType,
-  PublicServiceType
+  SentStatus
 } from "rongcloud-react-native-imlib";
 
 export const conversations = {
@@ -14,7 +14,12 @@ export const conversations = {
   [ConversationType.CUSTOMER_SERVICE]: "客服"
 };
 
-export const messageTypes = { text: "文本消息", image: "图片消息", file: "文件消息" };
+export const messageTypes = {
+  text: "文本消息",
+  image: "图片消息",
+  file: "文件消息",
+  location: "位置信息"
+};
 
 export const sentStatus = {
   [SentStatus.SENDING]: "发送中",

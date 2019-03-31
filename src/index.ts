@@ -151,7 +151,16 @@ export type FileMessage = {
   extra?: string;
 };
 
-export type MessageContent = TextMessage | ImageMessage | FileMessage;
+export type LocationMessage = {
+  type: "location";
+  name: string;
+  latitude: number;
+  longitude: number;
+  thumbnail?: string;
+  extra?: string;
+};
+
+export type MessageContent = TextMessage | ImageMessage | FileMessage | LocationMessage;
 
 export type Message = {
   /**
@@ -219,25 +228,57 @@ export function addReceiveMessageListener(listener: (message: Message) => void) 
   });
 }
 
+/**
+ * 要发送的消息
+ */
 export type SentMessage = {
+  /**
+   * 会话类型
+   */
   conversationType: ConversationType;
+
+  /**
+   * 目标 ID
+   */
   targetId: string;
+
+  /**
+   * 消息内容
+   */
   content: TextMessage;
+
+  /**
+   * 推送内容，用于显示
+   */
   pushContent: string;
+
+  /**
+   * 推送数据，不显示
+   */
   pushData: string;
 };
 
+/**
+ * 发送消息回调
+ */
 export type SentMessageCallback = {
   success?: (messageId: number) => void;
   error?: (errorCode: ErrorCode) => void;
 };
 
-export type MessageObjectName = "RC:TxtMsg" | "RC:FileMsg" | "RC:ImgMsg" | string;
+/**
+ * 消息对象名称
+ */
+export type MessageObjectName = "RC:TxtMsg" | "RC:FileMsg" | "RC:ImgMsg" | "RC:LBSMsg" | string;
 
+/**
+ * 消息对象名称枚举
+ */
 export enum MessageObjectNames {
   text = "RC:TxtMsg",
   image = "RC:ImgMsg",
-  file = "RC:FileMsg"
+  file = "RC:FileMsg",
+  location = "RC:LocMsg"
 }
 
 /**
@@ -265,6 +306,9 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
   RCIMClient.sendMessage(message, eventId);
 }
 
+/**
+ * 连接错误代码
+ */
 export enum ConnectErrorCode {
   RC_NET_CHANNEL_INVALID = 30001,
   RC_NET_UNAVAILABLE = 30002,
@@ -297,6 +341,9 @@ export enum ConnectErrorCode {
   RC_INVALID_ARGUMENT = -1000
 }
 
+/**
+ * 错误代码
+ */
 export enum ErrorCode {
   ERRORCODE_UNKNOWN = -1,
   REJECTED_BY_BLACKLIST = 405,
@@ -359,6 +406,9 @@ export enum ConnectionStatusAndroid {
   SERVER_INVALID
 }
 
+/**
+ * 连接状态
+ */
 export type ConnectionStatus = ConnectionStatusIOS | ConnectionStatusAndroid;
 
 /**
