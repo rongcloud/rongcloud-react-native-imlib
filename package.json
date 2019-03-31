@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "build-docs": "typedoc --out docs --module src",
+    "build-docs": "typedoc --out docs --theme markdown --includes src",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "reload": "adb reverse tcp:8081 tcp:8081; adb shell input text rr",
     "run-android": "node node_modules/react-native/local-cli/cli.js run-android",
@@ -32,6 +32,7 @@
     "react-navigation": "^3.5.1",
     "typedoc": "^0.14.2",
     "typedoc-plugin-external-module-name": "^2.0.0",
+    "typedoc-plugin-markdown": "^1.1.27",
     "typescript": "^3.3.4000"
   },
   "rnpm": {
