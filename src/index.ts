@@ -3,6 +3,7 @@
  */
 
 import { NativeEventEmitter, NativeModules } from "react-native";
+import { func } from "prop-types";
 
 /**
  * @hidden
@@ -970,6 +971,48 @@ export type PublicServiceMenuItem = {
 };
 
 /**
+ * 公众服务描述
+ */
+export type PublicServiceProfile = {
+  id: string;
+
+  /**
+   * 服务名称
+   */
+  name: string;
+
+  /**
+   * 服务描述
+   */
+  introduction: string;
+
+  /**
+   * 头像连接
+   */
+  portraitUrl: string;
+
+  /**
+   * 是否设置为所有用户均关注
+   */
+  isGlobal: boolean;
+
+  /**
+   * 用户是否已关注
+   */
+  followed: boolean;
+
+  /**
+   * 类型
+   */
+  type: PublicServiceType | ConversationType;
+
+  /**
+   * 菜单
+   */
+  menu: PublicServiceMenuItem[];
+};
+
+/**
  * 搜索公众服务
  *
  * @param keyword 关键字
@@ -980,6 +1023,52 @@ export function searchPublicService(
   keyword: string,
   searchType: SearchType = SearchType.FUZZY,
   publicServiceType: PublicServiceType = 0
-) {
+): Promise<PublicServiceProfile[]> {
   return RCIMClient.searchPublicService(keyword, searchType, publicServiceType);
+}
+
+/**
+ * 订阅公共服务
+ *
+ * @param publicServiceType 公共服务类型
+ * @param publicServiceId 公共服务 ID
+ */
+export function subscribePublicService(
+  publicServiceType: PublicServiceType,
+  publicServiceId: string
+): Promise<void> {
+  return RCIMClient.subscribePublicService(publicServiceType, publicServiceId);
+}
+
+/**
+ * 取消关注公共服务
+ *
+ * @param publicServiceType 公共服务类型
+ * @param publicServiceId 公共服务 ID
+ */
+export function unsubscribePublicService(
+  publicServiceType: PublicServiceType,
+  publicServiceId: string
+): Promise<void> {
+  return RCIMClient.unsubscribePublicService(publicServiceType, publicServiceId);
+}
+
+/**
+ * 获取已订阅的公众服务列表
+ */
+export function getPublicServiceList(): Promise<PublicServiceProfile[]> {
+  return RCIMClient.getPublicServiceList();
+}
+
+/**
+ * 获取单个公众服务信息
+ *
+ * @param publicServiceType 公共服务类型
+ * @param publicServiceId 公共服务 ID
+ */
+export function getPublicServiceProfile(
+  publicServiceType: PublicServiceType,
+  publicServiceId: string
+): Promise<PublicServiceProfile> {
+  return RCIMClient.getPublicServiceProfile(publicServiceType, publicServiceId);
 }

@@ -876,26 +876,32 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return menu;
     }
 
-    @ReactMethod
-    public void searchPublicService(String keyword, int searchType, int publicServiceType, final Promise promise) {
-        ResultCallback<PublicServiceProfileList> callback = new ResultCallback<PublicServiceProfileList>() {
+    private WritableMap publicServiceProfileToMap(PublicServiceProfile item) {
+        if (item == null) {
+            return null;
+        }
+        WritableMap map = Arguments.createMap();
+        map.putString("id", item.getTargetId());
+        map.putString("name", item.getName());
+        map.putString("introduction", item.getIntroduction());
+        map.putString("portraitUrl", item.getPortraitUri().toString());
+        map.putBoolean("isGlobal", item.isGlobal());
+        map.putBoolean("followed", item.isFollow());
+        map.putInt("type", item.getConversationType().getValue());
+        PublicServiceMenu menu = item.getMenu();
+        if (menu != null) {
+            map.putArray("menu", menuItemsToArray(menu.getMenuItems()));
+        }
+        return map;
+    }
+
+    private ResultCallback<PublicServiceProfileList> createPublicServiceProfileListCallback(final Promise promise) {
+        return new ResultCallback<PublicServiceProfileList>() {
             @Override
             public void onSuccess(PublicServiceProfileList result) {
                 WritableArray array = Arguments.createArray();
                 for (PublicServiceProfile item : result.getPublicServiceData()) {
-                    WritableMap map = Arguments.createMap();
-                    map.putString("id", item.getTargetId());
-                    map.putString("name", item.getName());
-                    map.putString("introduction", item.getIntroduction());
-                    map.putString("portraitUrl", item.getPortraitUri().toString());
-                    map.putBoolean("isGlobal", item.isGlobal());
-                    map.putBoolean("followed", item.isFollow());
-                    map.putInt("type", item.getConversationType().getValue());
-                    PublicServiceMenu menu = item.getMenu();
-                    if (menu != null) {
-                        map.putArray("menu", menuItemsToArray(menu.getMenuItems()));
-                    }
-                    array.pushMap(map);
+                    array.pushMap(publicServiceProfileToMap(item));
                 }
                 promise.resolve(array);
             }
@@ -905,7 +911,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 reject(promise, errorCode);
             }
         };
+    }
 
+    @ReactMethod
+    public void searchPublicService(String keyword, int searchType, int publicServiceType, final Promise promise) {
+        ResultCallback<PublicServiceProfileList> callback = createPublicServiceProfileListCallback(promise);
         SearchType type = searchType == SearchType.EXACT.getValue() ? SearchType.EXACT : SearchType.FUZZY;
         if (publicServiceType == 0) {
             RongIMClient.getInstance().searchPublicService(type, keyword, callback);
@@ -913,5 +923,38 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().searchPublicServiceByType(
                     PublicServiceType.setValue(publicServiceType), type, keyword, callback);
         }
+    }
+
+    @ReactMethod
+    public void subscribePublicService(int type, String id, final Promise promise) {
+        RongIMClient.getInstance().subscribePublicService(
+                PublicServiceType.setValue(type), id, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void unsubscribePublicService(int type, String id, final Promise promise) {
+        RongIMClient.getInstance().unsubscribePublicService(
+                PublicServiceType.setValue(type), id, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getPublicServiceProfile(int type, String id, final Promise promise) {
+        RongIMClient.getInstance().getPublicServiceProfile(
+                PublicServiceType.setValue(type), id, new ResultCallback<PublicServiceProfile>() {
+                    @Override
+                    public void onSuccess(PublicServiceProfile profile) {
+                        promise.resolve(publicServiceProfileToMap(profile));
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+    }
+
+    @ReactMethod
+    public void getPublicServiceList(final Promise promise) {
+        RongIMClient.getInstance().getPublicServiceList(createPublicServiceProfileListCallback(promise));
     }
 }
