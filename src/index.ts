@@ -159,6 +159,11 @@ export type Message = {
   conversationType: ConversationType;
 
   /**
+   * 消息对象名称
+   */
+  objectName: string;
+
+  /**
    * 消息 ID
    */
   messageId: number;

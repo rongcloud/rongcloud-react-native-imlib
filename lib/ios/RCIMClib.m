@@ -100,7 +100,7 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
 
     [RCIMClient.sharedRCIMClient sendMediaMessage:[message[@"conversationType"] intValue]
                                          targetId:message[@"targetId"]
-                                          content:[self messageContentFromDictionary:content]
+                                          content:[self toMessageContent:content]
                                       pushContent:message[@"pushContent"]
                                          pushData:message[@"pushData"]
                                          progress:progressBlock
@@ -110,7 +110,7 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   } else {
     [RCIMClient.sharedRCIMClient sendMessage:[message[@"conversationType"] intValue]
                                     targetId:message[@"targetId"]
-                                     content:[self messageContentFromDictionary:content]
+                                     content:[self toMessageContent:content]
                                  pushContent:message[@"pushContent"]
                                     pushData:message[@"pushData"]
                                      success:successBlock
@@ -142,7 +142,7 @@ RCT_EXPORT_METHOD(getHistoryMessages
 
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
   for (int i = 0; i < messages.count; i += 1) {
-    array[i] = [self dictionaryFromMessage:messages[i]];
+    array[i] = [self fromMessage:messages[i]];
   }
   resolve(array);
 }
@@ -161,16 +161,16 @@ RCT_EXPORT_METHOD(insertOutgoingMessage
         insertOutgoingMessage:conversationType
                      targetId:targetId
                    sentStatus:sentStatus
-                      content:[self messageContentFromDictionary:content]
+                      content:[self toMessageContent:content]
                      sentTime:sentTime];
   } else {
     message = [RCIMClient.sharedRCIMClient
         insertOutgoingMessage:conversationType
                      targetId:targetId
                    sentStatus:sentStatus
-                      content:[self messageContentFromDictionary:content]];
+                      content:[self toMessageContent:content]];
   }
-  resolve([self dictionaryFromMessage:message]);
+  resolve([self fromMessage:message]);
 }
 
 RCT_EXPORT_METHOD(clearMessages
@@ -217,7 +217,7 @@ RCT_EXPORT_METHOD(searchConversations
   for (int i = 0; i < results.count; i += 1) {
     array[i] = @{
       @"matchCount" : @(results[i].matchCount),
-      @"conversation" : [self dictionaryFromConversation:results[i].conversation]
+      @"conversation" : [self fromConversation:results[i].conversation]
     };
   }
   resolve(array);
@@ -238,7 +238,7 @@ RCT_EXPORT_METHOD(searchMessages
                                                         startTime:startTime];
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
   for (int i = 0; i < messages.count; i += 1) {
-    array[i] = [self dictionaryFromMessage:messages[i]];
+    array[i] = [self fromMessage:messages[i]];
   }
   resolve(array);
 }
@@ -250,7 +250,7 @@ RCT_EXPORT_METHOD(getConversation
                   : (RCTPromiseRejectBlock)reject) {
   RCConversation *conversation = [RCIMClient.sharedRCIMClient getConversation:conversationType
                                                                      targetId:targetId];
-  resolve([self dictionaryFromConversation:conversation]);
+  resolve([self fromConversation:conversation]);
 }
 
 RCT_EXPORT_METHOD(removeConversation
@@ -268,7 +268,7 @@ RCT_EXPORT_METHOD(getConversationList
   NSArray *list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes];
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
   for (int i = 0; i < list.count; i += 1) {
-    array[i] = [self dictionaryFromConversation:list[i]];
+    array[i] = [self fromConversation:list[i]];
   }
   resolve(array);
 }
@@ -574,7 +574,7 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
 }
 
 - (void)onReceived:(RCMessage *)message left:(int)left object:(id)object {
-  [self sendEventWithName:@"rcimlib-receive-message" body:[self dictionaryFromMessage:message]];
+  [self sendEventWithName:@"rcimlib-receive-message" body:[self fromMessage:message]];
 }
 
 - (void)reject:(RCTPromiseRejectBlock)reject error:(RCErrorCode)error {
@@ -611,7 +611,7 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
   };
 }
 
-- (NSDictionary *)dictionaryFromConversation:(RCConversation *)conversation {
+- (NSDictionary *)fromConversation:(RCConversation *)conversation {
   return @{
     @"conversationType" : @(conversation.conversationType),
     @"conversationTitle" : conversation.conversationTitle,
@@ -621,7 +621,7 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
     @"targetId" : conversation.targetId,
     @"objectName" : conversation.objectName,
     @"lastestMessageId" : @(conversation.lastestMessageId),
-    @"lastestMessage" : [self dictionaryFromMessageContent:conversation.lastestMessage],
+    @"lastestMessage" : [self fromMessageContent:conversation.lastestMessage],
     @"receivedStatus" : @(conversation.receivedStatus),
     @"receivedTime" : @(conversation.receivedTime),
     @"sentTime" : @(conversation.sentTime),
@@ -630,7 +630,7 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
   };
 }
 
-- (NSDictionary *)dictionaryFromMessage:(RCMessage *)message {
+- (NSDictionary *)fromMessage:(RCMessage *)message {
   return @{
     @"conversationType" : @(message.conversationType),
     @"objectName" : message.objectName,
@@ -641,12 +641,12 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
     @"senderUserId" : message.senderUserId,
     @"sentTime" : @(message.sentTime),
     @"receivedTime" : @(message.receivedTime),
-    @"content" : [self dictionaryFromMessageContent:message.content],
+    @"content" : [self fromMessageContent:message.content],
     @"extra" : message.extra ? message.extra : @"",
   };
 }
 
-- (NSDictionary *)dictionaryFromMessageContent:(RCMessageContent *)content {
+- (NSDictionary *)fromMessageContent:(RCMessageContent *)content {
   if ([content isKindOfClass:[RCImageMessage class]]) {
     RCImageMessage *image = (RCImageMessage *)content;
     return @{
@@ -674,7 +674,8 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
   } else if ([content isKindOfClass:[RCDiscussionNotificationMessage class]]) {
     RCDiscussionNotificationMessage *message = (RCDiscussionNotificationMessage *)content;
     return @{
-      @"type" : @(message.type),
+      @"type" : @"discussion-notification",
+      @"notificationType" : @(message.type),
       @"operatorId" : message.operatorId,
       @"extension" : message.extension,
     };
@@ -682,7 +683,7 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
   return @{@"error" : @"Content type not yet supported"};
 }
 
-- (RCMessageContent *)messageContentFromDictionary:(NSDictionary *)content {
+- (RCMessageContent *)toMessageContent:(NSDictionary *)content {
   NSString *type = content[@"type"];
   if ([type isEqualToString:@"text"]) {
     RCTextMessage *text = [RCTextMessage messageWithContent:content[@"content"]];
