@@ -116,3 +116,29 @@ sendMessage(
 ```
 
 更多示例请参考 [examples](example/examples)。
+
+## 运行示例
+
+如果要运行 iOS 示例，需要进行以下操作：
+1. [从官网下载 IMLib SDK](https://www.rongcloud.cn/downloads)
+2. 解压并把 `IMLib` 文件夹放到 `ios` 目录
+
+```
+yarn
+yarn run-ios
+yarn run-android
+```
+
+## [接口文档](docs)
+
+## 项目结构
+```
+├── android (Android 示例应用)
+├── docs (接口文档)
+├── example (React Native 示例)
+├── ios (iOS 示例应用)
+├── lib
+│   ├── android (Android 原生模块)
+│   └── ios (iOS 原生模块)
+└── src (接口实现)
+```

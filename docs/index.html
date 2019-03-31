@@ -1,0 +1,237 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>rongcloud-react-native-imlib</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">rongcloud-react-native-imlib</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> rongcloud-react-native-imlib</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="rongcloud-react-native-imlib">rongcloud-react-native-imlib</h1>
+				<p>融云 IMLib 的 React Native 原生模块，支持 Android + iOS</p>
+				<h2 id="-">安装</h2>
+				<pre><code>yarn <span class="hljs-keyword">add</span><span class="bash"> rongcloud-react-native-imlib</span></code></pre><h2 id="-">集成</h2>
+				<h3 id="ios">iOS</h3>
+				<p>运行 <code>react-native link rongcloud-react-native-imlib</code> 进行自动配置（推荐），或按以下步骤在 Xcode 进行手动配置：</p>
+				<ol>
+					<li><details>
+							<summary>Project navigator ➜ 右击 <code>Libraries</code> ➜ 选择 <code>Add Files to "XXXX"...</code></summary>
+							<img src="https://user-images.githubusercontent.com/1709072/55277292-70aae500-5339-11e9-9949-713c4ba28ccb.png" width=240>
+					</details></li>
+					<li><details>
+							<summary>找到并选择添加 <code>node_modules/rongcloud-react-native-imlib/lib/ios/RCIMLib.xcodeproj</code></summary>
+							<img src="https://user-images.githubusercontent.com/1709072/55277323-c7b0ba00-5339-11e9-982e-3b87a510cca8.png" width=600>
+					</details></li>
+					<li><details>
+							<summary><code>Build Phases</code> ➜ <code>Link Binary With Libraries</code> 中选择并添加 <code>libRNIMLib.a</code></summary>
+							<img src="https://user-images.githubusercontent.com/1709072/55277356-3e4db780-533a-11e9-8f3b-141b005e449a.png" width=600>
+						</details>
+					</li>
+				</ol>
+				<p>接下来，将 IMLib SDK 引入项目：</p>
+				<ol>
+					<li><a href="https://www.rongcloud.cn/downloads">从官网下载 IMLib SDK</a></li>
+					<li>解压并把 <code>IMLib</code> 文件夹放到 <code>ios</code> 目录</li>
+					<li>把 <code>IMLib</code> 里的 <code>libopencore-amrnb.a</code> 和 <code>RongIMLib.framework</code> 拖入 Project navigator <code>Frameworks</code></li>
+					<li><details>
+							<summary><code>Build Phases</code> ➜ <code>Link Binary With Libraries</code> 里搜索并添加 <code>libsqlite3.tbd</code></summary>
+							<img src="https://user-images.githubusercontent.com/1709072/55277928-88399c00-5340-11e9-938c-f88cd832d0de.png" width=600>
+						</details>
+					</li>
+				</ol>
+				<h3 id="android">Android</h3>
+				<p>运行 <code>react-native link rongcloud-react-native-imlib</code> 进行自动配置（推荐），或按以下步骤进行手动配置：</p>
+				<ol>
+					<li><p>编辑 <code>android/settings.gradle</code> 新增：</p>
+						<pre><code class="language-gradle"><span class="hljs-keyword">include</span> <span class="hljs-string">':rongcloud-react-native-imlib'</span>
+<span class="hljs-keyword">project</span>(<span class="hljs-string">':rongcloud-react-native-imlib'</span>).projectDir = <span class="hljs-keyword">new</span> <span class="hljs-keyword">File</span>(rootProject.projectDir, <span class="hljs-string">'../node_modules/rongcloud-react-native-imlib/lib/android'</span>)</code></pre>
+					</li>
+					<li><p>编辑 <code>android/app/build.gradle</code>，新增：</p>
+						<pre><code><span class="hljs-keyword">dependencies</span> {
+  ...
+  <span class="hljs-keyword">compile</span> <span class="hljs-keyword">project</span>(<span class="hljs-string">':rongcloud-react-native-imlib'</span>)
+}</code></pre></li>
+					<li><p>编辑 <code>MainApplication.java</code>：</p>
+						<p>导入 RCIMLibPackage</p>
+						<pre><code class="language-java"><span class="hljs-keyword">import</span> cn.rongcloud.imlib.react.RCIMLibPackage;</code></pre>
+						<p>添加 RCIMLibPackage</p>
+						<pre><code class="language-java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> List&lt;ReactPackage&gt; <span class="hljs-title">getPackages</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> Arrays.asList(
+            <span class="hljs-keyword">new</span> MainReactPackage(),
+            <span class="hljs-keyword">new</span> RCIMLibPackage()
+    );
+}</code></pre>
+					</li>
+				</ol>
+				<h2 id="-">使用</h2>
+				<h3 id="-">初始化并连接融云服务</h3>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { init, connect } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
+
+init(<span class="hljs-string">"n19jmcy59f1q9"</span>);
+connect(<span class="hljs-string">"FrdcuKklUMakOnYLFljI9gLUrCB73YwHabXQU7yFrr8ow=="</span>);</code></pre>
+				<h3 id="-">监听消息</h3>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { addReceiveMessageListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
+
+addReceiveMessageListener(<span class="hljs-function"><span class="hljs-params">message</span> =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(message);
+});</code></pre>
+				<h3 id="-">发送消息</h3>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { sendMessage, ConversationType } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
+
+<span class="hljs-keyword">const</span> conversationType = ConversationType.PRIVATE;
+<span class="hljs-keyword">const</span> targetId = <span class="hljs-string">"n19jmcy59f1q9"</span>;
+<span class="hljs-keyword">const</span> content = { <span class="hljs-attr">type</span>: <span class="hljs-string">"text"</span>, <span class="hljs-attr">content</span>: <span class="hljs-string">"这是一个文本消息"</span> };
+
+sendMessage(
+  { conversationType, targetId, content },
+  {
+    <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-params">messageId</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"消息发送成功："</span> + messageId),
+    <span class="hljs-attr">error</span>: <span class="hljs-function"><span class="hljs-params">errorCode</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"消息发送失败："</span> + errorCode)
+  }
+);</code></pre>
+				<p>更多示例请参考 <a href="example/examples">examples</a>。</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/rcimclient.html">RCIMClient</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
