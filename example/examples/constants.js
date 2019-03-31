@@ -18,7 +18,8 @@ export const messageTypes = {
   text: "文本消息",
   image: "图片消息",
   file: "文件消息",
-  location: "位置信息"
+  location: "位置信息",
+  voice: "语音消息"
 };
 
 export const sentStatus = {

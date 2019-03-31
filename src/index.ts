@@ -126,12 +126,18 @@ export enum SentStatus {
   CANCELED = 70
 }
 
+/**
+ * 文本消息
+ */
 export type TextMessage = {
   type: "text";
   content: string;
   extra?: string;
 };
 
+/**
+ * 图片消息
+ */
 export type ImageMessage = {
   type: "image";
   local: string;
@@ -141,6 +147,9 @@ export type ImageMessage = {
   extra?: string;
 };
 
+/**
+ * 文件消息
+ */
 export type FileMessage = {
   type: "file";
   local: string;
@@ -151,6 +160,9 @@ export type FileMessage = {
   extra?: string;
 };
 
+/**
+ * 位置消息
+ */
 export type LocationMessage = {
   type: "location";
   name: string;
@@ -160,8 +172,29 @@ export type LocationMessage = {
   extra?: string;
 };
 
-export type MessageContent = TextMessage | ImageMessage | FileMessage | LocationMessage;
+/**
+ * 语音消息
+ */
+export type VoiceMessage = {
+  type: "voice";
+  data: string;
+  local: string;
+  duration: number;
+};
 
+/**
+ * 消息内容
+ */
+export type MessageContent =
+  | TextMessage
+  | ImageMessage
+  | FileMessage
+  | LocationMessage
+  | VoiceMessage;
+
+/**
+ * 消息
+ */
 export type Message = {
   /**
    * 会话类型
@@ -269,7 +302,13 @@ export type SentMessageCallback = {
 /**
  * 消息对象名称
  */
-export type MessageObjectName = "RC:TxtMsg" | "RC:FileMsg" | "RC:ImgMsg" | "RC:LBSMsg" | string;
+export type MessageObjectName =
+  | "RC:TxtMsg"
+  | "RC:FileMsg"
+  | "RC:ImgMsg"
+  | "RC:LBSMsg"
+  | "RC:VcMsg"
+  | string;
 
 /**
  * 消息对象名称枚举
@@ -278,7 +317,8 @@ export enum MessageObjectNames {
   text = "RC:TxtMsg",
   image = "RC:ImgMsg",
   file = "RC:FileMsg",
-  location = "RC:LocMsg"
+  location = "RC:LocMsg",
+  voice = "RC:VcMsg"
 }
 
 /**
@@ -304,6 +344,16 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
     });
   }
   RCIMClient.sendMessage(message, eventId);
+}
+
+/**
+ * 消息撤回
+ *
+ * @param messageId 消息 ID
+ * @param pushContent 推送内容
+ */
+export function recallMessage(messageId: number, pushContent: string): Promise<void> {
+  return RCIMClient.recallMessage(messageId, pushContent);
 }
 
 /**

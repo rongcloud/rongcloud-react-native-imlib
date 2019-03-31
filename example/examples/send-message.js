@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
 import { showImagePicker } from "react-native-image-picker";
-import { sendMessage } from "rongcloud-react-native-imlib";
+import { sendMessage, recallMessage } from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations, messageTypes } from "./constants";
 
@@ -13,6 +13,8 @@ const style = StyleSheet.create({
 export default class extends React.PureComponent {
   static route = "SendMessage";
   static navigationOptions = { title: "发送消息" };
+
+  messageId = 0;
 
   state = {
     conversationType: 1,
@@ -27,6 +29,8 @@ export default class extends React.PureComponent {
   setTextContent = content => this.setState({ content: { type: "text", content } });
   setPushContent = pushContent => this.setState({ pushContent });
   setConversationType = conversationType => this.setState({ conversationType });
+  setVoice = voice =>
+    this.setState({ content: { type: "voice", data: voice, local: voice, duration: 2 } });
   setMessageType = messageType => {
     this.setState({ messageType });
     if (messageType === "location") {
@@ -64,10 +68,21 @@ export default class extends React.PureComponent {
     sendMessage(
       { conversationType, targetId, content, pushContent },
       {
-        success: messageId => this.setState({ result: "消息发送成功：" + messageId }),
+        success: messageId => {
+          this.messageId = messageId;
+          this.setState({ result: "消息发送成功：" + messageId });
+        },
         error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
       }
     );
+  };
+
+  recall = async () => {
+    if (!this.messageId) {
+      return;
+    }
+    await recallMessage(this.messageId);
+    this.setState({ result: "消息撤回" });
   };
 
   renderContent() {
@@ -98,6 +113,14 @@ export default class extends React.PureComponent {
               <Text>{content.local}</Text>
             </FormItem>
           )}
+        </View>
+      );
+    } else if (messageType === "voice") {
+      return (
+        <View>
+          <FormItem label="音频">
+            <TextInput onChangeText={this.setVoice} placeholder="请输音频地址/数据" />
+          </FormItem>
         </View>
       );
     }
@@ -132,6 +155,9 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="发送" onPress={this.send} />
+        </FormItem>
+        <FormItem>
+          <Button title="撤回" onPress={this.recall} />
         </FormItem>
         <Result>{result}</Result>
       </Body>

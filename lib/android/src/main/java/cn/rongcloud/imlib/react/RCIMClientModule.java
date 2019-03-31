@@ -12,10 +12,7 @@ import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
 import io.rong.imlib.model.Message.SentStatus;
-import io.rong.message.FileMessage;
-import io.rong.message.ImageMessage;
-import io.rong.message.LocationMessage;
-import io.rong.message.TextMessage;
+import io.rong.message.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -142,6 +139,13 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 map.putDouble("latitude", location.getLat());
                 map.putDouble("longitude", location.getLng());
                 map.putString("extra", location.getExtra());
+                break;
+            }
+            case "RC:VcMsg": {
+                VoiceMessage voice = (VoiceMessage) content;
+                map.putString("local", voice.getUri().toString());
+                map.putInt("duration", voice.getDuration());
+                map.putString("extra", voice.getExtra());
                 break;
             }
         }
@@ -301,6 +305,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     messageContent = LocationMessage.obtain(
                         map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
                     break;
+                case "voice":
+                    Uri voice = Utils.getFileUri(reactContext, map.getString("local"));
+                    messageContent = VoiceMessage.obtain(voice, map.getInt("duration"));
+                    break;
             }
         }
         return messageContent;
@@ -313,6 +321,31 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             return null;
         }
         return Message.obtain(map.getString("targetId"), conversationType, mapToMessageContent(content));
+    }
+
+    @ReactMethod
+    public void recallMessage(int id, final String pushContent, final Promise promise) {
+        RongIMClient.getInstance().getMessage(id, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().recallMessage(message, pushContent, new ResultCallback<RecallNotificationMessage>() {
+                    @Override
+                    public void onSuccess(RecallNotificationMessage message) {
+                        promise.resolve(null);
+                    }
+
+                    @Override
+                    public void onError(ErrorCode errorCode) {
+                        reject(promise, errorCode);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
     }
 
     @ReactMethod
@@ -342,7 +375,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(RongIMClient.ErrorCode errorCode) {
-                promise.reject(errorCode + "", "");
+                reject(promise, errorCode);
             }
         };
     }
@@ -370,7 +403,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(RongIMClient.ErrorCode errorCode) {
-                promise.reject(errorCode + "", "");
+                reject(promise, errorCode);
             }
         };
         if (sentTime == 0) {
@@ -421,7 +454,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
                 @Override
                 public void onError(RongIMClient.ErrorCode errorCode) {
-                    promise.reject(errorCode + "", "");
+                    reject(promise, errorCode);
                 }
             });
     }
@@ -435,7 +468,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(RongIMClient.ErrorCode errorCode) {
-                promise.reject(errorCode + "", "");
+                reject(promise, errorCode);
             }
         };
     }
@@ -464,7 +497,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
                 @Override
                 public void onError(RongIMClient.ErrorCode errorCode) {
-                    promise.reject(errorCode + "", "");
+                    reject(promise, errorCode);
                 }
             });
     }
