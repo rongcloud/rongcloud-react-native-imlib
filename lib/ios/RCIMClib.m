@@ -157,18 +157,16 @@ RCT_EXPORT_METHOD(insertOutgoingMessage
                   : (RCTPromiseRejectBlock)reject) {
   RCMessage *message;
   if (sentTime) {
-    message = [RCIMClient.sharedRCIMClient
-        insertOutgoingMessage:conversationType
-                     targetId:targetId
-                   sentStatus:sentStatus
-                      content:[self toMessageContent:content]
-                     sentTime:sentTime];
+    message = [RCIMClient.sharedRCIMClient insertOutgoingMessage:conversationType
+                                                        targetId:targetId
+                                                      sentStatus:sentStatus
+                                                         content:[self toMessageContent:content]
+                                                        sentTime:sentTime];
   } else {
-    message = [RCIMClient.sharedRCIMClient
-        insertOutgoingMessage:conversationType
-                     targetId:targetId
-                   sentStatus:sentStatus
-                      content:[self toMessageContent:content]];
+    message = [RCIMClient.sharedRCIMClient insertOutgoingMessage:conversationType
+                                                        targetId:targetId
+                                                      sentStatus:sentStatus
+                                                         content:[self toMessageContent:content]];
   }
   resolve([self fromMessage:message]);
 }
@@ -569,12 +567,148 @@ RCT_EXPORT_METHOD(setDiscussionInviteStatus
       }];
 }
 
+RCT_EXPORT_METHOD(searchPublicService
+                  : (NSString *)keyword
+                  : (int)searchType
+                  : (int)publicServiceType
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  if (publicServiceType) {
+    [RCIMClient.sharedRCIMClient searchPublicServiceByType:publicServiceType
+        searchType:searchType
+        searchKey:keyword
+        success:^(NSArray *accounts) {
+          resolve([self fromPublicServiceProfileArray:accounts]);
+        }
+        error:^(RCErrorCode status) {
+          [self reject:reject error:status];
+        }];
+  } else {
+    [RCIMClient.sharedRCIMClient searchPublicService:searchType
+        searchKey:keyword
+        success:^(NSArray *accounts) {
+          resolve([self fromPublicServiceProfileArray:accounts]);
+        }
+        error:^(RCErrorCode status) {
+          [self reject:reject error:status];
+        }];
+  }
+}
+
+RCT_EXPORT_METHOD(getPublicServiceProfile
+                  : (int)type
+                  : (NSString *)id
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve([self fromPublicServiceProfile:[RCIMClient.sharedRCIMClient getPublicServiceProfile:type
+                                                                              publicServiceId:id]]);
+}
+
+RCT_EXPORT_METHOD(getPublicServiceList
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve([self fromPublicServiceProfileArray:[RCIMClient.sharedRCIMClient getPublicServiceList]]);
+}
+
+RCT_EXPORT_METHOD(subscribePublicService
+                  : (int)type
+                  : (NSString *)id
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient subscribePublicService:type
+      publicServiceId:id
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(unsubscribePublicService
+                  : (int)type
+                  : (NSString *)id
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient unsubscribePublicService:type
+      publicServiceId:id
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
 
 - (void)onReceived:(RCMessage *)message left:(int)left object:(id)object {
   [self sendEventWithName:@"rcimlib-receive-message" body:[self fromMessage:message]];
+}
+
+- (NSArray *)fromPublicServiceProfileArray:(NSArray<RCPublicServiceProfile *> *)items {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:items.count];
+  for (int i = 0; i < items.count; i += 1) {
+    array[i] = [self fromPublicServiceProfile:items[i]];
+  }
+  return array;
+}
+
+- (NSDictionary *)fromPublicServiceProfile:(RCPublicServiceProfile *)profile {
+  if (!profile) {
+    return nil;
+  }
+  if (profile.menu) {
+    return @{
+      @"id" : profile.publicServiceId,
+      @"name" : profile.name,
+      @"introduction" : profile.introduction,
+      @"portraitUrl" : profile.portraitUrl,
+      @"isGlobal" : @(profile.isGlobal),
+      @"followed" : @(profile.followed),
+      @"type" : @(profile.publicServiceType),
+      @"menu" : profile.menu.menuItems,
+    };
+  } else {
+    return @{
+      @"id" : profile.publicServiceId,
+      @"name" : profile.name,
+      @"introduction" : profile.introduction,
+      @"portraitUrl" : profile.portraitUrl,
+      @"isGlobal" : @(profile.isGlobal),
+      @"followed" : @(profile.followed),
+      @"type" : @(profile.publicServiceType),
+    };
+  }
+}
+
+- (NSArray *)fromPublicServiceMenuItems:(NSArray<RCPublicServiceMenuItem *> *)items {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:items.count];
+  for (int i = 0; i < items.count; i += 1) {
+    array[i] = [self fromPublicServiceMenuItem:items[i]];
+  }
+  return array;
+}
+
+- (NSDictionary *)fromPublicServiceMenuItem:(RCPublicServiceMenuItem *)menu {
+  if (menu.subMenuItems && menu.subMenuItems.count > 0) {
+    return @{
+      @"id" : menu.id,
+      @"name" : menu.name,
+      @"url" : menu.url,
+      @"type" : @(menu.type),
+      @"submenu" : [self fromPublicServiceMenuItems:menu.subMenuItems],
+    };
+  } else {
+    return @{
+      @"id" : menu.id,
+      @"name" : menu.name,
+      @"url" : menu.url,
+      @"type" : @(menu.type),
+    };
+  }
 }
 
 - (void)reject:(RCTPromiseRejectBlock)reject error:(RCErrorCode)error {

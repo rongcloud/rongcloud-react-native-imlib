@@ -964,9 +964,24 @@ export enum PublicServiceMenuItemType {
  * 公众服务菜单项
  */
 export type PublicServiceMenuItem = {
+  /**
+   * 菜单项 ID
+   */
   id: string;
+
+  /**
+   * 菜单项名称
+   */
   name: string;
+
+  /**
+   * 菜单项 URL
+   */
   url: string;
+
+  /**
+   * 菜单项类型
+   */
   type: PublicServiceMenuItemType;
 };
 
