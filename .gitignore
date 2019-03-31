@@ -7,7 +7,6 @@ lib/js/
 node_modules/
 xcuserdata/
 IMLib/
-docs/
 
 *.iml
 .classpath

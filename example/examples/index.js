@@ -20,6 +20,7 @@ import GetUnreadCount from "./get-unread-count";
 import Blacklist from "./blacklist";
 import ChatRoom from "./chat-room";
 import CreateDiscussion from "./create-discussion";
+import PublicService from "./public-service";
 
 const examples = [
   Connect,
@@ -40,7 +41,8 @@ const examples = [
   GetUnreadCount,
   Blacklist,
   ChatRoom,
-  CreateDiscussion
+  CreateDiscussion,
+  PublicService
 ];
 
 export default class extends React.PureComponent {
@@ -76,5 +78,6 @@ export {
   GetUnreadCount,
   Blacklist,
   ChatRoom,
-  CreateDiscussion
+  CreateDiscussion,
+  PublicService
 };

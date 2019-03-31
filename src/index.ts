@@ -16,7 +16,7 @@ const eventEmitter = new NativeEventEmitter(RCIMClient);
 
 /**
  * 初始化 SDK，只需要调用一次
- * 
+ *
  * @param appKey 从融云开发者平台创建应用后获取到的 App Key
  */
 export function init(appKey: string) {
@@ -25,9 +25,9 @@ export function init(appKey: string) {
 
 /**
  * 设置 deviceToken，用于远程推送
- * 
+ *
  * @param deviceToken 从系统获取到的设备号 deviceToken（需要去掉空格和尖括号）
- * 
+ *
  *   deviceToken是系统提供的，从苹果服务器获取的，用于APNs远程推送必须使用的设备唯一值。
  *   您需要将 `-application:didRegisterForRemoteNotificationsWithDeviceToken:`
  *   获取到的deviceToken，转为NSString类型，并去掉其中的空格和尖括号，作为参数传入此方法。
@@ -38,7 +38,7 @@ export function setDeviceToken(deviceToken: string) {
 
 /**
  * 设置导航服务器和上传文件服务器信息，要在 [[init]] 前使用
- * 
+ *
  * @param naviServer 导航服务器地址
  * @param fileServer 文件服务器地址
  */
@@ -48,7 +48,7 @@ export function setServerInfo(naviServer: string, fileServer: string) {
 
 /**
  * 连接融云服务器，只需要调用一次
- * 
+ *
  * 在 App 整个生命周期，您只需要调用一次此方法与融云服务器建立连接。
  * 之后无论是网络出现异常或者App有前后台的切换等，SDK都会负责自动重连。
  * 除非您已经手动将连接断开，否则您不需要自己再手动重连。
@@ -82,7 +82,7 @@ export function connect(
 
 /**
  * 断开与融云服务器的连接
- * 
+ *
  * @param isReceivePush 是否还接收推送
  */
 export function disconnect(isReceivePush = true) {
@@ -907,4 +907,79 @@ export function setDiscussionName(targetId: string, name: string): Promise<void>
  */
 export function setDiscussionInviteStatus(targetId: string, isOpen: boolean): Promise<void> {
   return RCIMClient.setDiscussionInviteStatus(targetId, isOpen);
+}
+
+/**
+ * 搜索类型
+ */
+export enum SearchType {
+  /**
+   * 精准
+   */
+  EXACT,
+
+  /**
+   * 模糊
+   */
+  FUZZY
+}
+
+/**
+ * 公共服务类型
+ */
+export enum PublicServiceType {
+  /**
+   * 应用公众服务
+   */
+  APP_PUBLIC_SERVICE = 7,
+
+  /**
+   * 公共服务号
+   */
+  PUBLIC_SERVICE = 8
+}
+
+/**
+ * 公众服务菜单类型
+ */
+export enum PublicServiceMenuItemType {
+  /**
+   * 作为分组包含子菜单的菜单
+   */
+  GROUP,
+
+  /**
+   * 查看事件菜单
+   */
+  VIEW,
+
+  /**
+   * 点击事件菜单
+   */
+  CLICK
+}
+
+/**
+ * 公众服务菜单项
+ */
+export type PublicServiceMenuItem = {
+  id: string;
+  name: string;
+  url: string;
+  type: PublicServiceMenuItemType;
+};
+
+/**
+ * 搜索公众服务
+ *
+ * @param keyword 关键字
+ * @param searchType 搜索类型
+ * @param publicServiceType 公众服务类型
+ */
+export function searchPublicService(
+  keyword: string,
+  searchType: SearchType = SearchType.FUZZY,
+  publicServiceType: PublicServiceType = 0
+) {
+  return RCIMClient.searchPublicService(keyword, searchType, publicServiceType);
 }

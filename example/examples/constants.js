@@ -1,7 +1,9 @@
 import {
   ConversationType,
   SentStatus,
-  ConversationNotificationStatus
+  ConversationNotificationStatus,
+  SearchType,
+  PublicServiceType
 } from "rongcloud-react-native-imlib";
 
 export const conversations = {
@@ -27,4 +29,15 @@ export const sentStatus = {
 export const conversationNotificationStatus = {
   [ConversationNotificationStatus.DO_NOT_DISTURB]: "免打扰",
   [ConversationNotificationStatus.NOTIFY]: "消息提醒"
+};
+
+export const searchTypes = {
+  [SearchType.EXACT]: "精准匹配",
+  [SearchType.FUZZY]: "模糊匹配"
+};
+
+export const publicServiceTypes = {
+  0: "所有",
+  [PublicServiceType.APP_PUBLIC_SERVICE]: "应用公众服务",
+  [PublicServiceType.PUBLIC_SERVICE]: "公共服务"
 };

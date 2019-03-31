@@ -10,6 +10,7 @@ import io.rong.imlib.model.*;
 import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
+import io.rong.imlib.model.Conversation.PublicServiceType;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.message.FileMessage;
 import io.rong.message.ImageMessage;
@@ -160,6 +161,20 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 eventEmitter.emit("rcimlib-connect", createEventMap(eventId, "tokenIncorrect"));
             }
         });
+    }
+
+    @ReactMethod
+    public void connect(Boolean isReceivePush) {
+        if (isReceivePush) {
+            RongIMClient.getInstance().disconnect();
+        } else {
+            RongIMClient.getInstance().logout();
+        }
+    }
+
+    @ReactMethod
+    public void setServerInfo(String naviServer, String fileServer) {
+        RongIMClient.setServerInfo(naviServer, fileServer);
     }
 
     @ReactMethod
@@ -827,8 +842,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setDiscussionInviteStatus(String targetId, Boolean isOpen, final Promise promise) {
-        RongIMClient.getInstance().setDiscussionInviteStatus(
-                targetId, isOpen ? DiscussionInviteStatus.OPENED : DiscussionInviteStatus.CLOSED, createOperationCallback(promise));
+        DiscussionInviteStatus status = isOpen ? DiscussionInviteStatus.OPENED : DiscussionInviteStatus.CLOSED;
+        RongIMClient.getInstance().setDiscussionInviteStatus(targetId, status, createOperationCallback(promise));
     }
 
     @ReactMethod
@@ -843,5 +858,60 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void removeMemberFromDiscussion(String targetId, String userId, final Promise promise) {
         RongIMClient.getInstance().removeMemberFromDiscussion(targetId, userId, createOperationCallback(promise));
+    }
+
+    private WritableArray menuItemsToArray(List<PublicServiceMenuItem> items) {
+        WritableArray menu = Arguments.createArray();
+        for (PublicServiceMenuItem menuItem : items) {
+            WritableMap menuItemMap = Arguments.createMap();
+            menuItemMap.putString("id", menuItem.getId());
+            menuItemMap.putString("name", menuItem.getName());
+            menuItemMap.putString("url", menuItem.getUrl());
+            menuItemMap.putInt("type", menuItem.getType().getValue());
+            List<PublicServiceMenuItem> subItems = menuItem.getSubMenuItems();
+            if (subItems != null && subItems.size() > 0) {
+                menuItemMap.putArray("submenu", menuItemsToArray(subItems));
+            }
+        }
+        return menu;
+    }
+
+    @ReactMethod
+    public void searchPublicService(String keyword, int searchType, int publicServiceType, final Promise promise) {
+        ResultCallback<PublicServiceProfileList> callback = new ResultCallback<PublicServiceProfileList>() {
+            @Override
+            public void onSuccess(PublicServiceProfileList result) {
+                WritableArray array = Arguments.createArray();
+                for (PublicServiceProfile item : result.getPublicServiceData()) {
+                    WritableMap map = Arguments.createMap();
+                    map.putString("id", item.getTargetId());
+                    map.putString("name", item.getName());
+                    map.putString("introduction", item.getIntroduction());
+                    map.putString("portraitUrl", item.getPortraitUri().toString());
+                    map.putBoolean("isGlobal", item.isGlobal());
+                    map.putBoolean("followed", item.isFollow());
+                    map.putInt("type", item.getConversationType().getValue());
+                    PublicServiceMenu menu = item.getMenu();
+                    if (menu != null) {
+                        map.putArray("menu", menuItemsToArray(menu.getMenuItems()));
+                    }
+                    array.pushMap(map);
+                }
+                promise.resolve(array);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        };
+
+        SearchType type = searchType == SearchType.EXACT.getValue() ? SearchType.EXACT : SearchType.FUZZY;
+        if (publicServiceType == 0) {
+            RongIMClient.getInstance().searchPublicService(type, keyword, callback);
+        } else {
+            RongIMClient.getInstance().searchPublicServiceByType(
+                    PublicServiceType.setValue(publicServiceType), type, keyword, callback);
+        }
     }
 }
