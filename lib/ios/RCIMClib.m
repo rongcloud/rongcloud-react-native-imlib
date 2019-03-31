@@ -118,6 +118,22 @@ RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   }
 }
 
+RCT_EXPORT_METHOD(recallMessage
+                  : (double)id
+                  : (NSString *)pushContent
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:id];
+  [RCIMClient.sharedRCIMClient recallMessage:message
+      pushContent:pushContent
+      success:^(long messageId) {
+        resolve(nil);
+      }
+      error:^(RCErrorCode errorcode) {
+        [self reject:reject error:errorcode];
+      }];
+}
+
 RCT_EXPORT_METHOD(getHistoryMessages
                   : (int)conversationType
                   : (NSString *)targetId
@@ -190,7 +206,7 @@ RCT_EXPORT_METHOD(deleteMessages
         resolve(@(true));
       }
       error:^(RCErrorCode status) {
-        reject(@"", @"", nil);
+        [self reject:reject error:status];
       }];
 }
 
@@ -813,6 +829,28 @@ RCT_EXPORT_METHOD(unsubscribePublicService
       @"operatorId" : message.operatorId,
       @"extension" : message.extension,
     };
+  } else if ([content isKindOfClass:[RCLocationMessage class]]) {
+    RCLocationMessage *message = (RCLocationMessage *)content;
+    return @{
+      @"type" : @"voice",
+      @"latitude" : @(message.location.latitude),
+      @"longitude" : @(message.location.longitude),
+      @"name" : message.locationName,
+      @"thumbnail" : @"",
+      @"extra" : message.extra ? message.extra : @"",
+    };
+  } else if ([content isKindOfClass:[RCVoiceMessage class]]) {
+    RCVoiceMessage *message = (RCVoiceMessage *)content;
+    NSString *data = @"";
+    if (message.wavAudioData) {
+      data = [message.wavAudioData base64EncodedStringWithOptions:0];
+    }
+    return @{
+      @"type" : @"voice",
+      @"data" : data,
+      @"duration" : @(message.duration),
+      @"extra" : message.extra ? message.extra : @"",
+    };
   }
   return @{@"error" : @"Content type not yet supported"};
 }
@@ -835,6 +873,20 @@ RCT_EXPORT_METHOD(unsubscribePublicService
         messageWithFile:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
     file.extra = content[@"extra"];
     return file;
+  } else if ([type isEqualToString:@"location"]) {
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
+        [content[@"latitude"] doubleValue], [content[@"longitude"] doubleValue]);
+    RCLocationMessage *location = [RCLocationMessage messageWithLocationImage:nil
+                                                                     location:coordinate
+                                                                 locationName:content[@"name"]];
+    location.extra = content[@"extra"];
+    return location;
+  } else if ([type isEqualToString:@"voice"]) {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:content[@"data"] options:0];
+    RCVoiceMessage *voice = [RCVoiceMessage messageWithAudio:data
+                                                    duration:[content[@"duration"] intValue]];
+    voice.extra = content[@"extra"];
+    return voice;
   }
   return nil;
 }
