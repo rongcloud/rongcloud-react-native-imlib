@@ -134,6 +134,44 @@ RCT_EXPORT_METHOD(recallMessage
       }];
 }
 
+RCT_EXPORT_METHOD(sendTypingStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSString *)typingContentType) {
+  [RCIMClient.sharedRCIMClient sendTypingStatus:conversationType
+                                       targetId:targetId
+                                    contentType:typingContentType];
+}
+
+RCT_EXPORT_METHOD(sendReadReceiptMessage
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)timestamp) {
+  [RCIMClient.sharedRCIMClient sendReadReceiptMessage:conversationType
+      targetId:targetId
+      time:timestamp
+      success:^{
+        NSLog(@"sendReadReceiptMessageSuccess");
+      }
+      error:^(RCErrorCode error) {
+        NSLog(@"sendReadReceiptMessageError");
+      }];
+}
+
+RCT_EXPORT_METHOD(sendReadReceiptRequest
+                  : (int)messageId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:messageId];
+  [RCIMClient.sharedRCIMClient sendReadReceiptRequest:message
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode error) {
+        [self reject:reject error:error];
+      }];
+}
+
 RCT_EXPORT_METHOD(getHistoryMessages
                   : (int)conversationType
                   : (NSString *)targetId
@@ -664,6 +702,44 @@ RCT_EXPORT_METHOD(unsubscribePublicService
   [self sendEventWithName:@"rcimlib-receive-message" body:[self fromMessage:message]];
 }
 
+- (void)onTypingStatusChanged:(RCConversationType)conversationType
+                     targetId:(NSString *)targetId
+                       status:(NSArray *)status {
+  if (status.count > 0) {
+    RCUserTypingStatus *item = status[0];
+    [self sendEventWithName:@"rcimlib-typing-status"
+                       body:@{
+                         @"conversationType" : @(conversationType),
+                         @"targetId" : targetId,
+                         @"userId" : item.userId,
+                         @"typingContentType" : item.contentType,
+                       }];
+  }
+}
+
+- (void)onMessageReceiptRequest:(RCConversationType)conversationType
+                       targetId:(NSString *)targetId
+                     messageUId:(NSString *)messageUId {
+  [self sendEventWithName:@"rcimlib-receipt-request"
+                     body:@{
+                       @"conversationType" : @(conversationType),
+                       @"targetId" : targetId,
+                       @"messageUId" : messageUId,
+                     }];
+}
+
+- (void)onMessageReceiptResponse:(RCConversationType)conversationType
+                        targetId:(NSString *)targetId
+                      messageUId:(NSString *)messageUId
+                      readerList:(NSMutableDictionary *)userIdList {
+  [self sendEventWithName:@"rcimlib-receipt-response"
+                     body:@{
+                       @"conversationType" : @(conversationType),
+                       @"targetId" : targetId,
+                       @"messageUId" : messageUId,
+                     }];
+}
+
 - (NSArray *)fromPublicServiceProfileArray:(NSArray<RCPublicServiceProfile *> *)items {
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:items.count];
   for (int i = 0; i < items.count; i += 1) {
@@ -894,7 +970,8 @@ RCT_EXPORT_METHOD(unsubscribePublicService
 - (NSArray<NSString *> *)supportedEvents {
   return @[
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
-    @"rcimlib-send-message"
+    @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
+    @"rcimlib-receipt-request", @"rcimlib-receipt-response"
   ];
 }
 
