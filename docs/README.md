@@ -126,8 +126,8 @@ yarn run-ios
 yarn run-android
 ```
 
-[接口文档](docs)
-------------
+[接口文档](docs/modules/rcimclient.md)
+----------------------------------
 
 项目结构
 ----

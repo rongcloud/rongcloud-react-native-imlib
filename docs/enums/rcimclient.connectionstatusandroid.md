@@ -24,7 +24,7 @@
 
 **CONNECTED**: 
 
-*Defined in [index.ts:353](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L353)*
+*Defined in [index.ts:579](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L579)*
 
 ___
 <a id="connecting"></a>
@@ -33,7 +33,7 @@ ___
 
 **CONNECTING**: 
 
-*Defined in [index.ts:354](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L354)*
+*Defined in [index.ts:580](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L580)*
 
 ___
 <a id="disconnected"></a>
@@ -42,7 +42,7 @@ ___
 
 **DISCONNECTED**: 
 
-*Defined in [index.ts:355](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L355)*
+*Defined in [index.ts:581](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L581)*
 
 ___
 <a id="kicked_offline_by_other_client"></a>
@@ -51,7 +51,7 @@ ___
 
 **KICKED_OFFLINE_BY_OTHER_CLIENT**: 
 
-*Defined in [index.ts:356](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L356)*
+*Defined in [index.ts:582](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L582)*
 
 ___
 <a id="network_unavailable"></a>
@@ -60,7 +60,7 @@ ___
 
 **NETWORK_UNAVAILABLE**:  =  -1
 
-*Defined in [index.ts:352](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L352)*
+*Defined in [index.ts:578](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L578)*
 
 ___
 <a id="server_invalid"></a>
@@ -69,7 +69,7 @@ ___
 
 **SERVER_INVALID**: 
 
-*Defined in [index.ts:358](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L358)*
+*Defined in [index.ts:584](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L584)*
 
 ___
 <a id="token_incorrect"></a>
@@ -78,7 +78,7 @@ ___
 
 **TOKEN_INCORRECT**: 
 
-*Defined in [index.ts:357](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L357)*
+*Defined in [index.ts:583](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L583)*
 
 ___
 

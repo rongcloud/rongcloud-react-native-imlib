@@ -21,7 +21,7 @@
 
 **APP_PUBLIC_SERVICE**:  = 7
 
-*Defined in [index.ts:934](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L934)*
+*Defined in [index.ts:1163](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1163)*
 
 应用公众服务
 
@@ -32,7 +32,7 @@ ___
 
 **PUBLIC_SERVICE**:  = 8
 
-*Defined in [index.ts:939](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L939)*
+*Defined in [index.ts:1168](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1168)*
 
 公共服务号
 

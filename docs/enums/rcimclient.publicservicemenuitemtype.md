@@ -22,7 +22,7 @@
 
 **CLICK**: 
 
-*Defined in [index.ts:959](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L959)*
+*Defined in [index.ts:1188](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1188)*
 
 点击事件菜单
 
@@ -33,7 +33,7 @@ ___
 
 **GROUP**: 
 
-*Defined in [index.ts:949](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L949)*
+*Defined in [index.ts:1178](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1178)*
 
 作为分组包含子菜单的菜单
 
@@ -44,7 +44,7 @@ ___
 
 **VIEW**: 
 
-*Defined in [index.ts:954](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L954)*
+*Defined in [index.ts:1183](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1183)*
 
 查看事件菜单
 

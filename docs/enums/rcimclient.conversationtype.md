@@ -28,7 +28,7 @@
 
 **APP_SERVICE**: 
 
-*Defined in [index.ts:110](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L110)*
+*Defined in [index.ts:110](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L110)*
 
 ___
 <a id="chatroom"></a>
@@ -37,7 +37,7 @@ ___
 
 **CHATROOM**: 
 
-*Defined in [index.ts:107](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L107)*
+*Defined in [index.ts:107](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L107)*
 
 ___
 <a id="customer_service"></a>
@@ -46,7 +46,7 @@ ___
 
 **CUSTOMER_SERVICE**: 
 
-*Defined in [index.ts:108](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L108)*
+*Defined in [index.ts:108](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L108)*
 
 ___
 <a id="discussion"></a>
@@ -55,7 +55,7 @@ ___
 
 **DISCUSSION**: 
 
-*Defined in [index.ts:105](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L105)*
+*Defined in [index.ts:105](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L105)*
 
 ___
 <a id="group"></a>
@@ -64,7 +64,7 @@ ___
 
 **GROUP**: 
 
-*Defined in [index.ts:106](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L106)*
+*Defined in [index.ts:106](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L106)*
 
 ___
 <a id="private"></a>
@@ -73,7 +73,7 @@ ___
 
 **PRIVATE**:  = 1
 
-*Defined in [index.ts:104](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L104)*
+*Defined in [index.ts:104](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L104)*
 
 ___
 <a id="public_service"></a>
@@ -82,7 +82,7 @@ ___
 
 **PUBLIC_SERVICE**: 
 
-*Defined in [index.ts:111](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L111)*
+*Defined in [index.ts:111](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L111)*
 
 ___
 <a id="push_service"></a>
@@ -91,7 +91,7 @@ ___
 
 **PUSH_SERVICE**: 
 
-*Defined in [index.ts:112](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L112)*
+*Defined in [index.ts:112](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L112)*
 
 ___
 <a id="system"></a>
@@ -100,7 +100,7 @@ ___
 
 **SYSTEM**: 
 
-*Defined in [index.ts:109](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L109)*
+*Defined in [index.ts:109](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L109)*
 
 ___
 

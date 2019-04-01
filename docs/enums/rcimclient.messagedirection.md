@@ -21,7 +21,7 @@
 
 **RECEIVE**: 
 
-*Defined in [index.ts:97](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L97)*
+*Defined in [index.ts:97](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L97)*
 
 ___
 <a id="send"></a>
@@ -30,7 +30,7 @@ ___
 
 **SEND**:  = 1
 
-*Defined in [index.ts:96](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L96)*
+*Defined in [index.ts:96](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L96)*
 
 ___
 

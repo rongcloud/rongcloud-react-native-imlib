@@ -2,6 +2,8 @@
 
 # Enumeration: ErrorCode
 
+错误代码
+
 ## Index
 
 ### Enumeration members
@@ -47,7 +49,7 @@
 
 **CLIENT_NOT_INIT**:  = 33001
 
-*Defined in [index.ts:317](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L317)*
+*Defined in [index.ts:543](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L543)*
 
 ___
 <a id="database_error"></a>
@@ -56,7 +58,7 @@ ___
 
 **DATABASE_ERROR**:  = 33002
 
-*Defined in [index.ts:318](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L318)*
+*Defined in [index.ts:544](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L544)*
 
 ___
 <a id="errorcode_timeout"></a>
@@ -65,7 +67,7 @@ ___
 
 **ERRORCODE_TIMEOUT**:  = 5004
 
-*Defined in [index.ts:302](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L302)*
+*Defined in [index.ts:528](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L528)*
 
 ___
 <a id="errorcode_unknown"></a>
@@ -74,7 +76,7 @@ ___
 
 **ERRORCODE_UNKNOWN**:  =  -1
 
-*Defined in [index.ts:300](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L300)*
+*Defined in [index.ts:526](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L526)*
 
 ___
 <a id="forbidden_in_chatroom"></a>
@@ -83,7 +85,7 @@ ___
 
 **FORBIDDEN_IN_CHATROOM**:  = 23408
 
-*Defined in [index.ts:308](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L308)*
+*Defined in [index.ts:534](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L534)*
 
 ___
 <a id="forbidden_in_group"></a>
@@ -92,7 +94,7 @@ ___
 
 **FORBIDDEN_IN_GROUP**:  = 22408
 
-*Defined in [index.ts:306](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L306)*
+*Defined in [index.ts:532](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L532)*
 
 ___
 <a id="invalid_parameter"></a>
@@ -101,7 +103,7 @@ ___
 
 **INVALID_PARAMETER**:  = 33003
 
-*Defined in [index.ts:319](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L319)*
+*Defined in [index.ts:545](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L545)*
 
 ___
 <a id="invalid_public_number"></a>
@@ -110,7 +112,7 @@ ___
 
 **INVALID_PUBLIC_NUMBER**:  = 29201
 
-*Defined in [index.ts:321](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L321)*
+*Defined in [index.ts:547](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L547)*
 
 ___
 <a id="kicked_from_chatroom"></a>
@@ -119,7 +121,7 @@ ___
 
 **KICKED_FROM_CHATROOM**:  = 23409
 
-*Defined in [index.ts:309](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L309)*
+*Defined in [index.ts:535](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L535)*
 
 ___
 <a id="msg_roaming_service_unavailable"></a>
@@ -128,7 +130,7 @@ ___
 
 **MSG_ROAMING_SERVICE_UNAVAILABLE**:  = 33007
 
-*Defined in [index.ts:320](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L320)*
+*Defined in [index.ts:546](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L546)*
 
 ___
 <a id="not_in_chatroom"></a>
@@ -137,7 +139,7 @@ ___
 
 **NOT_IN_CHATROOM**:  = 23406
 
-*Defined in [index.ts:307](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L307)*
+*Defined in [index.ts:533](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L533)*
 
 ___
 <a id="not_in_discussion"></a>
@@ -146,7 +148,7 @@ ___
 
 **NOT_IN_DISCUSSION**:  = 21406
 
-*Defined in [index.ts:304](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L304)*
+*Defined in [index.ts:530](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L530)*
 
 ___
 <a id="not_in_group"></a>
@@ -155,7 +157,7 @@ ___
 
 **NOT_IN_GROUP**:  = 22406
 
-*Defined in [index.ts:305](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L305)*
+*Defined in [index.ts:531](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L531)*
 
 ___
 <a id="rc_channel_invalid"></a>
@@ -164,7 +166,7 @@ ___
 
 **RC_CHANNEL_INVALID**:  = 30001
 
-*Defined in [index.ts:314](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L314)*
+*Defined in [index.ts:540](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L540)*
 
 ___
 <a id="rc_chatroom_is_full"></a>
@@ -173,7 +175,7 @@ ___
 
 **RC_CHATROOM_IS_FULL**:  = 23411
 
-*Defined in [index.ts:311](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L311)*
+*Defined in [index.ts:537](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L537)*
 
 ___
 <a id="rc_chatroom_not_exist"></a>
@@ -182,7 +184,7 @@ ___
 
 **RC_CHATROOM_NOT_EXIST**:  = 23410
 
-*Defined in [index.ts:310](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L310)*
+*Defined in [index.ts:536](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L536)*
 
 ___
 <a id="rc_msg_blocked_sensitive_word"></a>
@@ -191,7 +193,7 @@ ___
 
 **RC_MSG_BLOCKED_SENSITIVE_WORD**:  = 21501
 
-*Defined in [index.ts:327](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L327)*
+*Defined in [index.ts:553](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L553)*
 
 ___
 <a id="rc_msg_replaced_sensitive_word"></a>
@@ -200,7 +202,7 @@ ___
 
 **RC_MSG_REPLACED_SENSITIVE_WORD**:  = 21502
 
-*Defined in [index.ts:328](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L328)*
+*Defined in [index.ts:554](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L554)*
 
 ___
 <a id="rc_msg_response_timeout"></a>
@@ -209,7 +211,7 @@ ___
 
 **RC_MSG_RESPONSE_TIMEOUT**:  = 30003
 
-*Defined in [index.ts:316](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L316)*
+*Defined in [index.ts:542](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L542)*
 
 ___
 <a id="rc_msg_size_out_of_limit"></a>
@@ -218,7 +220,7 @@ ___
 
 **RC_MSG_SIZE_OUT_OF_LIMIT**:  = 30016
 
-*Defined in [index.ts:322](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L322)*
+*Defined in [index.ts:548](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L548)*
 
 ___
 <a id="rc_network_unavailable"></a>
@@ -227,7 +229,7 @@ ___
 
 **RC_NETWORK_UNAVAILABLE**:  = 30002
 
-*Defined in [index.ts:315](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L315)*
+*Defined in [index.ts:541](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L541)*
 
 ___
 <a id="rc_operation_blocked"></a>
@@ -236,7 +238,7 @@ ___
 
 **RC_OPERATION_BLOCKED**:  = 20605
 
-*Defined in [index.ts:325](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L325)*
+*Defined in [index.ts:551](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L551)*
 
 ___
 <a id="rc_operation_not_support"></a>
@@ -245,7 +247,7 @@ ___
 
 **RC_OPERATION_NOT_SUPPORT**:  = 20606
 
-*Defined in [index.ts:326](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L326)*
+*Defined in [index.ts:552](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L552)*
 
 ___
 <a id="rc_parameter_invalid_chatroom"></a>
@@ -254,7 +256,7 @@ ___
 
 **RC_PARAMETER_INVALID_CHATROOM**:  = 23412
 
-*Defined in [index.ts:312](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L312)*
+*Defined in [index.ts:538](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L538)*
 
 ___
 <a id="rc_pushsetting_parameter_invalid"></a>
@@ -263,7 +265,7 @@ ___
 
 **RC_PUSHSETTING_PARAMETER_INVALID**:  = 26001
 
-*Defined in [index.ts:324](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L324)*
+*Defined in [index.ts:550](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L550)*
 
 ___
 <a id="rc_recallmessage_parameter_invalid"></a>
@@ -272,7 +274,7 @@ ___
 
 **RC_RECALLMESSAGE_PARAMETER_INVALID**:  = 25101
 
-*Defined in [index.ts:323](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L323)*
+*Defined in [index.ts:549](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L549)*
 
 ___
 <a id="rc_roaming_service_unavailable_chatroom"></a>
@@ -281,7 +283,7 @@ ___
 
 **RC_ROAMING_SERVICE_UNAVAILABLE_CHATROOM**:  = 23414
 
-*Defined in [index.ts:313](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L313)*
+*Defined in [index.ts:539](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L539)*
 
 ___
 <a id="rc_sight_msg_duration_limit_exceed"></a>
@@ -290,7 +292,7 @@ ___
 
 **RC_SIGHT_MSG_DURATION_LIMIT_EXCEED**:  = 34002
 
-*Defined in [index.ts:329](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L329)*
+*Defined in [index.ts:555](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L555)*
 
 ___
 <a id="rejected_by_blacklist"></a>
@@ -299,7 +301,7 @@ ___
 
 **REJECTED_BY_BLACKLIST**:  = 405
 
-*Defined in [index.ts:301](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L301)*
+*Defined in [index.ts:527](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L527)*
 
 ___
 <a id="send_msg_frequency_overrun"></a>
@@ -308,7 +310,7 @@ ___
 
 **SEND_MSG_FREQUENCY_OVERRUN**:  = 20604
 
-*Defined in [index.ts:303](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L303)*
+*Defined in [index.ts:529](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L529)*
 
 ___
 

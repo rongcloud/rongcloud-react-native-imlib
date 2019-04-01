@@ -21,7 +21,7 @@
 
 **EXACT**: 
 
-*Defined in [index.ts:919](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L919)*
+*Defined in [index.ts:1148](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1148)*
 
 精准
 
@@ -32,7 +32,7 @@ ___
 
 **FUZZY**: 
 
-*Defined in [index.ts:924](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L924)*
+*Defined in [index.ts:1153](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1153)*
 
 模糊
 

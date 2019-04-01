@@ -33,7 +33,7 @@
 
 **AIRPLANE_MODE**:  = 2
 
-*Defined in [index.ts:336](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L336)*
+*Defined in [index.ts:562](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L562)*
 
 ___
 <a id="cellular_2g"></a>
@@ -42,7 +42,7 @@ ___
 
 **Cellular_2G**:  = 3
 
-*Defined in [index.ts:337](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L337)*
+*Defined in [index.ts:563](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L563)*
 
 ___
 <a id="cellular_3g_4g"></a>
@@ -51,7 +51,7 @@ ___
 
 **Cellular_3G_4G**:  = 4
 
-*Defined in [index.ts:338](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L338)*
+*Defined in [index.ts:564](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L564)*
 
 ___
 <a id="connected"></a>
@@ -60,7 +60,7 @@ ___
 
 **Connected**:  = 0
 
-*Defined in [index.ts:334](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L334)*
+*Defined in [index.ts:560](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L560)*
 
 ___
 <a id="connecting"></a>
@@ -69,7 +69,7 @@ ___
 
 **Connecting**:  = 10
 
-*Defined in [index.ts:344](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L344)*
+*Defined in [index.ts:570](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L570)*
 
 ___
 <a id="disconn_exception"></a>
@@ -78,7 +78,7 @@ ___
 
 **DISCONN_EXCEPTION**:  = 31011
 
-*Defined in [index.ts:348](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L348)*
+*Defined in [index.ts:574](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L574)*
 
 ___
 <a id="kicked_offline_by_other_client"></a>
@@ -87,7 +87,7 @@ ___
 
 **KICKED_OFFLINE_BY_OTHER_CLIENT**:  = 6
 
-*Defined in [index.ts:340](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L340)*
+*Defined in [index.ts:566](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L566)*
 
 ___
 <a id="login_on_web"></a>
@@ -96,7 +96,7 @@ ___
 
 **LOGIN_ON_WEB**:  = 7
 
-*Defined in [index.ts:341](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L341)*
+*Defined in [index.ts:567](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L567)*
 
 ___
 <a id="network_unavailable"></a>
@@ -105,7 +105,7 @@ ___
 
 **NETWORK_UNAVAILABLE**:  = 1
 
-*Defined in [index.ts:335](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L335)*
+*Defined in [index.ts:561](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L561)*
 
 ___
 <a id="server_invalid"></a>
@@ -114,7 +114,7 @@ ___
 
 **SERVER_INVALID**:  = 8
 
-*Defined in [index.ts:342](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L342)*
+*Defined in [index.ts:568](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L568)*
 
 ___
 <a id="signup"></a>
@@ -123,7 +123,7 @@ ___
 
 **SignUp**:  = 12
 
-*Defined in [index.ts:346](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L346)*
+*Defined in [index.ts:572](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L572)*
 
 ___
 <a id="token_incorrect"></a>
@@ -132,7 +132,7 @@ ___
 
 **TOKEN_INCORRECT**:  = 31004
 
-*Defined in [index.ts:347](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L347)*
+*Defined in [index.ts:573](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L573)*
 
 ___
 <a id="unknown"></a>
@@ -141,7 +141,7 @@ ___
 
 **UNKNOWN**:  =  -1
 
-*Defined in [index.ts:333](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L333)*
+*Defined in [index.ts:559](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L559)*
 
 ___
 <a id="unconnected"></a>
@@ -150,7 +150,7 @@ ___
 
 **Unconnected**:  = 11
 
-*Defined in [index.ts:345](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L345)*
+*Defined in [index.ts:571](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L571)*
 
 ___
 <a id="validate_invalid"></a>
@@ -159,7 +159,7 @@ ___
 
 **VALIDATE_INVALID**:  = 9
 
-*Defined in [index.ts:343](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L343)*
+*Defined in [index.ts:569](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L569)*
 
 ___
 <a id="wifi"></a>
@@ -168,7 +168,7 @@ ___
 
 **WIFI**:  = 5
 
-*Defined in [index.ts:339](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L339)*
+*Defined in [index.ts:565](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L565)*
 
 ___
 

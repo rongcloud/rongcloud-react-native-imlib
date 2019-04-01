@@ -21,7 +21,7 @@
 
 **ASC**:  = 1
 
-*Defined in [index.ts:792](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L792)*
+*Defined in [index.ts:1021](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1021)*
 
 生序
 
@@ -32,7 +32,7 @@ ___
 
 **DESC**: 
 
-*Defined in [index.ts:797](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L797)*
+*Defined in [index.ts:1026](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L1026)*
 
 降序
 

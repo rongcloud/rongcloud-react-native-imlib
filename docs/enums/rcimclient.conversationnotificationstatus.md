@@ -21,7 +21,7 @@
 
 **DO_NOT_DISTURB**: 
 
-*Defined in [index.ts:605](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L605)*
+*Defined in [index.ts:834](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L834)*
 
 ___
 <a id="notify"></a>
@@ -30,7 +30,7 @@ ___
 
 **NOTIFY**: 
 
-*Defined in [index.ts:606](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/c4be651/src/index.ts#L606)*
+*Defined in [index.ts:835](https://github.com/rongcloud/rongcloud-react-native-imlib/blob/2913ce2/src/index.ts#L835)*
 
 ___
 
