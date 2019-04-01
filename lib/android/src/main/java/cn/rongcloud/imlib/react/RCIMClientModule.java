@@ -12,11 +12,11 @@ import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
 import io.rong.imlib.model.Message.SentStatus;
+import io.rong.imlib.typingmessage.TypingStatus;
 import io.rong.message.*;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class RCIMClientModule extends ReactContextBaseJavaModule {
     private RCTDeviceEventEmitter eventEmitter;
@@ -36,6 +36,46 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             @Override
             public void onChanged(ConnectionStatus status) {
                 eventEmitter.emit("rcimlib-connection-status", status.getValue());
+            }
+        });
+        RongIMClient.setTypingStatusListener(new TypingStatusListener() {
+            @Override
+            public void onTypingStatusChanged(ConversationType conversationType, String targetId, Collection<TypingStatus> set) {
+                if (set.size() > 0) {
+                    Iterator iterator = set.iterator();
+                    TypingStatus status = (TypingStatus) iterator.next();
+                    WritableMap map = Arguments.createMap();
+                    map.putInt("conversationType", conversationType.getValue());
+                    map.putString("targetId", targetId);
+                    map.putString("userId", status.getUserId());
+                    map.putDouble("sentTime", status.getSentTime());
+                    map.putString("typingContentType", status.getTypingContentType());
+                    eventEmitter.emit("rcimlib-typing-status", map);
+                }
+            }
+        });
+        RongIMClient.setReadReceiptListener(new ReadReceiptListener() {
+            @Override
+            public void onReadReceiptReceived(Message message) {
+                eventEmitter.emit("rcimlib-read-receipt-received", messageToMap(message));
+            }
+
+            @Override
+            public void onMessageReceiptRequest(ConversationType conversationType, String targetId, String UId) {
+                WritableMap map = Arguments.createMap();
+                map.putInt("conversationType", conversationType.getValue());
+                map.putString("targetId", targetId);
+                map.putString("messageUId", UId);
+                eventEmitter.emit("rcimlib-receipt-request", map);
+            }
+
+            @Override
+            public void onMessageReceiptResponse(ConversationType conversationType, String targetId, String UId, HashMap<String, Long> hashMap) {
+                WritableMap map = Arguments.createMap();
+                map.putInt("conversationType", conversationType.getValue());
+                map.putString("targetId", targetId);
+                map.putString("messageUId", UId);
+                eventEmitter.emit("rcimlib-receipt-response", map);
             }
         });
     }
@@ -1004,5 +1044,30 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPublicServiceList(final Promise promise) {
         RongIMClient.getInstance().getPublicServiceList(createPublicServiceProfileListCallback(promise));
+    }
+
+    @ReactMethod
+    public void sendTypingStatus(int conversationType, String targetId, String typingStatus) {
+        RongIMClient.getInstance().sendTypingStatus(ConversationType.setValue(conversationType), targetId, typingStatus);
+    }
+
+    @ReactMethod
+    public void sendReadReceiptMessage(int conversationType, String targetId, double timestamp) {
+        RongIMClient.getInstance().sendReadReceiptMessage(ConversationType.setValue(conversationType), targetId, (long) timestamp);
+    }
+
+    @ReactMethod
+    public void sendReadReceiptRequest(int messageId, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().sendReadReceiptRequest(message, createOperationCallback(promise));
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
     }
 }

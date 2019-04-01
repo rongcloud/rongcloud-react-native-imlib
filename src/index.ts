@@ -3,7 +3,6 @@
  */
 
 import { NativeEventEmitter, NativeModules } from "react-native";
-import { func } from "prop-types";
 
 /**
  * @hidden
@@ -183,6 +182,47 @@ export type VoiceMessage = {
 };
 
 /**
+ * 命令消息
+ */
+export type CommandMessage = {
+  type: "command";
+  name: string;
+  data: string;
+};
+
+/**
+ * 群组通知消息
+ */
+export type GroupNotificationMessage = {
+  type: "group-notification";
+
+  /**
+   * 群组通知的操作名称
+   */
+  operation: string;
+
+  /**
+   * 操作者 ID
+   */
+  operatorUserId: string;
+
+  /**
+   * 操作数据
+   */
+  data: string;
+
+  /**
+   * 消息内容
+   */
+  message: string;
+
+  /**
+   * 额外数据
+   */
+  extra: string;
+};
+
+/**
  * 消息内容
  */
 export type MessageContent =
@@ -256,9 +296,7 @@ export type Message = {
  * 添加消息监听函数
  */
 export function addReceiveMessageListener(listener: (message: Message) => void) {
-  return eventEmitter.addListener("rcimlib-receive-message", message => {
-    listener(message);
-  });
+  return eventEmitter.addListener("rcimlib-receive-message", listener);
 }
 
 /**
@@ -354,6 +392,96 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
  */
 export function recallMessage(messageId: number, pushContent: string): Promise<void> {
   return RCIMClient.recallMessage(messageId, pushContent);
+}
+
+/**
+ * 发送输入状态
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param typingContentType 输入内容类型
+ */
+export function sendTypingStatus(
+  conversationType: ConversationType,
+  targetId: string,
+  typingContentType: string
+) {
+  RCIMClient.sendTypingStatus(conversationType, targetId, typingContentType);
+}
+
+/**
+ * 输入状态
+ */
+export type TypingStatus = {
+  conversationType: ConversationType;
+  targetId: string;
+  userId: string;
+  sentTime: number;
+  typingContentType: string;
+};
+
+/**
+ * 添加输入状态监听函数
+ */
+export function addTypingStatusListener(listener: (status: TypingStatus) => void) {
+  return eventEmitter.addListener("rcimlib-typing-status", listener);
+}
+
+/**
+ * 发送阅读回执
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param timestamp 该会话中已阅读点最后一条消息的发送时间戳
+ */
+export function sendReadReceiptMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  timestamp: number
+) {
+  RCIMClient.sendReadReceiptMessage(conversationType, targetId, timestamp);
+}
+
+/**
+ * 发起群组消息回执请求
+ *
+ * @param messageId 消息 ID
+ */
+export function sendReadReceiptRequest(messageId: number): Promise<void> {
+  return RCIMClient.sendReadReceiptRequest(messageId);
+}
+
+/**
+ * 添加私聊阅读回执监听函数
+ */
+export function addReadReceiptReceivedListener(listener: (message: Message) => void) {
+  return eventEmitter.addListener("rcimlib-read-receipt-received", listener);
+}
+
+export type ReceiptRequest = {
+  conversationType: ConversationType;
+  targetId: string;
+  messageUId: string;
+};
+
+/**
+ * 添加收到消息已读回执请求监听函数
+ *
+ * 收到此请求后，如果用户阅读了对应的消息，需要调用 sendMessageReadReceiptResponse 接口发送已读响应
+ */
+export function addReceiptRequestListener(listener: (data: ReceiptRequest) => void) {
+  return eventEmitter.addListener("rcimlib-receipt-request", listener);
+}
+
+export type ReceiptResponse = {
+  conversationType: ConversationType;
+  targetId: string;
+  messageUId: string;
+  users: { [key: string]: number };
+};
+
+export function addReceiptResponseListener(listener: (data: ReceiptResponse) => void) {
+  return eventEmitter.addListener("rcimlib-receipt-response", listener);
 }
 
 /**
