@@ -1070,4 +1070,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         });
     }
+
+    @ReactMethod
+    public void cleanRemoteHistoryMessages(int conversationType, String targetId, double timestamp, Promise promise) {
+        RongIMClient.getInstance().cleanRemoteHistoryMessages(
+            ConversationType.setValue(conversationType), targetId, (long) timestamp, createOperationCallback(promise));
+    }
 }
