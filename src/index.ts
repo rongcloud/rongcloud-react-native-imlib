@@ -525,6 +525,9 @@ export function addReceiptRequestListener(listener: (data: ReceiptRequest) => vo
   return eventEmitter.addListener("rcimlib-receipt-request", listener);
 }
 
+/**
+ * 消息回执响应信息
+ */
 export type ReceiptResponse = {
   conversationType: ConversationType;
   targetId: string;
@@ -532,8 +535,70 @@ export type ReceiptResponse = {
   users: { [key: string]: number };
 };
 
+/**
+ * 添加消息回执响应监听函数
+ *
+ * @param listener
+ */
 export function addReceiptResponseListener(listener: (data: ReceiptResponse) => void) {
   return eventEmitter.addListener("rcimlib-receipt-response", listener);
+}
+
+/**
+ * 取消发送中的媒体消息
+ *
+ * @param messageId 消息 ID
+ */
+export function cancelSendMediaMessage(messageId: number): Promise<void> {
+  return RCIMClient.cancelSendMediaMessage(messageId);
+}
+
+/**
+ * 取消下载中的媒体消息
+ *
+ * @param messageId 消息 ID
+ */
+export function cancelDownloadMediaMessage(messageId: number): Promise<void> {
+  return RCIMClient.cancelDownloadMediaMessage(messageId);
+}
+
+export type MediaMessageCallback = {
+  progress?: (progress: number) => void;
+  success?: (path: string) => void;
+  error?: (errorCode: number) => void;
+  cancel?: () => void;
+};
+
+/**
+ * 下载媒体消息
+ *
+ * @param messageId 消息 ID
+ * @param progress 下载进度回调函数
+ * @param success 下载成功回调函数
+ * @param error 下载失败回调函数
+ * @param cancel 下载取消回调函数
+ */
+export function downloadMediaMessage(messageId: number, callback: MediaMessageCallback = {}) {
+  const eventId = Math.random().toString();
+  const listener = eventEmitter.addListener("rcimlib-download-media", data => {
+    if (callback) {
+      if (data.eventId === eventId) {
+        const { success, error, progress, cancel } = callback;
+        if (data.type === "success") {
+          success && success(data.path);
+          listener.remove();
+        } else if (data.type === "error") {
+          error && error(data.errorCode);
+          listener.remove();
+        } else if (data.type === "progress") {
+          progress && progress(data.progress);
+        } else if (data.type === "cancel") {
+          cancel && cancel();
+        }
+      }
+    }
+  });
+  RCIMClient.downloadMediaMessage(messageId, eventId);
 }
 
 /**

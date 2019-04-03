@@ -278,6 +278,62 @@ RCT_EXPORT_METHOD(clearMessages
   resolve(@([RCIMClient.sharedRCIMClient clearMessages:conversationType targetId:targetId]));
 }
 
+RCT_EXPORT_METHOD(cancelSendMediaMessage
+                  : (int)messageId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  BOOL isSuccess = [RCIMClient.sharedRCIMClient cancelSendMediaMessage:messageId];
+  if (isSuccess) {
+    resolve(nil);
+  } else {
+    reject(@"", @"取消失败", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(cancelDownloadMediaMessage
+                  : (int)messageId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  BOOL isSuccess = [RCIMClient.sharedRCIMClient cancelDownloadMediaMessage:messageId];
+  if (isSuccess) {
+    resolve(nil);
+  } else {
+    reject(@"", @"取消失败", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(downloadMediaMessage : (int)messageId : (NSString *)eventId) {
+  [RCIMClient.sharedRCIMClient downloadMediaMessage:messageId
+      progress:^(int progress) {
+        [self sendEventWithName:@"rcimlib-download-media"
+                           body:@{
+                             @"type" : @"progress",
+                             @"progress" : @(progress),
+                           }];
+      }
+      success:^(NSString *mediaPath) {
+        [self sendEventWithName:@"rcimlib-download-media"
+                           body:@{
+                             @"type" : @"cancel",
+                             @"path" : mediaPath,
+                           }];
+      }
+      error:^(RCErrorCode errorCode) {
+        [self sendEventWithName:@"rcimlib-download-media"
+                           body:@{
+                             @"type" : @"error",
+                             @"errorCode" : @(errorCode),
+                           }];
+      }
+      cancel:^{
+        [self sendEventWithName:@"rcimlib-download-media"
+                           body:@{
+                             @"type" : @"cancel",
+                             @"eventId" : eventId,
+                           }];
+      }];
+}
+
 RCT_EXPORT_METHOD(deleteMessages
                   : (int)conversationType
                   : (NSString *)targetId
@@ -628,6 +684,7 @@ RCT_EXPORT_METHOD(getChatRoomInfo
         [self reject:reject error:status];
       }];
 }
+
 RCT_EXPORT_METHOD(getRemoteChatroomHistoryMessages
                   : (NSString *)targetId
                   : (double)recordTime

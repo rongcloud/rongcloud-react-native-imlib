@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
 import { showImagePicker } from "react-native-image-picker";
-import { sendMessage, recallMessage } from "rongcloud-react-native-imlib";
+import { sendMessage, recallMessage, cancelSendMediaMessage } from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations, messageTypes } from "./constants";
 
@@ -29,8 +29,10 @@ export default class extends React.PureComponent {
   setTextContent = content => this.setState({ content: { type: "text", content } });
   setPushContent = pushContent => this.setState({ pushContent });
   setConversationType = conversationType => this.setState({ conversationType });
+
   setVoice = voice =>
     this.setState({ content: { type: "voice", data: voice, local: voice, duration: 2 } });
+
   setMessageType = messageType => {
     this.setState({ messageType });
     if (messageType === "location") {
@@ -40,8 +42,7 @@ export default class extends React.PureComponent {
           latitude: 23,
           longitude: 102,
           name: "海龙大厦",
-          thumbnail:
-            "https://restapi.amap.com/v3/staticmap?scale=2&location=116.37359,39.92437&zoom=10&size=216*140&markers=mid,,A:116.37359,39.92437&key=ee95e52bf08006f63fd29bcfbcf21df0"
+          thumbnail: "https://www.rongcloud.cn/images/logo.png"
         }
       });
     }
@@ -71,6 +72,9 @@ export default class extends React.PureComponent {
         success: messageId => {
           this.messageId = messageId;
           this.setState({ result: "消息发送成功：" + messageId });
+        },
+        progress: progress => {
+          this.setState({ result: progress + "%" })
         },
         error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
       }
@@ -156,6 +160,9 @@ export default class extends React.PureComponent {
         <FormItem>
           <Button title="发送" onPress={this.send} />
         </FormItem>
+        {/* <FormItem>
+          <Button title="取消媒体消息的发送" onPress={this.cancel} />
+        </FormItem> */}
         <FormItem>
           <Button title="撤回" onPress={this.recall} />
         </FormItem>
