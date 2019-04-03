@@ -232,7 +232,42 @@ RCT_EXPORT_METHOD(insertOutgoingMessage
                                                       sentStatus:sentStatus
                                                          content:[self toMessageContent:content]];
   }
-  resolve([self fromMessage:message]);
+  if (message) {
+    resolve([self fromMessage:message]);
+  } else {
+    reject(@"", @"插入消息失败", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(insertIncomingMessage
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSString *)senderId
+                  : (int)receiveStatus
+                  : (NSDictionary *)content
+                  : (double)sentTime
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message;
+  if (sentTime) {
+    message = [RCIMClient.sharedRCIMClient insertIncomingMessage:conversationType
+                                                        targetId:targetId
+                                                    senderUserId:senderId
+                                                  receivedStatus:receiveStatus
+                                                         content:[self toMessageContent:content]
+                                                        sentTime:sentTime];
+  } else {
+    message = [RCIMClient.sharedRCIMClient insertIncomingMessage:conversationType
+                                                        targetId:targetId
+                                                    senderUserId:senderId
+                                                  receivedStatus:receiveStatus
+                                                         content:[self toMessageContent:content]];
+  }
+  if (message) {
+    resolve([self fromMessage:message]);
+  } else {
+    reject(@"", @"插入消息失败", nil);
+  }
 }
 
 RCT_EXPORT_METHOD(clearMessages
@@ -796,6 +831,7 @@ RCT_EXPORT_METHOD(unsubscribePublicService
                        @"conversationType" : @(conversationType),
                        @"targetId" : targetId,
                        @"messageUId" : messageUId,
+                       @"users" : userIdList,
                      }];
 }
 
@@ -925,6 +961,7 @@ RCT_EXPORT_METHOD(unsubscribePublicService
     @"messageDirection" : @(message.messageDirection),
     @"senderUserId" : message.senderUserId,
     @"sentTime" : @(message.sentTime),
+    @"receivedStatus" : @(message.receivedStatus),
     @"receivedTime" : @(message.receivedTime),
     @"content" : [self fromMessageContent:message.content],
     @"extra" : message.extra ? message.extra : @"",

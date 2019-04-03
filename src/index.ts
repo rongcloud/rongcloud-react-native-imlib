@@ -715,6 +715,34 @@ export function insertOutgoingMessage(
 }
 
 /**
+ * 向本地会话插入一条接收消息
+ *
+ * @param conversationType
+ * @param targetId
+ * @param senderUserId
+ * @param receivedStatus
+ * @param messageContent
+ * @param sentTime
+ */
+export function insertIncomingMessage(
+  conversationType: ConversationType,
+  targetId: string,
+  senderUserId: string,
+  receivedStatus: number,
+  messageContent: MessageContent,
+  sentTime = 0
+): Promise<Message> {
+  return RCIMClient.insertIncomingMessage(
+    conversationType,
+    targetId,
+    senderUserId,
+    receivedStatus,
+    messageContent,
+    sentTime
+  );
+}
+
+/**
  * 清空某一会话的所有消息
  *
  * @param conversationType
