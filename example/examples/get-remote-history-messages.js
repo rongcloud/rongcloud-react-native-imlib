@@ -1,13 +1,8 @@
 import * as React from "react";
-import { Picker, Platform, ScrollView, StyleSheet, Text, TextInput, Button } from "react-native";
-import { getRemoteHistoryMessages, MessageObjectNames } from "rongcloud-react-native-imlib";
-import FormItem from "./form-item";
+import { Button, TextInput } from "react-native";
+import { cleanRemoteHistoryMessages, getRemoteHistoryMessages } from "rongcloud-react-native-imlib";
+import { Body, FormItem, Result, Select } from "../components";
 import { conversations } from "./constants";
-
-const style = StyleSheet.create({
-  body: { padding: 16 },
-  item: { marginBottom: 8, fontFamily: Platform.OS === "ios" ? "menlo" : "monospace" }
-});
 
 export default class extends React.PureComponent {
   static route = "GetRemoteHistoryMessages";
@@ -19,7 +14,7 @@ export default class extends React.PureComponent {
     messageType: "",
     sentTime: "0",
     count: "10",
-    messages: []
+    result: []
   };
 
   setTargetId = targetId => this.setState({ targetId });
@@ -34,24 +29,25 @@ export default class extends React.PureComponent {
       parseInt(sentTime),
       parseInt(count)
     );
-    console.log(messages);
-    this.setState({ messages });
+    this.setState({ result: JSON.stringify(messages, null, 2) });
+  };
+
+  cleanHistoryMessages = async () => {
+    const { conversationType, targetId, sentTime } = this.state;
+    await cleanRemoteHistoryMessages(conversationType, targetId, parseInt(sentTime));
+    this.setState({ result: "清除服务端消息" });
   };
 
   render() {
-    const { messages, conversationType, targetId, sentTime, count } = this.state;
+    const { conversationType, targetId, sentTime, count, result } = this.state;
     return (
-      <ScrollView contentContainerStyle={style.body}>
-        <FormItem label="会话类型">
-          <Picker
-            selectedValue={conversationType}
-            onValueChange={conversationType => this.setState({ conversationType })}
-          >
-            {Object.keys(conversations).map(key => (
-              <Picker.Item key={key} label={conversations[key]} value={key} />
-            ))}
-          </Picker>
-        </FormItem>
+      <Body>
+        <Select
+          label="会话类型"
+          options={conversations}
+          value={conversationType}
+          onChange={this.setConversationType}
+        />
         <FormItem label="目标 ID">
           <TextInput value={targetId} onChangeText={this.setTargetId} placeholder="请输入目标 ID" />
         </FormItem>
@@ -74,13 +70,11 @@ export default class extends React.PureComponent {
         <FormItem>
           <Button title="获取消息" onPress={this.getHistoryMessages} />
         </FormItem>
-        {messages.length === 0 && <Text style={style.item}>No messages.</Text>}
-        {messages.map(message => (
-          <Text style={style.item} key={message.messageId}>
-            {JSON.stringify(message, null, 2)}
-          </Text>
-        ))}
-      </ScrollView>
+        <FormItem>
+          <Button title="清除服务端历史消息" onPress={this.cleanHistoryMessages} />
+        </FormItem>
+        <Result>{result}</Result>
+      </Body>
     );
   }
 }

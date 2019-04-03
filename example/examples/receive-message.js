@@ -1,10 +1,13 @@
 import * as React from "react";
-import { Text, ScrollView, StyleSheet, Platform } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text } from "react-native";
 import * as IMClient from "rongcloud-react-native-imlib";
 
 const style = StyleSheet.create({
   body: { padding: 16 },
-  item: { marginBottom: 8, fontFamily: Platform.OS === "ios" ? "menlo" : "monospace" }
+  item: {
+    marginBottom: 8,
+    fontFamily: Platform.OS === "ios" ? "menlo" : "monospace"
+  }
 });
 
 export default class extends React.PureComponent {
@@ -30,7 +33,7 @@ export default class extends React.PureComponent {
       <ScrollView contentContainerStyle={style.body}>
         {messages.length === 0 && <Text style={style.item}>No messages.</Text>}
         {messages.map(message => (
-          <Text style={style.item} key={message.messageId}>
+          <Text style={style.item} key={message.message.messageId}>
             {JSON.stringify(message, null, 2)}
           </Text>
         ))}

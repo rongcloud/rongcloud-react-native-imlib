@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { addConnectionStatusListener, connect, disconnect } from "rongcloud-react-native-imlib";
+import { addConnectionStatusListener, connect, disconnect, setReconnectKickEnable } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({ body: { padding: 16 }, message: { marginTop: 16 } });
@@ -49,6 +49,12 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="断开连接（不再接收推送）" onPress={() => disconnect(false)} />
+        </FormItem>
+        <FormItem>
+          <Button title="断线重连时踢出重连设备" onPress={() => setReconnectKickEnable(true)} />
+        </FormItem>
+        <FormItem>
+          <Button title="断线重连时不踢出重连设备" onPress={() => setReconnectKickEnable(true)} />
         </FormItem>
         <Text style={style.message}>{message}</Text>
         <Text style={style.message}>连接状态监听：{status}</Text>

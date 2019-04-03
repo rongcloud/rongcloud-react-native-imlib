@@ -21,6 +21,14 @@ RCT_EXPORT_METHOD(setServerInfo : (NSString *)naviServer : (NSString *)fileServe
   [RCIMClient.sharedRCIMClient setServerInfo:naviServer fileServer:fileServer];
 }
 
+RCT_EXPORT_METHOD(setStatisticServer : (NSString *)server) {
+  [RCIMClient.sharedRCIMClient setStatisticServer:server];
+}
+
+RCT_EXPORT_METHOD(setReconnectKickEnable : (BOOL)enabled) {
+  [RCIMClient.sharedRCIMClient setReconnectKickEnable:enabled];
+}
+
 RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient connectWithToken:token
       success:^(NSString *userId) {
@@ -244,6 +252,46 @@ RCT_EXPORT_METHOD(deleteMessages
       targetId:targetId
       success:^{
         resolve(@(true));
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getRemoteHistoryMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)time
+                  : (double)count
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getRemoteHistoryMessages:conversationType
+      targetId:targetId
+      recordTime:time
+      count:count
+      success:^(NSArray *messages, BOOL isRemaining) {
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+        for (int i = 0; i < messages.count; i += 1) {
+          array[i] = [self fromMessage:messages[i]];
+        }
+        resolve(array);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(cleanRemoteHistoryMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)time
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient clearRemoteHistoryMessages:conversationType
+      targetId:targetId
+      recordTime:time
+      success:^{
+        resolve(nil);
       }
       error:^(RCErrorCode status) {
         [self reject:reject error:status];
@@ -733,6 +781,10 @@ RCT_EXPORT_METHOD(unsubscribePublicService
                        @"targetId" : targetId,
                        @"messageUId" : messageUId,
                      }];
+}
+
+- (void)onMessageRecalled:(long)messageId {
+  [self sendEventWithName:@"rcimlib-recall" body:@(messageId)];
 }
 
 - (void)onMessageReceiptResponse:(RCConversationType)conversationType
