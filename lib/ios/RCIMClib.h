@@ -2,5 +2,5 @@
 #import <RongIMLib/RongIMLib.h>
 
 @interface RCIMClib : RCTEventEmitter <RCTBridgeModule, RCConnectionStatusChangeDelegate,
-                                       RCIMClientReceiveMessageDelegate, RCTypingStatusDelegate>
+                                       RCIMClientReceiveMessageDelegate, RCTypingStatusDelegate, RCLogInfoDelegate>
 @end

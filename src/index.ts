@@ -41,9 +41,7 @@ export function addRecallMessageListener(listener: (messageId: string) => void) 
   return eventEmitter.addListener("rcimlib-recall", listener);
 }
 
-export function syncConversationNotificationStatus() {
-  
-}
+export function syncConversationNotificationStatus() {}
 
 /**
  * 设置 deviceToken，用于远程推送
@@ -71,7 +69,8 @@ export function setServerInfo(naviServer: string, fileServer: string) {
 /**
  * 设置统计服务地址
  *
- * 配置数据上传地址 (非必须) 通过配置该地址，SDK 会在初始化时把设备相关信息上传到私有云节点。
+ * 配置数据上传地址 (非必须) 通过配置该地址，SDK
+ * 会在初始化时把设备相关信息上传到私有云节点。
  * 影响到的功能是开发者后台的广播推送功能，如果私有云客户没有配置该地址，那从后台发推送时，客户端是收不到的。
  * 普通的 IM 推送不受影响。设置数据上传服务器地址。
  * 可以支持设置 http://cn.xxx.com 或者 https://cn.xxx.com 或者 cn.xxx.com
@@ -330,9 +329,24 @@ export type Message = {
 };
 
 /**
+ * 收到的消息
+ */
+export type ReceiveMessage = {
+  /**
+   * 消息数据
+   */
+  message: Message;
+
+  /**
+   * 剩余未接收的消息数量
+   */
+  left: number;
+};
+
+/**
  * 添加消息监听函数
  */
-export function addReceiveMessageListener(listener: (message: Message) => void) {
+export function addReceiveMessageListener(listener: (message: ReceiveMessage) => void) {
   return eventEmitter.addListener("rcimlib-receive-message", listener);
 }
 
@@ -504,7 +518,8 @@ export type ReceiptRequest = {
 /**
  * 添加收到消息已读回执请求监听函数
  *
- * 收到此请求后，如果用户阅读了对应的消息，需要调用 sendMessageReadReceiptResponse 接口发送已读响应
+ * 收到此请求后，如果用户阅读了对应的消息，需要调用
+ * sendMessageReadReceiptResponse 接口发送已读响应
  */
 export function addReceiptRequestListener(listener: (data: ReceiptRequest) => void) {
   return eventEmitter.addListener("rcimlib-receipt-request", listener);
@@ -637,10 +652,11 @@ export function addConnectionStatusListener(listener: (status: ConnectionStatus)
  * 设置断线重连时是否踢出重连设备
  *
  * 用户没有开通多设备登录功能的前提下，同一个账号在一台新设备上登录的时候，会把这个账号在之前登录的设备上踢出。
- * 由于 SDK 有断线重连功能，存在下面情况。 用户在 A 设备登录，A 设备网络不稳定，没有连接成功，SDK 启动重连机制。
- * 用户此时又在 B 设备登录，B 设备连接成功。
- * A 设备网络稳定之后，用户在 A 设备连接成功，B 设备被踢出。 这个接口就是为这种情况加的。
- * 设置 enable 为 true 时，SDK 重连的时候发现此时已有别的设备连接成功，不再强行踢出已有设备，而是踢出重连设备。
+ * 由于 SDK 有断线重连功能，存在下面情况。 用户在 A 设备登录，A
+ * 设备网络不稳定，没有连接成功，SDK 启动重连机制。 用户此时又在 B 设备登录，B
+ * 设备连接成功。 A 设备网络稳定之后，用户在 A 设备连接成功，B 设备被踢出。
+ * 这个接口就是为这种情况加的。 设置 enable 为 true 时，SDK
+ * 重连的时候发现此时已有别的设备连接成功，不再强行踢出已有设备，而是踢出重连设备。
  *
  * @param enabled 是否踢出重连设备
  */

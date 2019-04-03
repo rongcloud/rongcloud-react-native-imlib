@@ -9,6 +9,8 @@ RCT_EXPORT_METHOD(init : (NSString *)key) {
   [RCIMClient.sharedRCIMClient initWithAppKey:key];
   [RCIMClient.sharedRCIMClient setRCConnectionStatusChangeDelegate:self];
   [RCIMClient.sharedRCIMClient setReceiveMessageDelegate:self object:nil];
+  [RCIMClient.sharedRCIMClient setRCLogInfoDelegate:self];
+  [RCIMClient.sharedRCIMClient setRCTypingStatusDelegate:self];
 }
 
 RCT_EXPORT_METHOD(setDeviceToken : (NSString *)token) {
@@ -699,7 +701,8 @@ RCT_EXPORT_METHOD(unsubscribePublicService
 }
 
 - (void)onReceived:(RCMessage *)message left:(int)left object:(id)object {
-  [self sendEventWithName:@"rcimlib-receive-message" body:[self fromMessage:message]];
+  [self sendEventWithName:@"rcimlib-receive-message"
+                     body:@{@"message" : [self fromMessage:message], @"left" : @(left)}];
 }
 
 - (void)onTypingStatusChanged:(RCConversationType)conversationType
@@ -715,6 +718,10 @@ RCT_EXPORT_METHOD(unsubscribePublicService
                          @"typingContentType" : item.contentType,
                        }];
   }
+}
+
+- (void)didOccurLog:(NSString *)logInfo {
+  [self sendEventWithName:@"rcimlib-log" body:logInfo];
 }
 
 - (void)onMessageReceiptRequest:(RCConversationType)conversationType
@@ -971,7 +978,7 @@ RCT_EXPORT_METHOD(unsubscribePublicService
   return @[
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
     @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
-    @"rcimlib-receipt-request", @"rcimlib-receipt-response"
+    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log"
   ];
 }
 
