@@ -22,9 +22,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     private RCTDeviceEventEmitter eventEmitter;
     private ReactApplicationContext reactContext;
 
-    RCIMClientModule(ReactApplicationContext reactContext) {
+    RCIMClientModule(final ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+
         RongIMClient.setOnReceiveMessageListener(new OnReceiveMessageListener() {
             @Override
             public boolean onReceived(Message message, int left) {
@@ -32,12 +33,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 return false;
             }
         });
+
         RongIMClient.setConnectionStatusListener(new ConnectionStatusListener() {
             @Override
             public void onChanged(ConnectionStatus status) {
                 eventEmitter.emit("rcimlib-connection-status", status.getValue());
             }
         });
+
         RongIMClient.setTypingStatusListener(new TypingStatusListener() {
             @Override
             public void onTypingStatusChanged(ConversationType conversationType, String targetId, Collection<TypingStatus> set) {
@@ -54,6 +57,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 }
             }
         });
+
         RongIMClient.setReadReceiptListener(new ReadReceiptListener() {
             @Override
             public void onReadReceiptReceived(Message message) {
@@ -70,12 +74,35 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
 
             @Override
-            public void onMessageReceiptResponse(ConversationType conversationType, String targetId, String UId, HashMap<String, Long> hashMap) {
+            public void onMessageReceiptResponse(ConversationType conversationType, String targetId, String UId, HashMap<String, Long> users) {
+                WritableMap userIdList = Arguments.createMap();
+                for (String userId : users.keySet()) {
+                    Long readTime = users.get(userId);
+                    if (readTime != null) {
+                        userIdList.putDouble(userId, readTime);
+                    }
+                }
                 WritableMap map = Arguments.createMap();
                 map.putInt("conversationType", conversationType.getValue());
                 map.putString("targetId", targetId);
                 map.putString("messageUId", UId);
+                map.putMap("usesIdList", userIdList);
                 eventEmitter.emit("rcimlib-receipt-response", map);
+            }
+        });
+
+        RongIMClient.setRCLogInfoListener(new RCLogInfoListener() {
+            @Override
+            public void onRCLogInfoOccurred(String log) {
+                eventEmitter.emit("rcimlib-log", log);
+            }
+        });
+
+        RongIMClient.setOnRecallMessageListener(new OnRecallMessageListener() {
+            @Override
+            public boolean onMessageRecalled(Message message, RecallNotificationMessage recall) {
+                eventEmitter.emit("rcimlib-recall", message.getMessageId());
+                return false;
             }
         });
     }
@@ -1075,5 +1102,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void cleanRemoteHistoryMessages(int conversationType, String targetId, double timestamp, Promise promise) {
         RongIMClient.getInstance().cleanRemoteHistoryMessages(
             ConversationType.setValue(conversationType), targetId, (long) timestamp, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void setReconnectKickEnable(boolean enabled) {
+        RongIMClient.getInstance().setReconnectKickEnable(enabled);
+    }
+
+    @ReactMethod
+    public void setStatisticServer(String server) {
+        RongIMClient.setStatisticDomain(server);
     }
 }
