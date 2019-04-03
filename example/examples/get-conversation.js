@@ -1,6 +1,12 @@
 import * as React from "react";
 import { Button, TextInput } from "react-native";
-import { getConversation, setConversationToTop, getTopConversationList } from "rongcloud-react-native-imlib";
+import {
+  getConversation,
+  getFirstUnreadMessage,
+  getMessageCount,
+  getTopConversationList,
+  setConversationToTop
+} from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations } from "./constants";
 
@@ -8,11 +14,7 @@ export default class extends React.PureComponent {
   static route = "GetConversation";
   static navigationOptions = { title: "获取会话" };
 
-  state = {
-    conversationType: 1,
-    targetId: "vh6a0VoDJ",
-    result: ""
-  };
+  state = { conversationType: 1, targetId: "vh6a0VoDJ", result: "" };
 
   setTargetId = targetId => this.setState({ targetId });
 
@@ -36,6 +38,18 @@ export default class extends React.PureComponent {
     const { conversationType } = this.state;
     const conversations = await getTopConversationList([parseInt(conversationType)]);
     this.setState({ result: JSON.stringify(conversations, null, 2) });
+  };
+
+  getMessageCount = async () => {
+    const { conversationType, targetId } = this.state;
+    const result = await getMessageCount(parseInt(conversationType), targetId);
+    this.setState({ result: JSON.stringify(result, null, 2) });
+  };
+
+  getFirstUnreadMessage = async () => {
+    const { conversationType, targetId } = this.state;
+    const result = await getFirstUnreadMessage(parseInt(conversationType), targetId);
+    this.setState({ result: JSON.stringify(result, null, 2) });
   };
 
   render() {
@@ -62,6 +76,12 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="获取置顶会话" onPress={this.getTopConversations} />
+        </FormItem>
+        <FormItem>
+          <Button title="获取消息数" onPress={this.getMessageCount} />
+        </FormItem>
+        <FormItem>
+          <Button title="获取第一条未读消息" onPress={this.getFirstUnreadMessage} />
         </FormItem>
         <Result>{result}</Result>
       </Body>

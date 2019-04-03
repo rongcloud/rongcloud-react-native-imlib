@@ -936,6 +936,51 @@ export function getMessageByUId(messageUId: string): Promise<Message> {
 }
 
 /**
+ * 设置消息的附加信息
+ *
+ * @param messageId 消息 ID
+ * @param extra 附加信息
+ */
+export function setMessageExtra(messageId: number, extra: string): Promise<void> {
+  return RCIMClient.setMessageExtra(messageId, extra);
+}
+
+/**
+ * 获取消息发送时间
+ *
+ * @param messageId 消息 ID
+ */
+export function getMessageSendTime(messageId: number): Promise<number> {
+  return RCIMClient.getMessageSendTime(messageId);
+}
+
+/**
+ * 获取会话中的消息数量
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getMessageCount(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<number> {
+  return RCIMClient.getMessageCount(conversationType, targetId);
+}
+
+/**
+ * 获取会话里第一条未读消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getFirstUnreadMessage(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<Message> {
+  return RCIMClient.getFirstUnreadMessage(conversationType, targetId);
+}
+
+/**
  * 获取服务端历史消息
  *
  * @param conversationType 会话类型

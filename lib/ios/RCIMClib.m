@@ -460,6 +460,43 @@ RCT_EXPORT_METHOD(getMessageByUId
   }
 }
 
+RCT_EXPORT_METHOD(setMessageExtra
+                  : (int)messageId
+                  : (NSString *)extra
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient setMessageExtra:messageId value:extra]));
+}
+
+RCT_EXPORT_METHOD(getMessageSendTime
+                  : (int)messageId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient getMessageSendTime:messageId]));
+}
+
+RCT_EXPORT_METHOD(getMessageCount
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient getMessageCount:conversationType targetId:targetId]));
+}
+
+RCT_EXPORT_METHOD(getFirstUnreadMessage
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message = [RCIMClient.sharedRCIMClient getFirstUnreadMessage:conversationType
+                                                                 targetId:targetId];
+  if (message) {
+    resolve([self fromMessage:message]);
+  } else {
+    reject(@"", @"获取失败", nil);
+  }
+}
+
 RCT_EXPORT_METHOD(getConversation
                   : (int)conversationType
                   : (NSString *)targetId
@@ -1233,7 +1270,7 @@ RCT_EXPORT_METHOD(unsubscribePublicService
   return @[
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
     @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
-    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log"
+    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log", @"rcimlib-download-media"
   ];
 }
 
