@@ -41,7 +41,20 @@ export function addRecallMessageListener(listener: (messageId: string) => void) 
   return eventEmitter.addListener("rcimlib-recall", listener);
 }
 
-export function syncConversationNotificationStatus() {}
+/**
+ * 多端登录时，通知其它终端清除某个会话的未读消息数
+ * 
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param timestamp 该会话中已读的最后一条消息的发送时间戳
+ */
+export function syncConversationNotificationStatus(
+  conversationType: ConversationType,
+  targetId: string,
+  timestamp: number
+): Promise<void> {
+  return RCIMClient.syncConversationNotificationStatus(conversationType, targetId, timestamp);
+}
 
 /**
  * 设置 deviceToken，用于远程推送

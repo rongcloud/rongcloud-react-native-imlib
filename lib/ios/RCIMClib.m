@@ -522,6 +522,23 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
       }];
 }
 
+RCT_EXPORT_METHOD(syncConversationReadStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)timestamp
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient syncConversationReadStatus:conversationType
+      targetId:targetId
+      time:timestamp
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 RCT_EXPORT_METHOD(saveTextMessageDraft
                   : (int)conversationType
                   : (NSString *)targetId
