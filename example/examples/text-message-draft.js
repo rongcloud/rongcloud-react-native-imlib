@@ -1,8 +1,13 @@
 import * as React from "react";
 import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { saveTextMessageDraft, getTextMessageDraft } from "rongcloud-react-native-imlib";
-import FormItem from "./form-item";
+import {
+  clearTextMessageDraft,
+  getTextMessageDraft,
+  saveTextMessageDraft
+} from "rongcloud-react-native-imlib";
+
 import { conversations } from "./constants";
+import FormItem from "./form-item";
 
 const style = StyleSheet.create({
   body: { padding: 16 },
@@ -14,12 +19,7 @@ export default class extends React.PureComponent {
   static route = "TextMessageDraft";
   static navigationOptions = { title: "消息草稿" };
 
-  state = {
-    conversationType: 1,
-    targetId: "vh6a0VoDJ",
-    content: "",
-    result: ""
-  };
+  state = { conversationType: 1, targetId: "vh6a0VoDJ", content: "", result: "" };
 
   setTargetId = targetId => this.setState({ targetId });
   setContent = content => this.setState({ content });
@@ -34,6 +34,12 @@ export default class extends React.PureComponent {
     const { conversationType, targetId } = this.state;
     const result = await getTextMessageDraft(parseInt(conversationType), targetId);
     this.setState({ result: "消息草稿：" + result });
+  };
+
+  clearDraft = async () => {
+    const { conversationType, targetId } = this.state;
+    await clearTextMessageDraft(parseInt(conversationType), targetId);
+    this.setState({ result: "清除草稿" });
   };
 
   render() {
@@ -61,6 +67,9 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="获取消息草稿" onPress={this.getDraft} />
+        </FormItem>
+        <FormItem>
+          <Button title="清除消息草稿" onPress={this.clearDraft} />
         </FormItem>
         <FormItem>
           <Text style={style.result}>{result}</Text>

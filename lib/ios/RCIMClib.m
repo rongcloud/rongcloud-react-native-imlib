@@ -541,6 +541,20 @@ RCT_EXPORT_METHOD(getTextMessageDraft
   resolve([RCIMClient.sharedRCIMClient getTextMessageDraft:conversationType targetId:targetId]);
 }
 
+RCT_EXPORT_METHOD(clearTextMessageDraft
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  BOOL isSuccess = [RCIMClient.sharedRCIMClient clearTextMessageDraft:conversationType
+                                                             targetId:targetId];
+  if (isSuccess) {
+    resolve(nil);
+  } else {
+    reject(@"", @"清除文本消息草稿失败", nil);
+  }
+}
+
 RCT_EXPORT_METHOD(getTotalUnreadCount
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {

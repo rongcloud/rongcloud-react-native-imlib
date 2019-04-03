@@ -1075,6 +1075,19 @@ export function getTextMessageDraft(
 }
 
 /**
+ * 清除某一会话的文本消息草稿
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function clearTextMessageDraft(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<string> {
+  return RCIMClient.clearTextMessageDraft(conversationType, targetId);
+}
+
+/**
  * 获取所有未读消息数
  */
 export function getTotalUnreadCount(): Promise<number> {
