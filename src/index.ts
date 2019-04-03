@@ -839,6 +839,24 @@ export function searchMessages(
 }
 
 /**
+ * 获取消息
+ *
+ * @param messageId 消息 ID
+ */
+export function getMessage(messageId: number): Promise<Message> {
+  return RCIMClient.getMessage(messageId);
+}
+
+/**
+ * 根据消息 UID 获取消息
+ *
+ * @param messageUId 消息 UID
+ */
+export function getMessageByUId(messageUId: string): Promise<Message> {
+  return RCIMClient.getMessageByUId(messageUId);
+}
+
+/**
  * 获取服务端历史消息
  *
  * @param conversationType 会话类型

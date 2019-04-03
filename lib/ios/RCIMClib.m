@@ -380,6 +380,30 @@ RCT_EXPORT_METHOD(searchMessages
   resolve(array);
 }
 
+RCT_EXPORT_METHOD(getMessage
+                  : (int)messageId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:messageId];
+  if (message) {
+    resolve([self fromMessage:message]);
+  } else {
+    reject(@"", @"消息不存在", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(getMessageByUId
+                  : (NSString *)UId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  RCMessage *message = [RCIMClient.sharedRCIMClient getMessageByUId:UId];
+  if (message) {
+    resolve([self fromMessage:message]);
+  } else {
+    reject(@"", @"消息不存在", nil);
+  }
+}
+
 RCT_EXPORT_METHOD(getConversation
                   : (int)conversationType
                   : (NSString *)targetId

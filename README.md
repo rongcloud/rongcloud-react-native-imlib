@@ -125,6 +125,7 @@ sendMessage(
 
 ```
 yarn
+yarn build
 yarn run-ios
 yarn run-android
 ```

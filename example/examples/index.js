@@ -5,6 +5,7 @@ import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
 import TypingStatus from "./typing-status";
+import GetMessage from "./get-message";
 import ReadReceipt from "./read-receipt";
 import GetHistoryMessages from "./get-history-messages";
 import GetRemoteHistoryMessages from "./get-remote-history-messages";
@@ -29,6 +30,7 @@ const examples = [
   ReceiveMessage,
   SendMessage,
   TypingStatus,
+  GetMessage,
   ReadReceipt,
   GetHistoryMessages,
   GetRemoteHistoryMessages,
@@ -68,6 +70,7 @@ export {
   ReceiveMessage,
   SendMessage,
   TypingStatus,
+  GetMessage,
   ReadReceipt,
   GetHistoryMessages,
   GetRemoteHistoryMessages,
