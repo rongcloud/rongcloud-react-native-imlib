@@ -981,6 +981,19 @@ export function getFirstUnreadMessage(
 }
 
 /**
+ * 获取会话中 @ 提醒自己的消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getUnreadMentionedMessages(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<Message[]> {
+  return RCIMClient.getUnreadMentionedMessages(conversationType, targetId);
+}
+
+/**
  * 获取服务端历史消息
  *
  * @param conversationType 会话类型

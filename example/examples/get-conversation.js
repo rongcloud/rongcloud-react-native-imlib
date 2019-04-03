@@ -5,6 +5,7 @@ import {
   getFirstUnreadMessage,
   getMessageCount,
   getTopConversationList,
+  getUnreadMentionedMessages,
   setConversationToTop
 } from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
@@ -52,6 +53,12 @@ export default class extends React.PureComponent {
     this.setState({ result: JSON.stringify(result, null, 2) });
   };
 
+  getUnreadMentionedMessages = async () => {
+    const { conversationType, targetId } = this.state;
+    const result = await getUnreadMentionedMessages(parseInt(conversationType), targetId);
+    this.setState({ result: JSON.stringify(result, null, 2) });
+  };
+
   render() {
     const { targetId, conversationType, result } = this.state;
     return (
@@ -82,6 +89,9 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="获取第一条未读消息" onPress={this.getFirstUnreadMessage} />
+        </FormItem>
+        <FormItem>
+          <Button title="获取 @ 自己的消息" onPress={this.getUnreadMentionedMessages} />
         </FormItem>
         <Result>{result}</Result>
       </Body>

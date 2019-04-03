@@ -497,6 +497,20 @@ RCT_EXPORT_METHOD(getFirstUnreadMessage
   }
 }
 
+RCT_EXPORT_METHOD(getUnreadMentionedMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *messages = [RCIMClient.sharedRCIMClient getUnreadMentionedMessages:conversationType
+                                                                     targetId:targetId];
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+  for (int i = 0; i < messages.count; i += 1) {
+    array[i] = [self fromMessage:messages[i]];
+  }
+  resolve(messages);
+}
+
 RCT_EXPORT_METHOD(getConversation
                   : (int)conversationType
                   : (NSString *)targetId
@@ -1270,7 +1284,8 @@ RCT_EXPORT_METHOD(unsubscribePublicService
   return @[
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
     @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
-    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log", @"rcimlib-download-media"
+    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log",
+    @"rcimlib-download-media"
   ];
 }
 
