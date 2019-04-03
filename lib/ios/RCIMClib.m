@@ -628,6 +628,28 @@ RCT_EXPORT_METHOD(getChatRoomInfo
         [self reject:reject error:status];
       }];
 }
+RCT_EXPORT_METHOD(getRemoteChatroomHistoryMessages
+                  : (NSString *)targetId
+                  : (double)recordTime
+                  : (double)count
+                  : (double)order
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient getRemoteChatroomHistoryMessages:targetId
+      recordTime:recordTime
+      count:count
+      order:order
+      success:^(NSArray *messages, long long syncTime) {
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+        for (int i = 0; i < messages.count; i += 1) {
+          array[i] = [self fromMessage:messages[i]];
+        }
+        resolve(@{@"messages" : array, @"syncTime" : @(syncTime)});
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
 
 RCT_EXPORT_METHOD(createDiscussion
                   : (NSString *)name

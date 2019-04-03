@@ -1,7 +1,13 @@
 import * as React from "react";
 import { Button, TextInput } from "react-native";
-import { cleanRemoteHistoryMessages, getRemoteHistoryMessages } from "rongcloud-react-native-imlib";
+import {
+  cleanRemoteHistoryMessages,
+  getRemoteChatroomHistoryMessages,
+  getRemoteHistoryMessages
+} from "rongcloud-react-native-imlib";
+
 import { Body, FormItem, Result, Select } from "../components";
+
 import { conversations } from "./constants";
 
 export default class extends React.PureComponent {
@@ -13,6 +19,7 @@ export default class extends React.PureComponent {
     targetId: "vh6a0VoDJ",
     messageType: "",
     sentTime: "0",
+    order: 0,
     count: "10",
     result: []
   };
@@ -32,6 +39,17 @@ export default class extends React.PureComponent {
     this.setState({ result: JSON.stringify(messages, null, 2) });
   };
 
+  getRemoteChatroomHistoryMessages = async () => {
+    const { targetId, sentTime, count, order } = this.state;
+    const messages = await getRemoteChatroomHistoryMessages(
+      targetId,
+      parseInt(sentTime),
+      parseInt(count),
+      order
+    );
+    this.setState({ result: JSON.stringify(messages, null, 2) });
+  };
+
   cleanHistoryMessages = async () => {
     const { conversationType, targetId, sentTime } = this.state;
     await cleanRemoteHistoryMessages(conversationType, targetId, parseInt(sentTime));
@@ -39,7 +57,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { conversationType, targetId, sentTime, count, result } = this.state;
+    const { conversationType, targetId, sentTime, count, order, result } = this.state;
     return (
       <Body>
         <Select
@@ -72,6 +90,15 @@ export default class extends React.PureComponent {
         </FormItem>
         <FormItem>
           <Button title="清除服务端历史消息" onPress={this.cleanHistoryMessages} />
+        </FormItem>
+        <Select
+          label="时间戳排序"
+          options={{ 0: "倒序", 1: "顺序" }}
+          value={order}
+          onChange={order => this.setState({ order })}
+        />
+        <FormItem>
+          <Button title="获取服务端聊天室消息" onPress={this.getRemoteChatroomHistoryMessages} />
         </FormItem>
         <Result>{result}</Result>
       </Body>

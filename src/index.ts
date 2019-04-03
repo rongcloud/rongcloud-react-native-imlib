@@ -669,7 +669,8 @@ export function setReconnectKickEnable(enabled: boolean) {
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
- * @param objectName 消息对象名称，可以用 MessageObjectNames 获取消息类型对应的对象名称
+ * @param objectName 消息对象名称，可以用 MessageObjectNames
+ *     获取消息类型对应的对象名称
  * @param oldestMessageId 最近一条消息的 ID
  * @param count 数量
  */
@@ -1122,6 +1123,38 @@ export function joinExistChatRoom(targetId: string, messageCount = 10): Promise<
  */
 export function quitChatRoom(targetId: string): Promise<void> {
   return RCIMClient.quitChatRoom(targetId);
+}
+
+/**
+ * 时间戳排序方式
+ */
+export enum TimestampOrder {
+  /**
+   * 按时间戳倒序排序
+   */
+  DESC,
+
+  /**
+   * 按时间戳顺序排序
+   */
+  ASC
+}
+
+/**
+ * 从服务器端获取聊天室的历史消息
+ *
+ * @param targetId 目标 ID
+ * @param recordTime 起始的消息发送时间戳，单位毫秒
+ * @param count 要获取的消息数量
+ * @param order 拉取顺序
+ */
+export function getRemoteChatroomHistoryMessages(
+  targetId: string,
+  recordTime: number,
+  count: number,
+  order: TimestampOrder
+): Promise<{ messages: Message[]; syncTime: number }> {
+  return RCIMClient.getRemoteChatroomHistoryMessages(targetId, recordTime, count, order);
 }
 
 /**
