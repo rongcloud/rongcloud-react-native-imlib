@@ -42,18 +42,18 @@ export function addRecallMessageListener(listener: (messageId: string) => void) 
 }
 
 /**
- * 多端登录时，通知其它终端清除某个会话的未读消息数
+ * 同步会话阅读状态
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
  * @param timestamp 该会话中已读的最后一条消息的发送时间戳
  */
-export function syncConversationNotificationStatus(
+export function syncConversationReadStatus(
   conversationType: ConversationType,
   targetId: string,
   timestamp: number
 ): Promise<void> {
-  return RCIMClient.syncConversationNotificationStatus(conversationType, targetId, timestamp);
+  return RCIMClient.syncConversationReadStatus(conversationType, targetId, timestamp);
 }
 
 /**
@@ -586,14 +586,11 @@ export type MediaMessageCallback = {
  * 下载媒体消息
  *
  * @param messageId 消息 ID
- * @param progress 下载进度回调函数
- * @param success 下载成功回调函数
- * @param error 下载失败回调函数
- * @param cancel 下载取消回调函数
+ * @param callback 回调
  */
 export function downloadMediaMessage(messageId: number, callback: MediaMessageCallback = {}) {
   const eventId = Math.random().toString();
-  const listener = eventEmitter.addListener("rcimlib-download-media", data => {
+  const listener = eventEmitter.addListener("rcimlib-download-media-message", data => {
     if (callback) {
       if (data.eventId === eventId) {
         const { success, error, progress, cancel } = callback;
@@ -1328,13 +1325,13 @@ export enum TimestampOrder {
  * @param count 要获取的消息数量
  * @param order 拉取顺序
  */
-export function getRemoteChatroomHistoryMessages(
+export function getRemoteChatRoomHistoryMessages(
   targetId: string,
   recordTime: number,
   count: number,
   order: TimestampOrder
 ): Promise<{ messages: Message[]; syncTime: number }> {
-  return RCIMClient.getRemoteChatroomHistoryMessages(targetId, recordTime, count, order);
+  return RCIMClient.getRemoteChatRoomHistoryMessages(targetId, recordTime, count, order);
 }
 
 /**

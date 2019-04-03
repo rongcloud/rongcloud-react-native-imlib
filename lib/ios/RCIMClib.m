@@ -305,28 +305,28 @@ RCT_EXPORT_METHOD(cancelDownloadMediaMessage
 RCT_EXPORT_METHOD(downloadMediaMessage : (int)messageId : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient downloadMediaMessage:messageId
       progress:^(int progress) {
-        [self sendEventWithName:@"rcimlib-download-media"
+        [self sendEventWithName:@"rcimlib-download-media-message"
                            body:@{
                              @"type" : @"progress",
                              @"progress" : @(progress),
                            }];
       }
       success:^(NSString *mediaPath) {
-        [self sendEventWithName:@"rcimlib-download-media"
+        [self sendEventWithName:@"rcimlib-download-media-message"
                            body:@{
                              @"type" : @"cancel",
                              @"path" : mediaPath,
                            }];
       }
       error:^(RCErrorCode errorCode) {
-        [self sendEventWithName:@"rcimlib-download-media"
+        [self sendEventWithName:@"rcimlib-download-media-message"
                            body:@{
                              @"type" : @"error",
                              @"errorCode" : @(errorCode),
                            }];
       }
       cancel:^{
-        [self sendEventWithName:@"rcimlib-download-media"
+        [self sendEventWithName:@"rcimlib-download-media-message"
                            body:@{
                              @"type" : @"cancel",
                              @"eventId" : eventId,
@@ -1285,7 +1285,7 @@ RCT_EXPORT_METHOD(unsubscribePublicService
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
     @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
     @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log",
-    @"rcimlib-download-media"
+    @"rcimlib-download-media-message"
   ];
 }
 

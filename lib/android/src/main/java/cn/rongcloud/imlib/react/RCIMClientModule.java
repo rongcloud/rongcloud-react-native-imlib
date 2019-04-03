@@ -3,6 +3,8 @@ package cn.rongcloud.imlib.react;
 import android.net.Uri;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
+import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
@@ -11,6 +13,7 @@ import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
+import io.rong.imlib.model.Message.ReceivedStatus;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.imlib.typingmessage.TypingStatus;
 import io.rong.message.*;
@@ -18,6 +21,7 @@ import io.rong.message.*;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class RCIMClientModule extends ReactContextBaseJavaModule {
     private RCTDeviceEventEmitter eventEmitter;
     private ReactApplicationContext reactContext;
@@ -29,7 +33,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setOnReceiveMessageListener(new OnReceiveMessageListener() {
             @Override
             public boolean onReceived(Message message, int left) {
-                eventEmitter.emit("rcimlib-receive-message", messageToMap(message));
+                WritableMap map = Arguments.createMap();
+                map.putMap("message", messageToMap(message));
+                map.putInt("left", left);
+                eventEmitter.emit("rcimlib-receive-message", map);
                 return false;
             }
         });
@@ -201,8 +208,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
             case "RC:LBSMsg": {
                 LocationMessage location = (LocationMessage) content;
+                Uri imageUri = location.getImgUri();
                 map.putString("name", location.getPoi());
-                map.putString("thumbnail", location.getImgUri().toString());
+                map.putString("thumbnail", imageUri == null ? "" : imageUri.toString());
                 map.putDouble("latitude", location.getLat());
                 map.putDouble("longitude", location.getLng());
                 map.putString("extra", location.getExtra());
@@ -457,15 +465,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return array;
     }
 
-    @ReactMethod
-    public void insertOutgoingMessage(int type, String targetId, int status, ReadableMap content, int sentTime, final Promise promise) {
-        MessageContent messageContent = mapToMessageContent(content);
-        SentStatus sentStatus = SentStatus.setValue(status);
-        ConversationType conversationType = ConversationType.setValue(type);
-        ResultCallback<Message> callback = new ResultCallback<Message>() {
+    private ResultCallback<Message> createMessageCallback(final Promise promise) {
+        return new ResultCallback<Message>() {
             @Override
             public void onSuccess(Message message) {
-                promise.resolve(messageToMap(message));
+                if (message == null) {
+                    promise.reject("", "获取消息失败");
+                } else {
+                    promise.resolve(messageToMap(message));
+                }
             }
 
             @Override
@@ -473,23 +481,46 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 reject(promise, errorCode);
             }
         };
+    }
+
+    @ReactMethod
+    public void insertOutgoingMessage(int type, String targetId, int status, ReadableMap content, int sentTime, final Promise promise) {
+        MessageContent messageContent = mapToMessageContent(content);
+        SentStatus sentStatus = SentStatus.setValue(status);
+        ConversationType conversationType = ConversationType.setValue(type);
         if (sentTime == 0) {
-            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, sentStatus, messageContent, callback);
+            RongIMClient.getInstance().insertOutgoingMessage(
+                conversationType, targetId, sentStatus, messageContent, createMessageCallback(promise));
         } else {
-            RongIMClient.getInstance().insertOutgoingMessage(conversationType, targetId, sentStatus, messageContent, sentTime, callback);
+            RongIMClient.getInstance().insertOutgoingMessage(
+                conversationType, targetId, sentStatus, messageContent, sentTime, createMessageCallback(promise));
+        }
+    }
+
+    @ReactMethod
+    public void insertIncomingMessage(int type, String targetId, String senderId, int status, ReadableMap content, int sentTime, final Promise promise) {
+        MessageContent messageContent = mapToMessageContent(content);
+        ReceivedStatus receivedStatus = new ReceivedStatus(status);
+        ConversationType conversationType = ConversationType.setValue(type);
+        if (sentTime == 0) {
+            RongIMClient.getInstance().insertIncomingMessage(
+                conversationType, targetId, senderId, receivedStatus, messageContent, createMessageCallback(promise));
+        } else {
+            RongIMClient.getInstance().insertIncomingMessage(
+                conversationType, targetId, senderId, receivedStatus, messageContent, sentTime, createMessageCallback(promise));
         }
     }
 
     @ReactMethod
     public void clearMessages(int type, String targetId, final Promise promise) {
         RongIMClient.getInstance().clearMessages(
-            ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+            ConversationType.setValue(type), targetId, createBooleanCallback(promise));
     }
 
     @ReactMethod
     public void deleteMessages(int type, String targetId, final Promise promise) {
         RongIMClient.getInstance().deleteMessages(
-            ConversationType.setValue(type), targetId, createDeleteMessagesCallback(promise));
+            ConversationType.setValue(type), targetId, createBooleanCallback(promise));
     }
 
     @ReactMethod
@@ -498,7 +529,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         for (int i = 0; i < ids.size(); i += 1) {
             array[i] = ids.getInt(i);
         }
-        RongIMClient.getInstance().deleteMessages(array, createDeleteMessagesCallback(promise));
+        RongIMClient.getInstance().deleteMessages(array, createBooleanCallback(promise));
     }
 
     @ReactMethod
@@ -526,7 +557,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             });
     }
 
-    private ResultCallback<Boolean> createDeleteMessagesCallback(final Promise promise) {
+    private ResultCallback<Boolean> createBooleanCallback(final Promise promise) {
         return new ResultCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
@@ -623,10 +654,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return conversationTypesArray;
     }
 
-    @ReactMethod
-    public void getConversationList(ReadableArray conversationTypes, final Promise promise) {
-        ConversationType[] types = arrayToConversationTypes(conversationTypes);
-        ResultCallback<List<Conversation>> callback = new ResultCallback<List<Conversation>>() {
+    private ResultCallback<List<Conversation>> createConversationListCallback(final Promise promise) {
+        return new ResultCallback<List<Conversation>>() {
             @Override
             public void onSuccess(List<Conversation> conversations) {
                 WritableArray array = Arguments.createArray();
@@ -641,8 +670,18 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 reject(promise, errorCode);
             }
         };
+    }
+
+    @ReactMethod
+    public void getConversationList(ReadableArray conversationTypes, int count, int timestamp, final Promise promise) {
+        ConversationType[] types = arrayToConversationTypes(conversationTypes);
+        ResultCallback<List<Conversation>> callback = createConversationListCallback(promise);
         if (types.length > 0) {
-            RongIMClient.getInstance().getConversationList(callback, types);
+            if (count > 0) {
+                RongIMClient.getInstance().getConversationListByPage(callback, timestamp, count, types);
+            } else {
+                RongIMClient.getInstance().getConversationList(callback, types);
+            }
         } else {
             RongIMClient.getInstance().getConversationList(callback);
         }
@@ -651,17 +690,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void removeConversation(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().removeConversation(
-            ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean result) {
-                    promise.resolve(result);
-                }
-
-                @Override
-                public void onError(ErrorCode errorCode) {
-                    reject(promise, errorCode);
-                }
-            });
+            ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
     }
 
     @ReactMethod
@@ -702,17 +731,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void saveTextMessageDraft(int conversationType, String targetId, String content, final Promise promise) {
         RongIMClient.getInstance().saveTextMessageDraft(
-            ConversationType.setValue(conversationType), targetId, content, new ResultCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean result) {
-                    promise.resolve(result);
-                }
-
-                @Override
-                public void onError(ErrorCode errorCode) {
-                    reject(promise, errorCode);
-                }
-            });
+            ConversationType.setValue(conversationType), targetId, content, createBooleanCallback(promise));
     }
 
     @ReactMethod
@@ -771,17 +790,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void clearMessagesUnreadStatus(int conversationType, String targetId, double time, final Promise promise) {
         if (time == 0) {
             RongIMClient.getInstance().clearMessagesUnreadStatus(
-                ConversationType.setValue(conversationType), targetId, new ResultCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        promise.resolve(result);
-                    }
-
-                    @Override
-                    public void onError(ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
+                ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
         } else {
             RongIMClient.getInstance().clearMessagesUnreadStatus(
                 ConversationType.setValue(conversationType), targetId, (long) time, new OperationCallback() {
@@ -1112,5 +1121,147 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setStatisticServer(String server) {
         RongIMClient.setStatisticDomain(server);
+    }
+
+    @ReactMethod
+    public void syncConversationReadStatus(int conversationType, String targetId, double timestamp, Promise promise) {
+        RongIMClient.getInstance().syncConversationReadStatus(
+            ConversationType.setValue(conversationType), targetId, (long) timestamp, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void cancelSendMediaMessage(int messageId, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().cancelSendMediaMessage(message, createOperationCallback(promise));
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void cancelDownloadMediaMessage(int messageId, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().cancelDownloadMediaMessage(message, createOperationCallback(promise));
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void downloadMediaMessage(int messageId, final String eventId, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().downloadMediaMessage(message, new IDownloadMediaMessageCallback() {
+                    @Override
+                    public void onSuccess(Message message) {
+                        MediaMessageContent media = (MediaMessageContent) message.getContent();
+                        WritableMap map = createEventMap(eventId, "success");
+                        map.putString("path", media.getLocalPath().toString());
+                        eventEmitter.emit("rcimlib-download-media-message", map);
+                    }
+
+                    @Override
+                    public void onProgress(Message message, int i) {
+                        WritableMap map = createEventMap(eventId, "progress");
+                        map.putInt("progress", i);
+                        eventEmitter.emit("rcimlib-download-media-message", map);
+                    }
+
+                    @Override
+                    public void onError(Message message, ErrorCode errorCode) {
+                        WritableMap map = createEventMap(eventId, "error");
+                        map.putInt("errorCode", errorCode.getValue());
+                        eventEmitter.emit("rcimlib-download-media-message", map);
+                    }
+
+                    @Override
+                    public void onCanceled(Message message) {
+                        eventEmitter.emit("rcimlib-download-media-message", createEventMap(eventId, "cancel"));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getMessage(int messageId, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, createMessageCallback(promise));
+    }
+
+    @ReactMethod
+    public void getMessageByUId(String UId, final Promise promise) {
+        RongIMClient.getInstance().getMessageByUid(UId, createMessageCallback(promise));
+    }
+
+    @ReactMethod
+    public void setMessageExtra(int messageId, String extra, final Promise promise) {
+        RongIMClient.getInstance().setMessageExtra(messageId, extra, createBooleanCallback(promise));
+    }
+
+    @ReactMethod
+    public void getMessageSendTime(int messageId, final Promise promise) {
+        promise.resolve(RongIMClient.getInstance().getSendTimeByMessageId(messageId));
+    }
+
+    @ReactMethod
+    public void getFirstUnreadMessage(int conversationType, String targetId, Promise promise) {
+        RongIMClient.getInstance().getTheFirstUnreadMessage(
+            ConversationType.setValue(conversationType), targetId, createMessageCallback(promise));
+    }
+
+    @ReactMethod
+    public void getUnreadMentionedMessages(int conversationType, String targetId, Promise promise) {
+        RongIMClient.getInstance().getUnreadMentionedMessages(
+            ConversationType.setValue(conversationType), targetId, createMessagesCallback(promise));
+    }
+
+    @ReactMethod
+    public void setConversationToTop(int conversationType, String targetId, Boolean isTop, Promise promise) {
+        RongIMClient.getInstance().setConversationToTop(
+            ConversationType.setValue(conversationType), targetId, isTop, createBooleanCallback(promise));
+    }
+
+    @ReactMethod
+    public void clearTextMessageDraft(int conversationType, String targetId, Promise promise) {
+        RongIMClient.getInstance().clearTextMessageDraft(
+            ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
+    }
+
+    @ReactMethod
+    public void getRemoteChatRoomHistoryMessages(String targetId, double recordTime, int count, int order, final Promise promise) {
+        TimestampOrder timestampOrder = order == 0 ? TimestampOrder.RC_TIMESTAMP_DESC : TimestampOrder.RC_TIMESTAMP_ASC;
+        RongIMClient.getInstance().getChatroomHistoryMessages(
+            targetId, (long) recordTime, count, timestampOrder, new IChatRoomHistoryMessageCallback() {
+                @Override
+                public void onSuccess(List<Message> list, long syncTime) {
+                    WritableMap map = Arguments.createMap();
+                    map.putArray("messages", (WritableArray) messagesToArray(list));
+                    map.putDouble("syncTime", syncTime);
+                    promise.resolve(map);
+                }
+
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    reject(promise, errorCode);
+                }
+            });
     }
 }

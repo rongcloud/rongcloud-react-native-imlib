@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button, TextInput } from "react-native";
 import {
   cleanRemoteHistoryMessages,
-  getRemoteChatroomHistoryMessages,
+  getRemoteChatRoomHistoryMessages,
   getRemoteHistoryMessages
 } from "rongcloud-react-native-imlib";
 
@@ -39,9 +39,9 @@ export default class extends React.PureComponent {
     this.setState({ result: JSON.stringify(messages, null, 2) });
   };
 
-  getRemoteChatroomHistoryMessages = async () => {
+  getRemoteChatRoomHistoryMessages = async () => {
     const { targetId, sentTime, count, order } = this.state;
-    const messages = await getRemoteChatroomHistoryMessages(
+    const messages = await getRemoteChatRoomHistoryMessages(
       targetId,
       parseInt(sentTime),
       parseInt(count),
@@ -98,7 +98,7 @@ export default class extends React.PureComponent {
           onChange={order => this.setState({ order })}
         />
         <FormItem>
-          <Button title="获取服务端聊天室消息" onPress={this.getRemoteChatroomHistoryMessages} />
+          <Button title="获取服务端聊天室消息" onPress={this.getRemoteChatRoomHistoryMessages} />
         </FormItem>
         <Result>{result}</Result>
       </Body>
