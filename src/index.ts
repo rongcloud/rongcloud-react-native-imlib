@@ -43,7 +43,7 @@ export function addRecallMessageListener(listener: (messageId: string) => void) 
 
 /**
  * 多端登录时，通知其它终端清除某个会话的未读消息数
- * 
+ *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
  * @param timestamp 该会话中已读的最后一条消息的发送时间戳
@@ -998,12 +998,17 @@ export function getConversation(
 /**
  * 获取会话列表
  *
- * @param conversationTypes 会话类型
+ * @param conversationTypes 会话类型列表
+ * @param count 获取的数量
+ * @param timestamp 会话的时间戳（获取这个时间戳之前的会话列表，0
+ *     表示从最新开始获取）
  */
 export function getConversationList(
-  conversationTypes: ConversationType[] = []
+  conversationTypes: ConversationType[] = [],
+  count = 0,
+  timestamp = 0
 ): Promise<Conversation[]> {
-  return RCIMClient.getConversationList(conversationTypes);
+  return RCIMClient.getConversationList(conversationTypes, count, timestamp);
 }
 
 /**
@@ -1057,6 +1062,32 @@ export function getConversationNotificationStatus(
   targetId: string
 ): Promise<ConversationNotificationStatus> {
   return RCIMClient.getConversationNotificationStatus(conversationType, targetId);
+}
+
+/**
+ * 设置是否置顶会话
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param isTop 是否置顶
+ */
+export function setConversationToTop(
+  conversationType: ConversationType,
+  targetId: string,
+  isTop: boolean
+) {
+  return RCIMClient.setConversationToTop(conversationType, targetId, isTop);
+}
+
+/**
+ * 获取置顶会话列表
+ *
+ * @param conversationTypes 会话类型列表
+ */
+export function getTopConversationList(
+  conversationTypes: ConversationType[] = []
+): Promise<Conversation[]> {
+  return RCIMClient.getTopConversationList(conversationTypes);
 }
 
 /**

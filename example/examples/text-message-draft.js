@@ -1,19 +1,12 @@
 import * as React from "react";
-import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import { Button, TextInput } from "react-native";
 import {
   clearTextMessageDraft,
   getTextMessageDraft,
   saveTextMessageDraft
 } from "rongcloud-react-native-imlib";
-
+import { Body, FormItem, Result, Select } from "../components";
 import { conversations } from "./constants";
-import FormItem from "./form-item";
-
-const style = StyleSheet.create({
-  body: { padding: 16 },
-  result: { fontFamily: Platform.OS === "ios" ? "menlo" : "monospace" },
-  switch: { position: "absolute", right: 8 }
-});
 
 export default class extends React.PureComponent {
   static route = "TextMessageDraft";
@@ -45,17 +38,13 @@ export default class extends React.PureComponent {
   render() {
     const { targetId, conversationType, content, result } = this.state;
     return (
-      <ScrollView contentContainerStyle={style.body}>
-        <FormItem label="会话类型">
-          <Picker
-            selectedValue={conversationType}
-            onValueChange={conversationType => this.setState({ conversationType })}
-          >
-            {Object.keys(conversations).map(key => (
-              <Picker.Item key={key} label={conversations[key]} value={key} />
-            ))}
-          </Picker>
-        </FormItem>
+      <Body>
+        <Select
+          label="会话类型"
+          options={conversations}
+          value={conversationType}
+          onChange={this.setConversationType}
+        />
         <FormItem label="目标 ID">
           <TextInput value={targetId} onChangeText={this.setTargetId} placeholder="请输入目标 ID" />
         </FormItem>
@@ -71,10 +60,8 @@ export default class extends React.PureComponent {
         <FormItem>
           <Button title="清除消息草稿" onPress={this.clearDraft} />
         </FormItem>
-        <FormItem>
-          <Text style={style.result}>{result}</Text>
-        </FormItem>
-      </ScrollView>
+        <Result>{result}</Result>
+      </Body>
     );
   }
 }

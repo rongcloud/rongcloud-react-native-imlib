@@ -480,9 +480,41 @@ RCT_EXPORT_METHOD(removeConversation
 
 RCT_EXPORT_METHOD(getConversationList
                   : (NSArray<NSNumber *> *)conversationTypes
+                  : (int)count
+                  : (double)timestamp
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
-  NSArray *list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes];
+  NSArray *list;
+  if (count) {
+    list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes
+                                                      count:count
+                                                  startTime:timestamp];
+  } else {
+    list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes];
+  }
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
+  for (int i = 0; i < list.count; i += 1) {
+    array[i] = [self fromConversation:list[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(setConversationToTop
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (BOOL)isTop
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient setConversationToTop:conversationType
+                                                     targetId:targetId
+                                                        isTop:isTop]));
+}
+
+RCT_EXPORT_METHOD(getTopConversationList
+                  : (NSArray<NSNumber *> *)conversationTypes
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *list = [RCIMClient.sharedRCIMClient getTopConversationList:conversationTypes];
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
   for (int i = 0; i < list.count; i += 1) {
     array[i] = [self fromConversation:list[i]];
