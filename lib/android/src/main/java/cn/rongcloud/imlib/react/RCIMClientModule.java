@@ -1271,15 +1271,17 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getRealTimeLocation(int conversationType, String targetId, Promise promise) {
+        RealTimeLocationErrorCode code = RongIMClient.getInstance().getRealTimeLocation(
+            ConversationType.setValue(conversationType), targetId);
+        promise.resolve(code.getValue());
+    }
+
+    @ReactMethod
     public void startRealTimeLocation(int conversationType, String targetId, Promise promise) {
-        RealTimeLocationErrorCode code = RongIMClient.getInstance().getRealTimeLocation(ConversationType.setValue(conversationType), targetId);
-        if (code == RealTimeLocationErrorCode.RC_REAL_TIME_LOCATION_SUCCESS) {
-            code = RongIMClient.getInstance().startRealTimeLocation(
-                ConversationType.setValue(conversationType), targetId);
-            promise.resolve(code.getValue());
-        } else {
-            promise.reject(code.getValue() + "", code.getMessage());
-        }
+        RealTimeLocationErrorCode code = RongIMClient.getInstance().startRealTimeLocation(
+            ConversationType.setValue(conversationType), targetId);
+        promise.resolve(code.getValue());
     }
 
     @ReactMethod
@@ -1317,5 +1319,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RealTimeLocationStatus status = RongIMClient.getInstance().getRealTimeLocationCurrentState(
             ConversationType.setValue(conversationType), targetId);
         promise.resolve(status.getValue());
+    }
+
+    @ReactMethod
+    public void cleanHistoryMessages(int conversationType, String targetId, double timestamp, boolean clearRemote, Promise promise) {
+        RongIMClient.getInstance().cleanHistoryMessages(
+            ConversationType.setValue(conversationType), targetId, (long) timestamp, clearRemote, createOperationCallback(promise));
     }
 }

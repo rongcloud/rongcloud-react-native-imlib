@@ -1012,14 +1012,31 @@ export function getRemoteHistoryMessages(
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
- * @param sentTime 清除消息截止时间戳，为 0 则清除会话所有服务端历史消息
+ * @param recordTime 清除消息截止时间戳，为 0 则清除会话所有服务端历史消息
  */
 export function cleanRemoteHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
-  sentTime: number
+  recordTime: number
 ): Promise<boolean> {
-  return RCIMClient.cleanRemoteHistoryMessages(conversationType, targetId, sentTime);
+  return RCIMClient.cleanRemoteHistoryMessages(conversationType, targetId, recordTime);
+}
+
+/**
+ * 清除服务端历史消息
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param recordTime 清除消息截止时间戳，为 0 则清除会话所有服务端历史消息
+ * @param clearRemote 是否同时删除服务端消息
+ */
+export function cleanHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  recordTime: number,
+  clearRemote: boolean,
+): Promise<boolean> {
+  return RCIMClient.cleanHistoryMessages(conversationType, targetId, recordTime, clearRemote);
 }
 
 /**
