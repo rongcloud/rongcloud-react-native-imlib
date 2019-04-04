@@ -24,6 +24,7 @@ import Blacklist from "./blacklist";
 import ChatRoom from "./chat-room";
 import CreateDiscussion from "./create-discussion";
 import PublicService from "./public-service";
+import RealTimeLocation from "./realtime-location";
 
 const examples = [
   Connect,
@@ -48,7 +49,8 @@ const examples = [
   Blacklist,
   ChatRoom,
   CreateDiscussion,
-  PublicService
+  PublicService,
+  RealTimeLocation
 ];
 
 export default class extends React.PureComponent {
@@ -88,5 +90,6 @@ export {
   Blacklist,
   ChatRoom,
   CreateDiscussion,
-  PublicService
+  PublicService,
+  RealTimeLocation
 };

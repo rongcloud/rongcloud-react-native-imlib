@@ -8,6 +8,11 @@ import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
+import io.rong.imlib.location.RealTimeLocationConstant;
+import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationErrorCode;
+import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationStatus;
+import io.rong.imlib.location.message.RealTimeLocationStartMessage;
+import io.rong.imlib.location.message.RealTimeLocationStatusMessage;
 import io.rong.imlib.model.*;
 import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
@@ -253,7 +258,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void connect(Boolean isReceivePush) {
+    public void disconnect(Boolean isReceivePush) {
         if (isReceivePush) {
             RongIMClient.getInstance().disconnect();
         } else {
@@ -1263,5 +1268,54 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     reject(promise, errorCode);
                 }
             });
+    }
+
+    @ReactMethod
+    public void startRealTimeLocation(int conversationType, String targetId, Promise promise) {
+        RealTimeLocationErrorCode code = RongIMClient.getInstance().getRealTimeLocation(ConversationType.setValue(conversationType), targetId);
+        if (code == RealTimeLocationErrorCode.RC_REAL_TIME_LOCATION_SUCCESS) {
+            code = RongIMClient.getInstance().startRealTimeLocation(
+                ConversationType.setValue(conversationType), targetId);
+            promise.resolve(code.getValue());
+        } else {
+            promise.reject(code.getValue() + "", code.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void joinRealTimeLocation(int conversationType, String targetId, Promise promise) {
+        RealTimeLocationErrorCode code = RongIMClient.getInstance().joinRealTimeLocation(
+            ConversationType.setValue(conversationType), targetId);
+        promise.resolve(code.getValue());
+    }
+
+    @ReactMethod
+    public void quitRealTimeLocation(int conversationType, String targetId, Promise promise) {
+        try {
+            RongIMClient.getInstance().quitRealTimeLocation(
+                ConversationType.setValue(conversationType), targetId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void getRealTimeLocationParticipants(int conversationType, String targetId, Promise promise) {
+        List<String> list = RongIMClient.getInstance().getRealTimeLocationParticipants(
+            ConversationType.setValue(conversationType), targetId);
+        WritableArray array = Arguments.createArray();
+        if (list != null) {
+            for (String item : list) {
+                array.pushString(item);
+            }
+        }
+        promise.resolve(array);
+    }
+
+    @ReactMethod
+    public void getRealTimeLocationStatus(int conversationType, String targetId, Promise promise) {
+        RealTimeLocationStatus status = RongIMClient.getInstance().getRealTimeLocationCurrentState(
+            ConversationType.setValue(conversationType), targetId);
+        promise.resolve(status.getValue());
     }
 }

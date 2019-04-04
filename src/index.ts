@@ -1638,3 +1638,64 @@ export function getPublicServiceProfile(
 ): Promise<PublicServiceProfile> {
   return RCIMClient.getPublicServiceProfile(publicServiceType, publicServiceId);
 }
+
+/**
+ * 发起实时位置共享
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function startRealTimeLocation(conversationType: ConversationType, targetId: string) {
+  return RCIMClient.startRealTimeLocation(conversationType, targetId);
+}
+
+/**
+ * 加入实时位置共享
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function joinRealTimeLocation(conversationType: ConversationType, targetId: string) {
+  return RCIMClient.joinRealTimeLocation(conversationType, targetId);
+}
+
+/**
+ * 退出实时位置共享
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function quitRealTimeLocation(conversationType: ConversationType, targetId: string) {
+  return RCIMClient.quitRealTimeLocation(conversationType, targetId);
+}
+
+/**
+ * 实时位置共享状态
+ */
+export enum RealTimeLocationStatus {}
+
+/**
+ * 获取实时位置共享状态
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getRealTimeLocationStatus(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<RealTimeLocationStatus> {
+  return RCIMClient.getRealTimeLocationStatus(conversationType, targetId);
+}
+
+/**
+ * 获取参与实时位置共享的所有成员
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function getRealTimeLocationParticipants(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<string[]> {
+  return RCIMClient.getRealTimeLocationParticipants(conversationType, targetId);
+}
