@@ -3,6 +3,7 @@
  */
 
 import { NativeEventEmitter, NativeModules } from "react-native";
+import { func } from "prop-types";
 
 /**
  * @hidden
@@ -136,6 +137,13 @@ export function connect(
  */
 export function disconnect(isReceivePush = true) {
   RCIMClient.disconnect(isReceivePush);
+}
+
+/**
+ * 获取当前连接状态
+ */
+export function getConnectionStatus(): Promise<ConnectionStatus> {
+  return RCIMClient.getConnectionStatus();
 }
 
 /**
@@ -492,6 +500,27 @@ export function addTypingStatusListener(listener: (status: TypingStatus) => void
 }
 
 /**
+ * 设置消息发送状态
+ *
+ * @param messageId 消息 ID
+ * @param status 状态
+ */
+export function setMessageSentStatus(messageId: number, status: SentStatus): Promise<void> {
+  return RCIMClient.setMessageSentStatus(messageId, status);
+}
+
+/**
+ * 获取屏蔽消息提醒的会话列表
+ *
+ * @param conversationTypeList 消息类型列表
+ */
+export function getBlockedConversationList(
+  conversationTypeList: ConversationType[]
+): Promise<Conversation[]> {
+  return RCIMClient.getBlockedConversationList(conversationTypeList);
+}
+
+/**
  * 发送阅读回执
  *
  * @param conversationType 会话类型
@@ -513,6 +542,19 @@ export function sendReadReceiptMessage(
  */
 export function sendReadReceiptRequest(messageId: number): Promise<void> {
   return RCIMClient.sendReadReceiptRequest(messageId);
+}
+
+/**
+ * 发起群组消息回执响应
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ */
+export function sendReadReceiptResponse(
+  conversationType: ConversationType,
+  targetId: string
+): Promise<void> {
+  return RCIMClient.sendReadReceiptResponse(conversationType, targetId);
 }
 
 /**
@@ -1034,7 +1076,7 @@ export function cleanHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
   recordTime: number,
-  clearRemote: boolean,
+  clearRemote: boolean
 ): Promise<boolean> {
   return RCIMClient.cleanHistoryMessages(conversationType, targetId, recordTime, clearRemote);
 }
@@ -1689,7 +1731,27 @@ export function quitRealTimeLocation(conversationType: ConversationType, targetI
 /**
  * 实时位置共享状态
  */
-export enum RealTimeLocationStatus {}
+export enum RealTimeLocationStatus {
+  /**
+   * 初始状态
+   */
+  IDLE,
+
+  /**
+   * 接收状态
+   */
+  INCOMING,
+
+  /**
+   * 发起状态
+   */
+  OUTGOING,
+
+  /**
+   * 已连接，正在共享的状态
+   */
+  CONNECTED
+}
 
 /**
  * 获取实时位置共享状态
@@ -1716,3 +1778,25 @@ export function getRealTimeLocationParticipants(
 ): Promise<string[]> {
   return RCIMClient.getRealTimeLocationParticipants(conversationType, targetId);
 }
+
+/**
+ * 全局屏蔽某个时间段的消息提醒
+ */
+export function setNotificationQuietHours(startTime: string, spanMinutes: number): Promise<void> {
+  return RCIMClient.setNotificationQuietHours(startTime, spanMinutes);
+}
+
+/**
+ * 查询已设置的全局时间段消息提醒屏蔽
+ */
+export function getNotificationQuietHours(): Promise<{ startTime: string; spanMinutes: number }> {
+  return RCIMClient.getNotificationQuietHours();
+}
+
+/**
+ * 删除已设置的全局时间段消息提醒屏蔽
+ */
+export function removeNotificationQuietHours(): Promise<void> {
+  return RCIMClient.removeNotificationQuietHours();
+}
+

@@ -8,11 +8,8 @@ import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
-import io.rong.imlib.location.RealTimeLocationConstant;
 import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationErrorCode;
 import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationStatus;
-import io.rong.imlib.location.message.RealTimeLocationStartMessage;
-import io.rong.imlib.location.message.RealTimeLocationStatusMessage;
 import io.rong.imlib.model.*;
 import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
@@ -693,6 +690,12 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getBlockedConversationList(ReadableArray conversationTypes, final Promise promise) {
+        ConversationType[] types = arrayToConversationTypes(conversationTypes);
+        RongIMClient.getInstance().getBlockedConversationList(createConversationListCallback(promise), types);
+    }
+
+    @ReactMethod
     public void removeConversation(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().removeConversation(
             ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
@@ -1296,7 +1299,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         try {
             RongIMClient.getInstance().quitRealTimeLocation(
                 ConversationType.setValue(conversationType), targetId);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1325,5 +1328,66 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void cleanHistoryMessages(int conversationType, String targetId, double timestamp, boolean clearRemote, Promise promise) {
         RongIMClient.getInstance().cleanHistoryMessages(
             ConversationType.setValue(conversationType), targetId, (long) timestamp, clearRemote, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getConnectionStatus(Promise promise) {
+        promise.resolve(RongIMClient.getInstance().getCurrentConnectionStatus().getValue());
+    }
+
+    @ReactMethod
+    public void sendReadReceiptResponse(int conversationType, String targetId, ReadableArray messages, Promise promise) {
+        ArrayList<Message> list = new ArrayList<>();
+        for (int i = 0; i < messages.size(); i += 1) {
+            ReadableMap map = messages.getMap(i);
+            if (map != null) {
+                list.add(mapToMessage(map));
+            }
+        }
+        RongIMClient.getInstance().sendReadReceiptResponse(
+            ConversationType.setValue(conversationType), targetId, list, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void setMessageSentStatus(int messageId, int status, final Promise promise) {
+        RongIMClient.getInstance().getMessage(messageId, new ResultCallback<Message>() {
+            @Override
+            public void onSuccess(Message message) {
+                RongIMClient.getInstance().setMessageSentStatus(message, createBooleanCallback(promise));
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getNotificationQuietHours(String startTime, int spanMinutes, Promise promise) {
+        RongIMClient.getInstance().setNotificationQuietHours(startTime, spanMinutes, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getNotificationQuietHours(final Promise promise) {
+        RongIMClient.getInstance().getNotificationQuietHours(new GetNotificationQuietHoursCallback() {
+            @Override
+            public void onSuccess(String startTime, int spanMinutes) {
+                WritableMap map = Arguments.createMap();
+                map.putString("startTime", startTime);
+                map.putInt("spanMinutes", spanMinutes);
+                promise.resolve(map);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void removeNotificationQuietHours(Promise promise) {
+        RongIMClient.getInstance().removeNotificationQuietHours(createOperationCallback(promise));
     }
 }
