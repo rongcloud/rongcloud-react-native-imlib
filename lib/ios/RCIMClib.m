@@ -996,6 +996,84 @@ RCT_EXPORT_METHOD(unsubscribePublicService
       }];
 }
 
+RCT_EXPORT_METHOD(startRealTimeLocation
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCRealTimeLocationManager.sharedManager getRealTimeLocationProxy:conversationType
+      targetId:targetId
+      success:^(id<RCRealTimeLocationProxy> locationShare) {
+        [locationShare startRealTimeLocation];
+        resolve(nil);
+      }
+      error:^(RCRealTimeLocationErrorCode status) {
+        reject([@(status) stringValue], @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(joinRealTimeLocation
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCRealTimeLocationManager.sharedManager getRealTimeLocationProxy:conversationType
+      targetId:targetId
+      success:^(id<RCRealTimeLocationProxy> locationShare) {
+        [locationShare joinRealTimeLocation];
+        resolve(nil);
+      }
+      error:^(RCRealTimeLocationErrorCode status) {
+        reject([@(status) stringValue], @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(quitRealTimeLocation
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCRealTimeLocationManager.sharedManager getRealTimeLocationProxy:conversationType
+      targetId:targetId
+      success:^(id<RCRealTimeLocationProxy> locationShare) {
+        [locationShare quitRealTimeLocation];
+        resolve(nil);
+      }
+      error:^(RCRealTimeLocationErrorCode status) {
+        reject([@(status) stringValue], @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(getRealTimeLocationParticipants
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCRealTimeLocationManager.sharedManager getRealTimeLocationProxy:conversationType
+      targetId:targetId
+      success:^(id<RCRealTimeLocationProxy> locationShare) {
+        resolve([locationShare getParticipants]);
+      }
+      error:^(RCRealTimeLocationErrorCode status) {
+        reject([@(status) stringValue], @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(getRealTimeLocationStatus
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCRealTimeLocationManager.sharedManager getRealTimeLocationProxy:conversationType
+      targetId:targetId
+      success:^(id<RCRealTimeLocationProxy> locationShare) {
+        resolve(@([locationShare getStatus]));
+      }
+      error:^(RCRealTimeLocationErrorCode status) {
+        reject([@(status) stringValue], @"", nil);
+      }];
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
