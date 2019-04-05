@@ -671,6 +671,45 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
       }];
 }
 
+RCT_EXPORT_METHOD(setNotificationQuietHours
+                  : (NSString *)startTime
+                  : (int)span
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient setNotificationQuietHours:startTime
+      spanMins:span
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(getNotificationQuietHours
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient
+      getNotificationQuietHours:^(NSString *startTime, int spansMin) {
+        resolve(@{@"startTime" : startTime, @"spanMinutes" : @(spansMin)});
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
+RCT_EXPORT_METHOD(removeNotificationQuietHours
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient
+      removeNotificationQuietHours:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 RCT_EXPORT_METHOD(syncConversationReadStatus
                   : (int)conversationType
                   : (NSString *)targetId

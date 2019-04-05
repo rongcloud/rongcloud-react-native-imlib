@@ -582,12 +582,14 @@ export function sendReadReceiptRequest(messageId: number): Promise<void> {
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
+ * @param messages 回执的消息列表
  */
 export function sendReadReceiptResponse(
   conversationType: ConversationType,
-  targetId: string
+  targetId: string,
+  messages: Message[]
 ): Promise<void> {
-  return RCIMClient.sendReadReceiptResponse(conversationType, targetId);
+  return RCIMClient.sendReadReceiptResponse(conversationType, targetId, messages);
 }
 
 /**
