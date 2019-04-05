@@ -1,6 +1,7 @@
 package cn.rongcloud.imlib.react;
 
 import android.net.Uri;
+import android.util.Log;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
@@ -268,40 +269,48 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setServerInfo(naviServer, fileServer);
     }
 
+    @SuppressWarnings("Duplicates")
     @ReactMethod
     public void sendMessage(ReadableMap data, final String eventId) {
-        ReadableMap content = data.getMap("content");
-        if (content == null) {
-            eventEmitter.emit("rcimlib-send-message", createEventMap(eventId, "error"));
-            return;
+        try {
+            Message message = mapToMessage(data);
+            String pushContent = getStringFromMap(data, "pushContent");
+            String pushData = getStringFromMap(data, "pushData");
+            RongIMClient.getInstance().sendMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
+        } catch (Exception e) {
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
         }
-        MessageContent messageContent = mapToMessageContent(content);
-        String targetId = data.getString("targetId");
-        ConversationType conversationType = ConversationType.setValue(data.getInt("conversationType"));
-        Message message = Message.obtain(targetId, conversationType, messageContent);
+    }
 
-        String pushContent = "";
-        if (data.hasKey("pushContent")) {
-            pushContent = data.getString("pushContent");
+    @SuppressWarnings("Duplicates")
+    @ReactMethod
+    public void sendMediaMessage(ReadableMap data, final String eventId) {
+        try {
+            Message message = mapToMessage(data);
+            String pushContent = getStringFromMap(data, "pushContent");
+            String pushData = getStringFromMap(data, "pushData");
+            RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
+        } catch (Exception e) {
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
         }
+    }
 
-        String pushData = "";
-        if (data.hasKey("pushData")) {
-            pushData = data.getString("pushData");
-        }
-
-        ISendMediaMessageCallback callback = new ISendMediaMessageCallback() {
+    private ISendMediaMessageCallback createSendMessageCallback(final String eventId) {
+        return new ISendMediaMessageCallback() {
             @Override
             public void onAttached(Message message) {
             }
 
             @Override
             public void onCanceled(Message message) {
+                eventEmitter.emit("rcimlib-send-message", createEventMap(eventId, "cancel"));
             }
 
             @Override
             public void onSuccess(Message message) {
-                onSendMessageSuccess(eventId, message);
+                WritableMap map = createEventMap(eventId, "success");
+                map.putInt("messageId", message.getMessageId());
+                eventEmitter.emit("rcimlib-send-message", map);
             }
 
             @Override
@@ -311,58 +320,52 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
             @Override
             public void onProgress(Message message, int i) {
-                onSendMessageProgress(eventId, i);
+                WritableMap map = createEventMap(eventId, "progress");
+                map.putInt("messageId", message.getMessageId());
+                map.putInt("progress", i);
+                eventEmitter.emit("rcimlib-send-message", map);
             }
         };
+    }
 
-        if (messageContent instanceof ImageMessage) {
-            RongIMClient.getInstance().sendImageMessage(message, pushContent, pushData, new SendImageMessageCallback() {
-                @Override
-                public void onAttached(Message message) {
-                }
-
-                @Override
-                public void onSuccess(Message message) {
-                    onSendMessageSuccess(eventId, message);
-                }
-
-                @Override
-                public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                    onSendMessageError(eventId, message, errorCode);
-                }
-
-                @Override
-                public void onProgress(Message message, int i) {
-                    onSendMessageProgress(eventId, i);
-                }
-            });
-        } else if (messageContent instanceof FileMessage) {
-            RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, callback);
-        } else {
-            RongIMClient.getInstance().sendMessage(message, pushContent, pushData, callback);
+    @SuppressWarnings("Duplicates")
+    @ReactMethod
+    public void sendDirectionalMessage(ReadableMap data, ReadableArray users, final String eventId) {
+        try {
+            ConversationType conversationType = ConversationType.setValue(data.getInt("conversationType"));
+            MessageContent messageContent = mapToMessageContent(data.getMap("content"));
+            String targetId = data.getString("targetId");
+            String pushContent = getStringFromMap(data, "pushContent");
+            String pushData = getStringFromMap(data, "pushData");
+            String[] array = toStringArray(users);
+            RongIMClient.getInstance().sendDirectionalMessage(
+                conversationType, targetId, messageContent, array, pushContent, pushData, createSendMessageCallback(eventId));
+        } catch (Exception e) {
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
         }
-    }
-
-    private void onSendMessageProgress(String eventId, int i) {
-        WritableMap map = createEventMap(eventId, "progress");
-        map.putInt("progress", i);
-        eventEmitter.emit("rcimlib-send-message", map);
-    }
-
-    private void onSendMessageSuccess(String eventId, Message message) {
-        WritableMap map = createEventMap(eventId, "success");
-        map.putInt("messageId", message.getMessageId());
-        eventEmitter.emit("rcimlib-send-message", map);
     }
 
     private void onSendMessageError(String eventId, Message message, RongIMClient.ErrorCode errorCode) {
         WritableMap map = createEventMap(eventId, "error");
         map.putInt("errorCode", errorCode.getValue());
-        map.putInt("messageId", message.getMessageId());
+        if (message != null) {
+            map.putInt("messageId", message.getMessageId());
+        }
         eventEmitter.emit("rcimlib-send-message", map);
     }
 
+    private String getStringFromMap(ReadableMap map, String key) {
+        String value = null;
+        if (map.hasKey("pushContent")) {
+            value = map.getString("pushContent");
+        }
+        return value;
+    }
+
     private MessageContent mapToMessageContent(ReadableMap map) {
+        if (map == null) {
+            return null;
+        }
         String contentType = map.getString("type");
         MessageContent messageContent = null;
         if (contentType != null) {
@@ -373,6 +376,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 case "image":
                     Uri uri = Utils.getFileUri(reactContext, map.getString("local"));
                     messageContent = ImageMessage.obtain(uri, uri);
+                    if (map.hasKey("isFull")) {
+                        ((ImageMessage) messageContent).setIsFull(map.getBoolean("isFull"));
+                    }
                     break;
                 case "file":
                     messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
@@ -393,11 +399,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     private Message mapToMessage(ReadableMap map) {
         ConversationType conversationType = ConversationType.setValue(map.getInt("conversationType"));
-        ReadableMap content = map.getMap("content");
-        if (content == null) {
-            return null;
-        }
-        return Message.obtain(map.getString("targetId"), conversationType, mapToMessageContent(content));
+        MessageContent content = mapToMessageContent(map.getMap("content"));
+        return Message.obtain(map.getString("targetId"), conversationType, content);
     }
 
     @ReactMethod
@@ -573,15 +576,18 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         };
     }
 
+    private String[] toStringArray(ReadableArray items) {
+        String[] array = new String[items.size()];
+        for (int i = 0; i < items.size(); i += 1) {
+            array[i] = items.getString(i);
+        }
+        return array;
+    }
+
     @ReactMethod
     public void searchConversations(String keyword, ReadableArray conversationTypes, ReadableArray objectNames, final Promise promise) {
         ConversationType[] conversationTypesArray = arrayToConversationTypes(conversationTypes);
-
-        String[] objectNamesArray = new String[objectNames.size()];
-        for (int i = 0; i < objectNames.size(); i += 1) {
-            objectNamesArray[i] = objectNames.getString(i);
-        }
-
+        String[] objectNamesArray = toStringArray(conversationTypes);
         RongIMClient.getInstance().searchConversations(
             keyword, conversationTypesArray, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
                 @Override

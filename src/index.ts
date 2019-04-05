@@ -2,8 +2,9 @@
  * @module RCIMClient
  */
 
-import { NativeEventEmitter, NativeModules } from "react-native";
+import { Animated, NativeEventEmitter, NativeModules } from "react-native";
 import { func } from "prop-types";
+import event = Animated.event;
 
 /**
  * @hidden
@@ -406,6 +407,8 @@ export type SentMessage = {
  */
 export type SentMessageCallback = {
   success?: (messageId: number) => void;
+  progress?: (progress: number, messageId: number) => void;
+  cancel?: () => void;
   error?: (errorCode: ErrorCode) => void;
 };
 
@@ -431,29 +434,59 @@ export enum MessageObjectNames {
   voice = "RC:VcMsg"
 }
 
-/**
- * 发送消息
- *
- * @param message 消息
- * @param callback 回调
- */
-export function sendMessage(message: SentMessage, callback: SentMessageCallback = null) {
+function handleSendMessageCallback(callback: SentMessageCallback): string {
   const eventId = Math.random().toString();
   if (callback) {
     const listener = eventEmitter.addListener("rcimlib-send-message", data => {
       if (data.eventId === eventId) {
-        const { success, error } = callback;
+        const { success, error, cancel, progress } = callback;
         if (data.type === "success") {
           success && success(data.messageId);
           listener.remove();
         } else if (data.type === "error") {
           error && error(data.errorCode);
           listener.remove();
+        } else if (data.type === "cancel") {
+          cancel && cancel();
+          listener.remove();
+        } else if (data.type === "progress") {
+          progress && progress(data.progress, data.messageId);
         }
       }
     });
   }
-  RCIMClient.sendMessage(message, eventId);
+  return eventId;
+}
+
+/**
+ * 发送消息
+ *
+ * @param message 消息
+ * @param callback 回调
+ */
+export function sendMessage(message: SentMessage, callback: SentMessageCallback = {}) {
+  RCIMClient.sendMessage(message, handleSendMessageCallback(callback));
+}
+
+/**
+ * 发送媒体消息
+ *
+ * @param message 消息
+ * @param callback 回调
+ */
+export function sendMediaMessage(message: SentMessage, callback: SentMessageCallback = {}) {
+  RCIMClient.sendMediaMessage(message, handleSendMessageCallback(callback));
+}
+
+/**
+ * 发送定向消息
+ *
+ * @param message 消息
+ * @param userIdList 用户 ID 列表
+ * @param callback 回调
+ */
+export function sendDirectionalMessage(message: SentMessage, userIdList: string[], callback: SentMessageCallback) {
+  RCIMClient.sendDirectionalMessage(message, handleSendMessageCallback(callback));
 }
 
 /**
@@ -1781,6 +1814,9 @@ export function getRealTimeLocationParticipants(
 
 /**
  * 全局屏蔽某个时间段的消息提醒
+ *
+ * @param startTime 开始屏蔽消息提醒的时间，格式为HH:MM:SS
+ * @param spanMinutes 需要屏蔽消息提醒的分钟数，0 < spanMinutes < 1440
  */
 export function setNotificationQuietHours(startTime: string, spanMinutes: number): Promise<void> {
   return RCIMClient.setNotificationQuietHours(startTime, spanMinutes);

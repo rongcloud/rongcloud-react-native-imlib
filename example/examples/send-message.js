@@ -2,7 +2,12 @@ import * as React from "react";
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import { DocumentPicker, DocumentPickerUtil } from "react-native-document-picker";
 import { showImagePicker } from "react-native-image-picker";
-import { sendMessage, recallMessage, cancelSendMediaMessage } from "rongcloud-react-native-imlib";
+import {
+  sendMessage,
+  sendMediaMessage,
+  recallMessage,
+  cancelSendMediaMessage
+} from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations, messageTypes } from "./constants";
 
@@ -29,7 +34,6 @@ export default class extends React.PureComponent {
   setTextContent = content => this.setState({ content: { type: "text", content } });
   setPushContent = pushContent => this.setState({ pushContent });
   setConversationType = conversationType => this.setState({ conversationType });
-
   setVoice = voice =>
     this.setState({ content: { type: "voice", data: voice, local: voice, duration: 2 } });
 
@@ -51,7 +55,7 @@ export default class extends React.PureComponent {
   pickImage = () => {
     showImagePicker({}, ({ uri }) => {
       if (uri) {
-        this.setState({ content: { type: "image", local: uri } });
+        this.setState({ content: { type: "image", local: uri, isFull: true } });
       }
     });
   };
@@ -66,20 +70,28 @@ export default class extends React.PureComponent {
 
   send = () => {
     const { conversationType, targetId, content, pushContent } = this.state;
-    sendMessage(
-      { conversationType, targetId, content, pushContent },
-      {
-        success: messageId => {
-          this.messageId = messageId;
-          this.setState({ result: "消息发送成功：" + messageId });
-        },
-        progress: progress => {
-          this.setState({ result: progress + "%" })
-        },
-        error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
-      }
-    );
+    const message = { conversationType, targetId, content, pushContent };
+    const callback = {
+      success: messageId => {
+        this.setState({ result: "消息发送成功：" + messageId });
+      },
+      progress: (progress, messageId) => {
+        this.messageId = messageId;
+        this.setState({ result: progress + "%" });
+      },
+      cancel: () => {
+        this.setState({ result: "取消发送" });
+      },
+      error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
+    };
+    if (content.type === "image" || content.type === "file") {
+      sendMediaMessage(message, callback);
+    } else {
+      sendMessage(message, callback);
+    }
   };
+
+  cancel = () => cancelSendMediaMessage(this.messageId);
 
   recall = async () => {
     if (!this.messageId) {
@@ -160,9 +172,9 @@ export default class extends React.PureComponent {
         <FormItem>
           <Button title="发送" onPress={this.send} />
         </FormItem>
-        {/* <FormItem>
+        <FormItem>
           <Button title="取消媒体消息的发送" onPress={this.cancel} />
-        </FormItem> */}
+        </FormItem>
         <FormItem>
           <Button title="撤回" onPress={this.recall} />
         </FormItem>
