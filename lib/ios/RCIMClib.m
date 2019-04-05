@@ -29,6 +29,12 @@ RCT_EXPORT_METHOD(setReconnectKickEnable : (BOOL)enabled) {
   [RCIMClient.sharedRCIMClient setReconnectKickEnable:enabled];
 }
 
+RCT_EXPORT_METHOD(getConnectionStatus
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient getConnectionStatus]));
+}
+
 RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient connectWithToken:token
       success:^(NSString *userId) {
@@ -54,6 +60,14 @@ RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
 
 RCT_EXPORT_METHOD(disconnect : (BOOL)isReceivePush) {
   [RCIMClient.sharedRCIMClient disconnect:isReceivePush];
+}
+
+RCT_EXPORT_METHOD(setMessageSentStatus
+                  : (int)messageId
+                  : (int)status
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient setMessageSentStatus:messageId sentStatus:status]));
 }
 
 RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
@@ -389,6 +403,25 @@ RCT_EXPORT_METHOD(cleanRemoteHistoryMessages
       }];
 }
 
+RCT_EXPORT_METHOD(cleanHistoryMessages
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (double)time
+                  : (BOOL)cleanRemote
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient clearHistoryMessages:conversationType
+      targetId:targetId
+      recordTime:time
+      clearRemote:cleanRemote
+      success:^{
+        resolve(nil);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 RCT_EXPORT_METHOD(deleteMessagesByIds
                   : (NSArray *)ids
                   : (RCTPromiseResolveBlock)resolve
@@ -511,6 +544,27 @@ RCT_EXPORT_METHOD(getUnreadMentionedMessages
   resolve(messages);
 }
 
+RCT_EXPORT_METHOD(sendReadReceiptResponse
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSArray *)messages
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+  for (int i = 0; i < messages.count; i += 1) {
+    array[i] = [self fromMessage:messages[i]];
+  }
+  [RCIMClient.sharedRCIMClient sendReadReceiptResponse:conversationType
+      targetId:targetId
+      messageList:array
+      success:^{
+        resolve(resolve);
+      }
+      error:^(RCErrorCode status) {
+        [self reject:reject error:status];
+      }];
+}
+
 RCT_EXPORT_METHOD(getConversation
                   : (int)conversationType
                   : (NSString *)targetId
@@ -543,6 +597,18 @@ RCT_EXPORT_METHOD(getConversationList
   } else {
     list = [RCIMClient.sharedRCIMClient getConversationList:conversationTypes];
   }
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
+  for (int i = 0; i < list.count; i += 1) {
+    array[i] = [self fromConversation:list[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(getBlockedConversationList
+                  : (NSArray<NSNumber *> *)conversationTypes
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *list = [RCIMClient.sharedRCIMClient getBlockedConversationList:conversationTypes];
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:list.count];
   for (int i = 0; i < list.count; i += 1) {
     array[i] = [self fromConversation:list[i]];
