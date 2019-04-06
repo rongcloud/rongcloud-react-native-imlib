@@ -1,9 +1,11 @@
 package cn.rongcloud.imlib.react;
 
 import android.net.Uri;
-import android.util.Log;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+import io.rong.imlib.CustomServiceConfig;
+import io.rong.imlib.CustomServiceConfig.CSEvaSolveStatus;
+import io.rong.imlib.ICustomServiceListener;
 import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
 import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
@@ -1425,5 +1427,220 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 reject(promise, errorCode);
             }
         });
+    }
+
+    private CSCustomServiceInfo mapToCSCustomServiceInfo(ReadableMap map) {
+        CSCustomServiceInfo.Builder builder = new CSCustomServiceInfo.Builder();
+        if (map.hasKey("userId")) {
+            builder.userId(map.getString("userId"));
+        }
+        if (map.hasKey("nickName")) {
+            builder.nickName(map.getString("nickName"));
+        }
+        if (map.hasKey("loginName")) {
+            builder.loginName(map.getString("loginName"));
+        }
+        if (map.hasKey("name")) {
+            builder.name(map.getString("name"));
+        }
+        if (map.hasKey("grade")) {
+            builder.grade(map.getString("grade"));
+        }
+        if (map.hasKey("age")) {
+            builder.age(map.getString("age"));
+        }
+        if (map.hasKey("profession")) {
+            builder.profession(map.getString("profession"));
+        }
+        if (map.hasKey("portraitUrl")) {
+            builder.portraitUrl(map.getString("portraitUrl"));
+        }
+        if (map.hasKey("province")) {
+            builder.province(map.getString("province"));
+        }
+        if (map.hasKey("city")) {
+            builder.city(map.getString("city"));
+        }
+        if (map.hasKey("memo")) {
+            builder.memo(map.getString("memo"));
+        }
+        if (map.hasKey("mobileNo")) {
+            builder.mobileNo(map.getString("mobileNo"));
+        }
+        if (map.hasKey("email")) {
+            builder.email(map.getString("email"));
+        }
+        if (map.hasKey("address")) {
+            builder.address(map.getString("address"));
+        }
+        if (map.hasKey("QQ")) {
+            builder.QQ(map.getString("QQ"));
+        }
+        if (map.hasKey("weibo")) {
+            builder.weibo(map.getString("weibo"));
+        }
+        if (map.hasKey("weixin")) {
+            builder.weixin(map.getString("weixin"));
+        }
+        if (map.hasKey("page")) {
+            builder.page(map.getString("page"));
+        }
+        if (map.hasKey("referrer")) {
+            builder.referrer(map.getString("referrer"));
+        }
+        if (map.hasKey("enterUrl")) {
+            builder.enterUrl(map.getString("enterUrl"));
+        }
+        if (map.hasKey("skillId")) {
+            builder.skillId(map.getString("skillId"));
+        }
+        if (map.hasKey("listUrl")) {
+            ReadableArray array = map.getArray("listUrl");
+            assert array != null;
+            ArrayList<String> listUrl = new ArrayList<>(array.size());
+            for (int i = 0; i < array.size(); i += 1) {
+                listUrl.set(i, array.getString(i));
+            }
+            builder.listUrl(listUrl);
+        }
+        if (map.hasKey("define")) {
+            builder.define(map.getString("define"));
+        }
+        if (map.hasKey("productId")) {
+            builder.productId(map.getString("productId"));
+        }
+        return builder.build();
+    }
+
+    private WritableMap CSLMessageItemToMap(CSLMessageItem item) {
+        WritableMap map = Arguments.createMap();
+        map.putString("name", item.getName());
+        map.putString("title", item.getTitle());
+        map.putString("defaultText", item.getDefaultText());
+        map.putString("type", item.getType());
+        map.putString("verification", item.getVerification());
+        map.putBoolean("required", item.isRequired());
+        map.putInt("max", item.getMax());
+        return map;
+    }
+
+    private WritableMap customServiceConfigToMap(CustomServiceConfig config) {
+        WritableMap map = Arguments.createMap();
+        map.putBoolean("isBlock", config.isBlack);
+        map.putString("companyName", config.companyName);
+        map.putString("companyIcon", config.companyIcon);
+        map.putString("announceClickUrl", config.announceClickUrl);
+        map.putString("announceMsg", config.announceMsg);
+        WritableArray leaveMessageNativeInfo = Arguments.createArray();
+        for (CSLMessageItem item : config.leaveMessageNativeInfo) {
+            leaveMessageNativeInfo.pushMap(CSLMessageItemToMap(item));
+        }
+        map.putArray("leaveMessageNativeInfo", leaveMessageNativeInfo);
+        map.putInt("leaveMessageType", config.leaveMessageConfigType.getValue());
+        map.putInt("userTipTime", config.userTipTime);
+        map.putString("userTipWord", config.userTipWord);
+        map.putInt("adminTipTime", config.adminTipTime);
+        map.putString("adminTipWord", config.adminTipWord);
+        map.putInt("evaEntryPoint", config.evaEntryPoint.getValue());
+        map.putInt("evaType", config.evaluateType.getValue());
+        map.putBoolean("robotSessionNoEva", config.robotSessionNoEva);
+        WritableMap humanEvaluateItems = Arguments.createMap();
+        for (CSHumanEvaluateItem item : config.humanEvaluateList) {
+            humanEvaluateItems.putString(String.valueOf(item.getValue()), item.getDescription());
+        }
+        map.putMap("humanEvaluateItems", humanEvaluateItems);
+        map.putBoolean("isReportResolveStatus", config.isReportResolveStatus);
+        map.putBoolean("isDisableLocation", config.isDisableLocation);
+        return map;
+    }
+
+    @ReactMethod
+    public void startCustomerService(String kefuId, ReadableMap csInfo, final String eventId) {
+        RongIMClient.getInstance().startCustomService(kefuId, new ICustomServiceListener() {
+            @Override
+            public void onSuccess(CustomServiceConfig customServiceConfig) {
+                WritableMap map = createEventMap(eventId, "success");
+                map.putMap("config", customServiceConfigToMap(customServiceConfig));
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+
+            @Override
+            public void onError(int errorCode, String message) {
+                WritableMap map = createEventMap(eventId, "error");
+                map.putInt("errorCode", errorCode);
+                map.putString("errorMessage", message);
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+
+            @Override
+            public void onModeChanged(CustomServiceMode customServiceMode) {
+                WritableMap map = createEventMap(eventId, "mode-changed");
+                map.putInt("mode", customServiceMode.getValue());
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+
+            @Override
+            public void onQuit(String message) {
+                WritableMap map = createEventMap(eventId, "quit");
+                map.putString("message", message);
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+
+            @Override
+            public void onPullEvaluation(String dialogId) {
+                WritableMap map = createEventMap(eventId, "pull-evaluation");
+                map.putString("dialogId", dialogId);
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+
+            @Override
+            public void onSelectGroup(List<CSGroupItem> list) {
+                WritableMap map = createEventMap(eventId, "select-group");
+                WritableArray groups = Arguments.createArray();
+                for (CSGroupItem item : list) {
+                    WritableMap group = Arguments.createMap();
+                    group.putString("id", item.getId());
+                    group.putString("name", item.getName());
+                    group.putBoolean("isOnline", item.getOnline());
+                }
+                map.putArray("groups", groups);
+                eventEmitter.emit("rcimlib-customer-service", map);
+            }
+        }, mapToCSCustomServiceInfo(csInfo));
+    }
+
+    @ReactMethod
+    public void switchToHumanMode(String kefuId) {
+        RongIMClient.getInstance().switchToHumanMode(kefuId);
+    }
+
+    @ReactMethod
+    public void selectCustomerServiceGroup(String kefuId, String groupId) {
+        RongIMClient.getInstance().selectCustomServiceGroup(kefuId, groupId);
+    }
+
+    @ReactMethod
+    public void stopCustomerService(String kefuId, String groupId) {
+        RongIMClient.getInstance().stopCustomService(kefuId);
+    }
+
+    @ReactMethod
+    public void leaveMessageCustomerService(String kefuId, ReadableMap message, Promise promise) {
+        HashMap<String, Object> contentMap = message.toHashMap();
+        HashMap<String, String> map = new HashMap<>();
+        for (String key : message.toHashMap().keySet()) {
+            map.put(key, (String) contentMap.get(key));
+        }
+        RongIMClient.getInstance().leaveMessageCustomService(kefuId, map, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void evaluateCustomerService(
+        String kefuId, String dialogId, int value, String suggest, int status, String tagText, String extra) {
+        if (tagText.isEmpty()) {
+            RongIMClient.getInstance().evaluateCustomService(kefuId, value, CSEvaSolveStatus.valueOf(status), suggest, dialogId);
+        } else {
+            RongIMClient.getInstance().evaluateCustomService(kefuId, value, CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
+        }
     }
 }

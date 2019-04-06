@@ -1853,3 +1853,195 @@ export function getOfflineMessageDuration(): Promise<number> {
 export async function setOfflineMessageDuration(duration: number): Promise<number> {
   return parseInt(await RCIMClient.setOfflineMessageDuration(duration));
 }
+
+/**
+ * 客服信息
+ */
+export type CSInfo = {
+  userId?: string;
+  nickName?: string;
+  loginName?: string;
+  name?: string;
+  grade?: string;
+  age?: string;
+  profession?: string;
+  portraitUrl?: string;
+  province?: string;
+  city?: string;
+  memo?: string;
+  mobileNo?: string;
+  email?: string;
+  address?: string;
+  QQ?: string;
+  weibo?: string;
+  weixin?: string;
+  page?: string;
+  referrer?: string;
+  enterUrl?: string;
+  skillId?: string;
+  listUrl?: string;
+  define?: string;
+  productId?: string;
+};
+
+/**
+ * 客服配置
+ */
+export type CSConfig = {
+  isBlock: boolean;
+  companyName: string;
+  companyUrl: string;
+  companyIcon: string;
+  announceClickUrl: string;
+  announceMsg: string;
+  leaveMessageNativeInfo: CSLeaveMessageItem[];
+  leaveMessageType: string;
+  userTipTime: number;
+  userTipWord: string;
+  adminTipTime: number;
+  adminTipWord: string;
+  evaEntryPoint: number;
+  evaType: number;
+  robotSessionNoEva: boolean;
+  humanEvaluateItems: { [targetId: string]: string };
+  isReportResolveStatus: boolean;
+  isDisableLocation: boolean;
+};
+
+/**
+ * 客服留言
+ */
+export type CSLeaveMessageItem = {
+  name?: string;
+  title?: string;
+  type?: string;
+  defaultText?: string;
+  required?: boolean;
+  message?: string;
+  verification?: string;
+  max?: number;
+};
+
+/**
+ * 客服分组信息
+ */
+export type CSGroupItem = {
+  id: string;
+  name: string;
+  isOnline: boolean;
+};
+
+/**
+ * 发起客服聊天回调
+ */
+export type CSCallback = {
+  success?: (config: CSConfig) => void;
+  error?: (code: number, message: string) => void;
+  modeChanged?: (mode: number) => void;
+  pullEvaluation?: (dialogId: string) => void;
+  quit?: (message: string) => void;
+  selectGroup?: (groups: CSGroupItem[]) => void;
+};
+
+/**
+ * 发起客服聊天
+ *
+ * @param kefuId 客服 ID
+ * @param csInfo 客服信息
+ * @param callback 回调
+ */
+export function startCustomerService(kefuId: string, csInfo: CSInfo, callback: CSCallback = null) {
+  const eventId = Math.random().toString();
+  if (callback) {
+    const { success, error, modeChanged, selectGroup, pullEvaluation, quit } = callback;
+    const listener = eventEmitter.addListener("rcimlib-customer-service", data => {
+      if (data.eventId === eventId) {
+        if (data.type === "success") {
+          success && success(data.config);
+        } else if (data.type === "error") {
+          error && error(data.errorCode, data.errorMessage);
+          listener.remove();
+        } else if (data.type === "mode-changed") {
+          modeChanged && modeChanged(data.mode);
+        } else if (data.type === "pull-evaluation") {
+          pullEvaluation && pullEvaluation(data.dialogId);
+        } else if (data.type === "select-group") {
+          selectGroup && selectGroup(data.groups);
+        } else if (data.type === "quit") {
+          quit && quit(data.message);
+          listener.remove();
+        }
+      }
+    });
+  }
+  RCIMClient.startCustomerService(kefuId, csInfo, eventId);
+}
+
+/**
+ * 切换至人工客服
+ *
+ * @param kefuId 客服 ID
+ */
+export function switchToHumanMode(kefuId: string) {
+  RCIMClient.switchToHumanMode(kefuId);
+}
+
+/**
+ * 选择客服分组模式
+ *
+ * @param kefuId 客服 ID
+ * @param groupId 分组 ID
+ */
+export function selectCustomerServiceGroup(kefuId: string, groupId: string) {
+  RCIMClient.selectCustomServiceGroup(kefuId, groupId);
+}
+
+/**
+ * 评价客服
+ *
+ * @param kefuId 客服 ID
+ * @param dialogId 会话 Id，客服后台主动拉评价的时候（onPullEvaluation）这个参数有效，其余情况传空字符串即可
+ * @param value 评价分数，取值范围 1 - 5
+ * @param suggest 客户建议
+ * @param resolveStatus 解决状态
+ * @param tagText 标签
+ * @param extra 用于扩展的额外信息
+ */
+export function evaluateCustomerService(
+  kefuId: string,
+  dialogId: string,
+  value: string,
+  suggest: string,
+  resolveStatus: number,
+  tagText = "",
+  extra = ""
+) {
+  RCIMClient.evaluateCustomerService(
+    kefuId,
+    dialogId,
+    value,
+    suggest,
+    resolveStatus,
+    tagText,
+    extra
+  );
+}
+
+/**
+ * 选择客服分组模式
+ *
+ * @param kefuId 客服 ID
+ * @param message 客服留言信息
+ */
+export function leaveMessageCustomerService(kefuId: string, message: CSLeaveMessageItem) {
+  RCIMClient.leaveMessageCustomerService(kefuId, message);
+}
+
+/**
+ * 结束客服聊天
+ *
+ * @param kefuId 客服 ID
+ */
+export function stopCustomerService(kefuId: string) {
+  RCIMClient.stopCustomerService(kefuId);
+}
