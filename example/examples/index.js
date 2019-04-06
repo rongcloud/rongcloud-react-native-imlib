@@ -25,6 +25,7 @@ import ChatRoom from "./chat-room";
 import CreateDiscussion from "./create-discussion";
 import PublicService from "./public-service";
 import RealTimeLocation from "./realtime-location";
+import CustomerService from "./customer-service";
 
 const examples = [
   Connect,
@@ -50,7 +51,8 @@ const examples = [
   ChatRoom,
   CreateDiscussion,
   PublicService,
-  RealTimeLocation
+  RealTimeLocation,
+  CustomerService
 ];
 
 export default class extends React.PureComponent {
@@ -91,5 +93,6 @@ export {
   ChatRoom,
   CreateDiscussion,
   PublicService,
-  RealTimeLocation
+  RealTimeLocation,
+  CustomerService
 };

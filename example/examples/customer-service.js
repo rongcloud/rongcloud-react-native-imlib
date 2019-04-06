@@ -18,7 +18,18 @@ export default class extends React.PureComponent {
 
   start = () => {
     const { targetId } = this.state;
-    return startCustomerService(parseInt(targetId), {}, {});
+    return startCustomerService(
+      targetId,
+      {},
+      {
+        success: config => {
+          this.setState({ result: JSON.stringify(config, null, 2) });
+        },
+        error: (code, message) => {
+          this.setState({ result: `${code}, ${message}` });
+        }
+      }
+    );
   };
 
   render() {
