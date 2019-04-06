@@ -3,6 +3,7 @@
  */
 
 import { NativeEventEmitter, NativeModules } from "react-native";
+import { CSLeaveMessageItem } from "../lib/js";
 
 /**
  * @hidden
@@ -1888,25 +1889,62 @@ export type CSInfo = {
  * 客服配置
  */
 export type CSConfig = {
-  isBlock: boolean;
+  isBlack: boolean;
   companyName: string;
   companyUrl: string;
   companyIcon: string;
   announceClickUrl: string;
   announceMsg: string;
   leaveMessageNativeInfo: CSLeaveMessageItem[];
-  leaveMessageType: string;
+  leaveMessageType: LeaveMessageType;
   userTipTime: number;
   userTipWord: string;
   adminTipTime: number;
   adminTipWord: string;
-  evaEntryPoint: number;
+  evaEntryPoint: CSEvaEntryPoint;
   evaType: number;
   robotSessionNoEva: boolean;
-  humanEvaluateItems: { [targetId: string]: string };
+  humanEvaluateItems: { value: number; description: string }[];
   isReportResolveStatus: boolean;
   isDisableLocation: boolean;
 };
+
+/**
+ * 留言消息类型
+ */
+export enum LeaveMessageType {
+  NATIVE,
+  WEB
+}
+
+/**
+ * 客服问题解决状态
+ */
+export enum CSResolveStatus {
+  UNRESOLVED,
+  RESOLVED,
+  RESOLVING
+}
+
+/**
+ * 客服评价时机
+ */
+export enum CSEvaEntryPoint {
+  LEAVE,
+  EXTENSION,
+  NONE,
+  END
+}
+
+/**
+ * 客服服务模式
+ */
+export enum CSMode {
+  NO_SERVICE,
+  ROBOT_ONLY,
+  HUMAN_ONLY,
+  ROBOT_FIRST
+}
 
 /**
  * 客服留言
@@ -1937,7 +1975,7 @@ export type CSGroupItem = {
 export type CSCallback = {
   success?: (config: CSConfig) => void;
   error?: (code: number, message: string) => void;
-  modeChanged?: (mode: number) => void;
+  modeChanged?: (mode: CSMode) => void;
   pullEvaluation?: (dialogId: string) => void;
   quit?: (message: string) => void;
   selectGroup?: (groups: CSGroupItem[]) => void;
@@ -2012,7 +2050,7 @@ export function evaluateCustomerService(
   dialogId: string,
   value: string,
   suggest: string,
-  resolveStatus: number,
+  resolveStatus: CSResolveStatus,
   tagText = "",
   extra = ""
 ) {

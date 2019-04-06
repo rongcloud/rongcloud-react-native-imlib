@@ -1526,7 +1526,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     private WritableMap customServiceConfigToMap(CustomServiceConfig config) {
         WritableMap map = Arguments.createMap();
-        map.putBoolean("isBlock", config.isBlack);
+        map.putBoolean("isBlack", config.isBlack);
         map.putString("companyName", config.companyName);
         map.putString("companyIcon", config.companyIcon);
         map.putString("announceClickUrl", config.announceClickUrl);
@@ -1544,11 +1544,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         map.putInt("evaEntryPoint", config.evaEntryPoint.getValue());
         map.putInt("evaType", config.evaluateType.getValue());
         map.putBoolean("robotSessionNoEva", config.robotSessionNoEva);
-        WritableMap humanEvaluateItems = Arguments.createMap();
+        WritableArray humanEvaluateItems = Arguments.createArray();
         for (CSHumanEvaluateItem item : config.humanEvaluateList) {
-            humanEvaluateItems.putString(String.valueOf(item.getValue()), item.getDescription());
+            WritableMap evaItem = Arguments.createMap();
+            evaItem.putInt("value", item.getValue());
+            evaItem.putString("description", item.getDescription());
+            humanEvaluateItems.pushMap(evaItem);
         }
-        map.putMap("humanEvaluateItems", humanEvaluateItems);
+        map.putArray("humanEvaluateItems", humanEvaluateItems);
         map.putBoolean("isReportResolveStatus", config.isReportResolveStatus);
         map.putBoolean("isDisableLocation", config.isDisableLocation);
         return map;
