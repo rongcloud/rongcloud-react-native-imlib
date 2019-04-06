@@ -2,9 +2,7 @@
  * @module RCIMClient
  */
 
-import { Animated, NativeEventEmitter, NativeModules } from "react-native";
-import { func } from "prop-types";
-import event = Animated.event;
+import { NativeEventEmitter, NativeModules } from "react-native";
 
 /**
  * @hidden
@@ -409,7 +407,7 @@ export type SentMessageCallback = {
   success?: (messageId: number) => void;
   progress?: (progress: number, messageId: number) => void;
   cancel?: () => void;
-  error?: (errorCode: ErrorCode) => void;
+  error?: (errorCode: ErrorCode, messageId: number) => void;
 };
 
 /**
@@ -444,7 +442,7 @@ function handleSendMessageCallback(callback: SentMessageCallback): string {
           success && success(data.messageId);
           listener.remove();
         } else if (data.type === "error") {
-          error && error(data.errorCode);
+          error && error(data.errorCode, data.messageId);
           listener.remove();
         } else if (data.type === "cancel") {
           cancel && cancel();
@@ -495,7 +493,7 @@ export function sendDirectionalMessage(message: SentMessage, userIdList: string[
  * @param messageId 消息 ID
  * @param pushContent 推送内容
  */
-export function recallMessage(messageId: number, pushContent: string): Promise<void> {
+export function recallMessage(messageId: number, pushContent = ""): Promise<void> {
   return RCIMClient.recallMessage(messageId, pushContent);
 }
 

@@ -73,6 +73,7 @@ export default class extends React.PureComponent {
     const message = { conversationType, targetId, content, pushContent };
     const callback = {
       success: messageId => {
+        this.messageId = messageId;
         this.setState({ result: "消息发送成功：" + messageId });
       },
       progress: (progress, messageId) => {

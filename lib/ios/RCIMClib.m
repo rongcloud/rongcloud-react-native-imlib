@@ -71,83 +71,101 @@ RCT_EXPORT_METHOD(setMessageSentStatus
 }
 
 RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
-  NSDictionary *content = message[@"content"];
-  if (!content) {
-    [self sendEventWithName:@"rcimlib-connect"
-                       body:@{
-                         @"type" : @"error",
-                         @"eventId" : eventId,
-                       }];
-    return;
-  }
-
-  void (^successBlock)(long messageId) = ^(long messageId) {
-    [self sendEventWithName:@"rcimlib-send-message"
-                       body:@{
-                         @"type" : @"success",
-                         @"eventId" : eventId,
-                         @"messageId" : @(messageId),
-                       }];
-  };
-
-  void (^errorBlock)(RCErrorCode errorCode, long messageId) =
-      ^(RCErrorCode errorCode, long messageId) {
+  [RCIMClient.sharedRCIMClient sendMessage:[message[@"conversationType"] intValue]
+      targetId:message[@"targetId"]
+      content:[self toMessageContent:message[@"content"]]
+      pushContent:message[@"pushContent"]
+      pushData:message[@"pushData"]
+      success:^(long messageId) {
         [self sendEventWithName:@"rcimlib-send-message"
                            body:@{
-                             @"type" : @"error",
+                             @"type" : @"success",
                              @"eventId" : eventId,
                              @"messageId" : @(messageId),
-                             @"errorCode" : @(errorCode),
                            }];
-      };
+      }
+      error:^(RCErrorCode errorCode, long messageId) {
+        [self sendMessageError:eventId errorCode:errorCode messageId:messageId];
+      }];
+}
 
-  NSString *type = content[@"type"];
-  if ([type isEqualToString:@"image"] || [type isEqualToString:@"file"]) {
-    void (^progressBlock)(int progress, long messageId) = ^(int progress, long messageId) {
-      [self sendEventWithName:@"rcimlib-send-message"
-                         body:@{
-                           @"type" : @"progress",
-                           @"eventId" : eventId,
-                           @"messageId" : @(messageId),
-                           @"progress" : @(progress),
-                         }];
-    };
+RCT_EXPORT_METHOD(sendMediaMessage : (NSDictionary *)message : (NSString *)eventId) {
+  [RCIMClient.sharedRCIMClient sendMediaMessage:[message[@"conversationType"] intValue]
+      targetId:message[@"targetId"]
+      content:[self toMessageContent:message[@"content"]]
+      pushContent:message[@"pushContent"]
+      pushData:message[@"pushData"]
+      progress:^(int progress, long messageId) {
+        [self sendEventWithName:@"rcimlib-send-message"
+                           body:@{
+                             @"type" : @"progress",
+                             @"eventId" : eventId,
+                             @"messageId" : @(messageId),
+                             @"progress" : @(progress),
+                           }];
+      }
+      success:^(long messageId) {
+        [self sendEventWithName:@"rcimlib-send-message"
+                           body:@{
+                             @"type" : @"success",
+                             @"eventId" : eventId,
+                             @"messageId" : @(messageId),
+                           }];
+      }
+      error:^(RCErrorCode errorCode, long messageId) {
+        [self sendMessageError:eventId errorCode:errorCode messageId:messageId];
+      }
+      cancel:^(long messageId) {
+        [self sendEventWithName:@"rcimlib-send-message"
+                           body:@{
+                             @"type" : @"cancel",
+                             @"eventId" : eventId,
+                             @"messageId" : @(messageId),
+                           }];
+      }];
+}
 
-    void (^cancelBlock)(long messageId) = ^(long messageId) {
-      [self sendEventWithName:@"rcimlib-send-message"
-                         body:@{
-                           @"type" : @"cancel",
-                           @"eventId" : eventId,
-                           @"messageId" : @(messageId),
-                         }];
-    };
+RCT_EXPORT_METHOD(sendDirectionalMessage
+                  : (NSDictionary *)message
+                  : (NSArray *)userIdList
+                  : (NSString *)eventId) {
+  [RCIMClient.sharedRCIMClient sendDirectionalMessage:[message[@"conversationType"] intValue]
+      targetId:message[@"targetId"]
+      toUserIdList:userIdList
+      content:[self toMessageContent:message[@"content"]]
+      pushContent:message[@"pushContent"]
+      pushData:message[@"pushData"]
+      success:^(long messageId) {
+        [self sendEventWithName:@"rcimlib-send-message"
+                           body:@{
+                             @"type" : @"cancel",
+                             @"eventId" : eventId,
+                             @"messageId" : @(messageId),
+                           }];
+      }
+      error:^(RCErrorCode errorCode, long messageId) {
+        [self sendMessageError:eventId errorCode:errorCode messageId:messageId];
+      }];
+}
 
-    [RCIMClient.sharedRCIMClient sendMediaMessage:[message[@"conversationType"] intValue]
-                                         targetId:message[@"targetId"]
-                                          content:[self toMessageContent:content]
-                                      pushContent:message[@"pushContent"]
-                                         pushData:message[@"pushData"]
-                                         progress:progressBlock
-                                          success:successBlock
-                                            error:errorBlock
-                                           cancel:cancelBlock];
-  } else {
-    [RCIMClient.sharedRCIMClient sendMessage:[message[@"conversationType"] intValue]
-                                    targetId:message[@"targetId"]
-                                     content:[self toMessageContent:content]
-                                 pushContent:message[@"pushContent"]
-                                    pushData:message[@"pushData"]
-                                     success:successBlock
-                                       error:errorBlock];
-  }
+- (void)sendMessageError:(NSString *)eventId
+               errorCode:(RCErrorCode)errorCode
+               messageId:(long)messageId {
+  [self sendEventWithName:@"rcimlib-send-message"
+                     body:@{
+                       @"type" : @"error",
+                       @"eventId" : eventId,
+                       @"messageId" : @(messageId),
+                       @"errorCode" : @(errorCode),
+                     }];
 }
 
 RCT_EXPORT_METHOD(recallMessage
-                  : (double)id
+                  : (int)messageId
                   : (NSString *)pushContent
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
-  RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:id];
+  RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:messageId];
   [RCIMClient.sharedRCIMClient recallMessage:message
       pushContent:pushContent
       success:^(long messageId) {
@@ -1468,7 +1486,7 @@ RCT_EXPORT_METHOD(getRealTimeLocationStatus
     @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
     @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
     @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log",
-    @"rcimlib-download-media-message"
+    @"rcimlib-download-media-message", @"rcimlib-recall",
   ];
 }
 
