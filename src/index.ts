@@ -2051,8 +2051,8 @@ export function evaluateCustomerService(
   value: string,
   suggest: string,
   resolveStatus: CSResolveStatus,
-  tagText = "",
-  extra = ""
+  tagText = null,
+  extra = null
 ) {
   RCIMClient.evaluateCustomerService(
     kefuId,
@@ -2071,8 +2071,11 @@ export function evaluateCustomerService(
  * @param kefuId 客服 ID
  * @param message 客服留言信息
  */
-export function leaveMessageCustomerService(kefuId: string, message: CSLeaveMessageItem) {
-  RCIMClient.leaveMessageCustomerService(kefuId, message);
+export function leaveMessageCustomerService(
+  kefuId: string,
+  message: CSLeaveMessageItem
+): Promise<void> {
+  return RCIMClient.leaveMessageCustomerService(kefuId, message);
 }
 
 /**

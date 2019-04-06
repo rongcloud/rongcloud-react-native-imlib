@@ -1640,10 +1640,12 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void evaluateCustomerService(
         String kefuId, String dialogId, int value, String suggest, int status, String tagText, String extra) {
-        if (tagText.isEmpty()) {
-            RongIMClient.getInstance().evaluateCustomService(kefuId, value, CSEvaSolveStatus.valueOf(status), suggest, dialogId);
+        if (tagText == null) {
+            RongIMClient.getInstance().evaluateCustomService(
+                kefuId, value, CSEvaSolveStatus.valueOf(status), suggest, dialogId);
         } else {
-            RongIMClient.getInstance().evaluateCustomService(kefuId, value, CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
+            RongIMClient.getInstance().evaluateCustomService(
+                kefuId, value, CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
         }
     }
 }
