@@ -1216,6 +1216,167 @@ RCT_EXPORT_METHOD(getRealTimeLocationStatus
       }];
 }
 
+RCT_EXPORT_METHOD(startCustomerService
+                  : (NSString *)kefuId
+                  : (NSDictionary *)info
+                  : (NSString *)eventId) {
+  RCCustomerServiceInfo *csInfo = [RCCustomerServiceInfo new];
+  csInfo.name = info[@"name"];
+  csInfo.nickName = info[@"nickName"];
+  csInfo.loginName = info[@"loginName"];
+  [RCIMClient.sharedRCIMClient startCustomerService:kefuId
+      info:csInfo
+      onSuccess:^(RCCustomerServiceConfig *config) {
+        NSMutableArray *leaveMessageNativeInfo =
+            [[NSMutableArray alloc] initWithCapacity:config.leaveMessageNativeInfo.count];
+        for (int i = 0; i < config.leaveMessageNativeInfo.count; i += 1) {
+          leaveMessageNativeInfo[i] = @{
+            @"name" : config.leaveMessageNativeInfo[i].name,
+            @"title" : config.leaveMessageNativeInfo[i].title,
+            @"type" : config.leaveMessageNativeInfo[i].type,
+            @"defaultText" : config.leaveMessageNativeInfo[i].defaultText,
+            @"required" : @(config.leaveMessageNativeInfo[i].required),
+            @"message" : config.leaveMessageNativeInfo[i].message,
+            @"verification" : config.leaveMessageNativeInfo[i].verification,
+            @"max" : @(config.leaveMessageNativeInfo[i].max),
+          };
+        }
+        NSMutableArray *humanEvaluateItems =
+            [[NSMutableArray alloc] initWithCapacity:config.humanEvaluateItems.count];
+        for (int i = 0; i < config.humanEvaluateItems.count; i += 1) {
+          humanEvaluateItems[i] = @{
+            @"value" : @(((RCEvaluateItem *)config.humanEvaluateItems[i]).value),
+            @"description" : ((RCEvaluateItem *)config.humanEvaluateItems[i]).describe,
+          };
+        }
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"success",
+                             @"config" : @{
+                               @"companyName" : config.companyName,
+                               @"companyUrl" : config.companyUrl,
+                               @"isBlack" : @(config.isBlack),
+                               @"announceMsg" : config.announceMsg,
+                               @"announceClickUrl" : config.announceClickUrl,
+                               @"leaveMessageType" : @(config.leaveMessageType),
+                               @"leaveMessageNativeInfo" : leaveMessageNativeInfo,
+                               @"userTipTime" : @(config.userTipTime),
+                               @"userTipWord" : config.userTipWord,
+                               @"adminTipTime" : @(config.adminTipTime),
+                               @"adminTipWord" : config.adminTipWord,
+                               @"evaType" : @(config.evaType),
+                               @"evaEntryPoint" : @(config.evaEntryPoint),
+                               @"robotSessionNoEva" : @(config.robotSessionNoEva),
+                               @"isReportResolveStatus" : @(config.reportResolveStatus),
+                               @"isDisableLocation" : @(config.disableLocation),
+                               @"humanEvaluateItems" : humanEvaluateItems,
+                             },
+                           }];
+      }
+      onError:^(int errorCode, NSString *errMsg) {
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"error",
+                             @"errorCode" : @(errorCode),
+                             @"errorMessage" : errMsg
+                           }];
+      }
+      onModeType:^(RCCSModeType mode) {
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"mode-changed",
+                             @"mode" : @(mode),
+                           }];
+      }
+      onPullEvaluation:^(NSString *dialogId) {
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"pull-evaluation",
+                             @"dialogId" : dialogId,
+                           }];
+      }
+      onSelectGroup:^(NSArray<RCCustomerServiceGroupItem *> *groupList) {
+        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:groupList.count];
+        for (int i = 0; i < groupList.count; i += 1) {
+          array[i] = @{
+            @"id" : groupList[i].groupId,
+            @"name" : groupList[i].name,
+            @"isOnline" : @(groupList[i].online)
+          };
+        }
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"quit",
+                             @"groups" : array,
+                           }];
+      }
+      onQuit:^(NSString *quitMsg) {
+        [self sendEventWithName:@"rcimlib-customer-service"
+                           body:@{
+                             @"eventId" : eventId,
+                             @"type" : @"quit",
+                             @"message" : quitMsg,
+                           }];
+      }];
+}
+
+RCT_EXPORT_METHOD(switchToHumanMode : (NSString *)kefuId) {
+  [RCIMClient.sharedRCIMClient switchToHumanMode:kefuId];
+}
+
+RCT_EXPORT_METHOD(leaveMessageCustomerService
+                  : (NSString *)kefuId
+                  : (NSDictionary *)message
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient leaveMessageCustomerService:kefuId
+      leaveMessageDic:message
+      success:^{
+        resolve(nil);
+      }
+      failure:^{
+        reject(@"", @"", nil);
+      }];
+}
+
+RCT_EXPORT_METHOD(evaluateCustomerService
+                  : (NSString *)kefuId
+                  : (NSString *)dialogId
+                  : (int)value
+                  : (NSString *)suggest
+                  : (int)status
+                  : (NSString *)tagText
+                  : (NSString *)extra) {
+  if (tagText) {
+    [RCIMClient.sharedRCIMClient evaluateCustomerService:kefuId
+                                                dialogId:dialogId
+                                               starValue:value
+                                                 suggest:suggest
+                                           resolveStatus:status
+                                                 tagText:tagText
+                                                   extra:nil];
+  } else {
+    [RCIMClient.sharedRCIMClient evaluateCustomerService:kefuId
+                                                dialogId:dialogId
+                                               starValue:value
+                                                 suggest:suggest
+                                           resolveStatus:status];
+  }
+}
+
+RCT_EXPORT_METHOD(stopCustomerService : (NSString *)kefuId) {
+  [RCIMClient.sharedRCIMClient stopCustomerService:kefuId];
+}
+
+RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)groupId) {
+  [RCIMClient.sharedRCIMClient selectCustomerServiceGroup:kefuId withGroupId:groupId];
+}
+
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {
   [self sendEventWithName:@"rcimlib-connection-status" body:@(status)];
 }
@@ -1513,6 +1674,7 @@ RCT_EXPORT_METHOD(getRealTimeLocationStatus
     @"rcimlib-log",
     @"rcimlib-download-media-message",
     @"rcimlib-recall",
+    @"rcimlib-customer-service",
   ];
 }
 
