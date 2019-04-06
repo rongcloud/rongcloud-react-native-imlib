@@ -214,6 +214,25 @@ RCT_EXPORT_METHOD(sendReadReceiptRequest
       }];
 }
 
+RCT_EXPORT_METHOD(setOfflineMessageDuration
+                  : (int)duration
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  [RCIMClient.sharedRCIMClient setOfflineMessageDuration:duration
+      success:^{
+        resolve(nil);
+      }
+      failure:^(RCErrorCode error) {
+        [self reject:reject error:error];
+      }];
+}
+
+RCT_EXPORT_METHOD(getOfflineMessageDuration
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient getOfflineMessageDuration]));
+}
+
 RCT_EXPORT_METHOD(getHistoryMessages
                   : (int)conversationType
                   : (NSString *)targetId
@@ -1483,10 +1502,17 @@ RCT_EXPORT_METHOD(getRealTimeLocationStatus
 
 - (NSArray<NSString *> *)supportedEvents {
   return @[
-    @"rcimlib-connect", @"rcimlib-connection-status", @"rcimlib-receive-message",
-    @"rcimlib-send-message", @"rcimlib-typing-status", @"rcimlib-read-receipt-received",
-    @"rcimlib-receipt-request", @"rcimlib-receipt-response", @"rcimlib-log",
-    @"rcimlib-download-media-message", @"rcimlib-recall",
+    @"rcimlib-connect",
+    @"rcimlib-connection-status",
+    @"rcimlib-receive-message",
+    @"rcimlib-send-message",
+    @"rcimlib-typing-status",
+    @"rcimlib-read-receipt-received",
+    @"rcimlib-receipt-request",
+    @"rcimlib-receipt-response",
+    @"rcimlib-log",
+    @"rcimlib-download-media-message",
+    @"rcimlib-recall",
   ];
 }
 
