@@ -1396,4 +1396,34 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void removeNotificationQuietHours(Promise promise) {
         RongIMClient.getInstance().removeNotificationQuietHours(createOperationCallback(promise));
     }
+
+    @ReactMethod
+    public void getOfflineMessageDuration(final Promise promise) {
+        RongIMClient.getInstance().getOfflineMessageDuration(new ResultCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                promise.resolve(s);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setOfflineMessageDuration(int duration, final Promise promise) {
+        RongIMClient.getInstance().setOfflineMessageDuration(duration, new ResultCallback<Long>() {
+            @Override
+            public void onSuccess(Long n) {
+                promise.resolve(n);
+            }
+
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        });
+    }
 }

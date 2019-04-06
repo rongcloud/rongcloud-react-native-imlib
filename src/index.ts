@@ -483,7 +483,11 @@ export function sendMediaMessage(message: SentMessage, callback: SentMessageCall
  * @param userIdList 用户 ID 列表
  * @param callback 回调
  */
-export function sendDirectionalMessage(message: SentMessage, userIdList: string[], callback: SentMessageCallback) {
+export function sendDirectionalMessage(
+  message: SentMessage,
+  userIdList: string[],
+  callback: SentMessageCallback
+) {
   RCIMClient.sendDirectionalMessage(message, handleSendMessageCallback(callback));
 }
 
@@ -1836,3 +1840,16 @@ export function removeNotificationQuietHours(): Promise<void> {
   return RCIMClient.removeNotificationQuietHours();
 }
 
+/**
+ * 获取离线消息在服务端的存储时间（以天为单位）
+ */
+export function getOfflineMessageDuration(): Promise<number> {
+  return RCIMClient.getOfflineMessageDuration();
+}
+
+/**
+ * 设置离线消息在服务端的存储时间（以天为单位）
+ */
+export async function setOfflineMessageDuration(duration: number): Promise<number> {
+  return parseInt(await RCIMClient.setOfflineMessageDuration(duration));
+}
