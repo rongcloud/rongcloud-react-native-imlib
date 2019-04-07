@@ -93,7 +93,8 @@ yarn add rongcloud-react-native-imlib
 
 2. 解压并把 `IMLib` 文件夹放到 `ios` 目录
 
-3. 把 `IMLib` 里的 `libopencore-amrnb.a`、`libopencore-amrwb.a`、 `RongIMLib.framework` 拖入 Project navigator `Frameworks`
+3. 把 `IMLib` 里的 `libopencore-amrnb.a`、`libopencore-amrwb.a`、`libvo-amrwbenc.a`、`RongIMLib.framework`
+   拖入 Project navigator `Frameworks`
 
 4. `Build Phases` ➜ `Link Binary With Libraries` 里搜索并添加 `libsqlite3.tbd`
 

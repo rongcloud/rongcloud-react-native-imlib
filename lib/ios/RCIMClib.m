@@ -169,7 +169,8 @@ RCT_EXPORT_METHOD(recallMessage
   [RCIMClient.sharedRCIMClient recallMessage:message
       pushContent:pushContent
       success:^(long messageId) {
-        resolve(nil);
+        RCMessage *message = [RCIMClient.sharedRCIMClient getMessage:messageId];
+        resolve([self fromMessageContent:message.content]);
       }
       error:^(RCErrorCode errorcode) {
         [self reject:reject error:errorcode];
@@ -239,6 +240,7 @@ RCT_EXPORT_METHOD(getHistoryMessages
                   : (NSString *)objectName
                   : (double)baseMessageId
                   : (int)count
+                  : (BOOL)isForward
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
   NSArray *messages;
@@ -246,13 +248,46 @@ RCT_EXPORT_METHOD(getHistoryMessages
     messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
                                                       targetId:targetId
                                                     objectName:objectName
-                                               oldestMessageId:baseMessageId
+                                                 baseMessageId:baseMessageId
+                                                     isForward:(BOOL)isForward
                                                          count:count];
   } else {
     messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
                                                       targetId:targetId
                                                oldestMessageId:baseMessageId
                                                          count:count];
+  }
+
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
+  for (int i = 0; i < messages.count; i += 1) {
+    array[i] = [self fromMessage:messages[i]];
+  }
+  resolve(array);
+}
+
+RCT_EXPORT_METHOD(getHistoryMessagesByTimestamp
+                  : (int)conversationType
+                  : (NSString *)targetId
+                  : (NSArray<NSString *> *)objectNames
+                  : (double)timestamp
+                  : (int)count
+                  : (BOOL)isForward
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  NSArray *messages;
+  if (objectNames && objectNames.count > 0) {
+    messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
+                                                      targetId:targetId
+                                                   objectNames:objectNames
+                                                      sentTime:timestamp
+                                                     isForward:isForward
+                                                         count:count];
+  } else {
+    messages = [RCIMClient.sharedRCIMClient getHistoryMessages:conversationType
+                                                      targetId:targetId
+                                                      sentTime:timestamp
+                                                   beforeCount:count
+                                                    afterCount:0];
   }
 
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:messages.count];
@@ -679,12 +714,12 @@ RCT_EXPORT_METHOD(getTopConversationList
 RCT_EXPORT_METHOD(setConversationNotificationStatus
                   : (int)conversationType
                   : (NSString *)targetId
-                  : (int)status
+                  : (BOOL)isBlock
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
   [RCIMClient.sharedRCIMClient setConversationNotificationStatus:conversationType
       targetId:targetId
-      isBlocked:!status
+      isBlocked:isBlock
       success:^(RCConversationNotificationStatus status) {
         resolve(@(status));
       }
@@ -701,7 +736,7 @@ RCT_EXPORT_METHOD(getConversationNotificationStatus
   [RCIMClient.sharedRCIMClient getConversationNotificationStatus:conversationType
       targetId:targetId
       success:^(RCConversationNotificationStatus status) {
-        resolve(@(status));
+        resolve(@(!status));
       }
       error:^(RCErrorCode status) {
         [self reject:reject error:status];
@@ -1398,6 +1433,12 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
                          @"userId" : item.userId,
                          @"typingContentType" : item.contentType,
                        }];
+  } else {
+    [self sendEventWithName:@"rcimlib-typing-status"
+                       body:@{
+                         @"conversationType" : @(conversationType),
+                         @"targetId" : targetId,
+                       }];
   }
 }
 
@@ -1620,6 +1661,15 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
       @"data" : data,
       @"duration" : @(message.duration),
       @"extra" : message.extra ? message.extra : @"",
+    };
+  } else if ([content isKindOfClass:[RCRecallNotificationMessage class]]) {
+    RCRecallNotificationMessage *message = (RCRecallNotificationMessage *)content;
+    return @{
+      @"type" : @"recall-notification",
+      @"operatorId" : message.operatorId,
+      @"recallTime" : @(message.recallTime),
+      @"originalObjectName" : message.originalObjectName,
+      @"isAdmin" : @(message.isAdmin),
     };
   }
   return @{@"error" : @"Content type not yet supported"};
