@@ -20,7 +20,7 @@ export default class extends React.PureComponent {
   state = {
     conversationType: 1,
     targetId: "vh6a0VoDJ",
-    status: 0,
+    status: "false",
     result: ""
   };
 
@@ -28,10 +28,11 @@ export default class extends React.PureComponent {
 
   setStatus = async () => {
     const { conversationType, targetId, status } = this.state;
+    console.log(typeof status, status);
     const result = await setConversationNotificationStatus(
       parseInt(conversationType),
       targetId,
-      parseInt(status)
+      status === "true"
     );
     this.setState({ result: "设置消息提醒状态：" + result });
   };

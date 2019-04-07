@@ -9,6 +9,7 @@ import io.rong.imlib.ICustomServiceListener;
 import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
 import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
+import io.rong.imlib.RongCommonDefine.GetMessageDirection;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
 import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationErrorCode;
@@ -56,15 +57,17 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setTypingStatusListener(new TypingStatusListener() {
             @Override
             public void onTypingStatusChanged(ConversationType conversationType, String targetId, Collection<TypingStatus> set) {
+                WritableMap map = Arguments.createMap();
+                map.putInt("conversationType", conversationType.getValue());
+                map.putString("targetId", targetId);
                 if (set.size() > 0) {
                     Iterator iterator = set.iterator();
                     TypingStatus status = (TypingStatus) iterator.next();
-                    WritableMap map = Arguments.createMap();
-                    map.putInt("conversationType", conversationType.getValue());
-                    map.putString("targetId", targetId);
                     map.putString("userId", status.getUserId());
                     map.putDouble("sentTime", status.getSentTime());
                     map.putString("typingContentType", status.getTypingContentType());
+                    eventEmitter.emit("rcimlib-typing-status", map);
+                } else {
                     eventEmitter.emit("rcimlib-typing-status", map);
                 }
             }
@@ -226,6 +229,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 map.putString("local", voice.getUri().toString());
                 map.putInt("duration", voice.getDuration());
                 map.putString("extra", voice.getExtra());
+                break;
+            }
+            case "RC:RcNtf": {
+                RecallNotificationMessage message = (RecallNotificationMessage) content;
+                map.putString("operatorId", message.getOperatorId());
+                map.putDouble("recallTime", message.getRecallTime());
+                map.putString("originalObjectName", message.getOriginalObjectName());
+                map.putBoolean("isAdmin", message.isAdmin());
                 break;
             }
         }
@@ -413,7 +424,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 RongIMClient.getInstance().recallMessage(message, pushContent, new ResultCallback<RecallNotificationMessage>() {
                     @Override
                     public void onSuccess(RecallNotificationMessage message) {
-                        promise.resolve(null);
+                        promise.resolve(messageContentToMap("RC:RcNtf", message));
                     }
 
                     @Override
@@ -431,13 +442,29 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getHistoryMessages(int type, String targetId, String objectName, int oldestMessageId, int count, final Promise promise) {
-        ResultCallback<List<Message>> callback = createMessagesCallback(promise);
-        ConversationType conversationType = ConversationType.setValue(type);
-        if (objectName.isEmpty()) {
-            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, oldestMessageId, count, callback);
+    public void getHistoryMessages(
+        int type, String targetId, String objectName, int oldestMessageId, int count, boolean isForward, final Promise promise) {
+        if (objectName == null || objectName.isEmpty()) {
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(type), targetId, oldestMessageId, count, createMessagesCallback(promise));
         } else {
-            RongIMClient.getInstance().getHistoryMessages(conversationType, targetId, objectName, oldestMessageId, count, callback);
+            GetMessageDirection direction = isForward ? GetMessageDirection.FRONT : GetMessageDirection.BEHIND;
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(type), targetId, objectName, oldestMessageId, count, direction, createMessagesCallback(promise));
+        }
+    }
+
+    @ReactMethod
+    public void getHistoryMessagesByTimestamp(
+        int type, String targetId, ReadableArray objectNames, double timestamp, int count, boolean isForward, final Promise promise) {
+        if (objectNames == null || objectNames.size() == 0) {
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(type), targetId, (long) timestamp, count, 0, createMessagesCallback(promise));
+        } else {
+            GetMessageDirection direction = isForward ? GetMessageDirection.FRONT : GetMessageDirection.BEHIND;
+            ArrayList<String> names = arrayToStringList(objectNames);
+            RongIMClient.getInstance().getHistoryMessages(
+                ConversationType.setValue(type), targetId, names, (long) timestamp, count, direction, createMessagesCallback(promise));
         }
     }
 
@@ -709,39 +736,33 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
     }
 
-    @ReactMethod
-    public void setConversationNotificationStatus(int conversationType, String targetId, int status, final Promise promise) {
-        RongIMClient.getInstance().setConversationNotificationStatus(
-            ConversationType.setValue(conversationType),
-            targetId,
-            ConversationNotificationStatus.setValue(status),
-            new ResultCallback<ConversationNotificationStatus>() {
-                @Override
-                public void onSuccess(ConversationNotificationStatus status) {
-                    promise.resolve(status.getValue());
-                }
+    private ResultCallback<ConversationNotificationStatus> createConversationNotificationStatusCallback(final Promise promise) {
+        return new ResultCallback<ConversationNotificationStatus>() {
+            @Override
+            public void onSuccess(ConversationNotificationStatus status) {
+                promise.resolve(status == ConversationNotificationStatus.DO_NOT_DISTURB);
+            }
 
-                @Override
-                public void onError(ErrorCode errorCode) {
-                    reject(promise, errorCode);
-                }
-            });
+            @Override
+            public void onError(ErrorCode errorCode) {
+                reject(promise, errorCode);
+            }
+        };
     }
 
     @ReactMethod
-    public void getConversationNotificationStatus(int conversationType, String targetId, final Promise promise) {
-        RongIMClient.getInstance().getConversationNotificationStatus(
-            ConversationType.setValue(conversationType), targetId, new ResultCallback<ConversationNotificationStatus>() {
-                @Override
-                public void onSuccess(ConversationNotificationStatus status) {
-                    promise.resolve(status.getValue());
-                }
+    public void setConversationNotificationStatus(int conversationType, String targetId, boolean isBlock, Promise promise) {
+        RongIMClient.getInstance().setConversationNotificationStatus(
+            ConversationType.setValue(conversationType),
+            targetId,
+            isBlock ? ConversationNotificationStatus.DO_NOT_DISTURB : ConversationNotificationStatus.NOTIFY,
+            createConversationNotificationStatusCallback(promise));
+    }
 
-                @Override
-                public void onError(ErrorCode errorCode) {
-                    reject(promise, errorCode);
-                }
-            });
+    @ReactMethod
+    public void getConversationNotificationStatus(int conversationType, String targetId, Promise promise) {
+        RongIMClient.getInstance().getConversationNotificationStatus(
+            ConversationType.setValue(conversationType), targetId, createConversationNotificationStatusCallback(promise));
     }
 
     @ReactMethod
@@ -1497,10 +1518,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         if (map.hasKey("listUrl")) {
             ReadableArray array = map.getArray("listUrl");
             assert array != null;
-            ArrayList<String> listUrl = new ArrayList<>(array.size());
-            for (int i = 0; i < array.size(); i += 1) {
-                listUrl.set(i, array.getString(i));
-            }
+            ArrayList<String> listUrl = arrayToStringList(array);
             builder.listUrl(listUrl);
         }
         if (map.hasKey("define")) {
@@ -1510,6 +1528,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             builder.productId(map.getString("productId"));
         }
         return builder.build();
+    }
+
+    private ArrayList<String> arrayToStringList(ReadableArray array) {
+        ArrayList<String> list = new ArrayList<>(array.size());
+        for (int i = 0; i < array.size(); i += 1) {
+            list.set(i, array.getString(i));
+        }
+        return list;
     }
 
     private WritableMap CSLMessageItemToMap(CSLMessageItem item) {

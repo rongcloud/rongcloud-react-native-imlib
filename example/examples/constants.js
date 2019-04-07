@@ -1,5 +1,4 @@
 import {
-  ConversationNotificationStatus,
   ConversationType,
   PublicServiceType,
   SearchType,
@@ -33,8 +32,8 @@ export const sentStatus = {
 };
 
 export const conversationNotificationStatus = {
-  [ConversationNotificationStatus.DO_NOT_DISTURB]: "免打扰",
-  [ConversationNotificationStatus.NOTIFY]: "消息提醒"
+  true: "免打扰",
+  false: "消息提醒"
 };
 
 export const searchTypes = {

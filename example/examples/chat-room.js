@@ -29,8 +29,12 @@ export default class extends React.PureComponent {
 
   joinExistChatRoom = async () => {
     const { targetId } = this.state;
-    await joinExistChatRoom(targetId);
-    this.setState({ result: "加入聊天室" });
+    try {
+      await joinExistChatRoom(targetId);
+      this.setState({ result: "加入聊天室" });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   getChatRoomInfo = async () => {

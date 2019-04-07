@@ -280,6 +280,33 @@ export type GroupNotificationMessage = {
 };
 
 /**
+ * 撤回通知消息
+ */
+export type RecallNotificationMessage = {
+  type: "recall-notification";
+
+  /**
+   * 撤回消息的用户 ID
+   */
+  operatorId: string;
+
+  /**
+   * 撤回时间
+   */
+  recallTime: number;
+
+  /**
+   * 原消息对象名称
+   */
+  originalObjectName: string;
+
+  /**
+   * 是否管理员操作
+   */
+  isAdmin: string;
+};
+
+/**
  * 消息内容
  */
 export type MessageContent =
@@ -498,7 +525,10 @@ export function sendDirectionalMessage(
  * @param messageId 消息 ID
  * @param pushContent 推送内容
  */
-export function recallMessage(messageId: number, pushContent = ""): Promise<void> {
+export function recallMessage(
+  messageId: number,
+  pushContent = ""
+): Promise<RecallNotificationMessage> {
   return RCIMClient.recallMessage(messageId, pushContent);
 }
 
@@ -740,26 +770,26 @@ export enum ErrorCode {
   NOT_IN_CHATROOM = 23406,
   FORBIDDEN_IN_CHATROOM = 23408,
   KICKED_FROM_CHATROOM = 23409,
-  RC_CHATROOM_NOT_EXIST = 23410,
-  RC_CHATROOM_IS_FULL = 23411,
-  RC_PARAMETER_INVALID_CHATROOM = 23412,
-  RC_ROAMING_SERVICE_UNAVAILABLE_CHATROOM = 23414,
-  RC_CHANNEL_INVALID = 30001,
-  RC_NETWORK_UNAVAILABLE = 30002,
-  RC_MSG_RESPONSE_TIMEOUT = 30003,
+  CHATROOM_NOT_EXIST = 23410,
+  CHATROOM_IS_FULL = 23411,
+  PARAMETER_INVALID_CHATROOM = 23412,
+  ROAMING_SERVICE_UNAVAILABLE_CHATROOM = 23414,
+  CHANNEL_INVALID = 30001,
+  NETWORK_UNAVAILABLE = 30002,
+  MSG_RESPONSE_TIMEOUT = 30003,
   CLIENT_NOT_INIT = 33001,
   DATABASE_ERROR = 33002,
   INVALID_PARAMETER = 33003,
   MSG_ROAMING_SERVICE_UNAVAILABLE = 33007,
   INVALID_PUBLIC_NUMBER = 29201,
-  RC_MSG_SIZE_OUT_OF_LIMIT = 30016,
-  RC_RECALLMESSAGE_PARAMETER_INVALID = 25101,
-  RC_PUSHSETTING_PARAMETER_INVALID = 26001,
-  RC_OPERATION_BLOCKED = 20605,
-  RC_OPERATION_NOT_SUPPORT = 20606,
-  RC_MSG_BLOCKED_SENSITIVE_WORD = 21501,
-  RC_MSG_REPLACED_SENSITIVE_WORD = 21502,
-  RC_SIGHT_MSG_DURATION_LIMIT_EXCEED = 34002
+  MSG_SIZE_OUT_OF_LIMIT = 30016,
+  RECALLMESSAGE_PARAMETER_INVALID = 25101,
+  PUSHSETTING_PARAMETER_INVALID = 26001,
+  OPERATION_BLOCKED = 20605,
+  OPERATION_NOT_SUPPORT = 20606,
+  MSG_BLOCKED_SENSITIVE_WORD = 21501,
+  MSG_REPLACED_SENSITIVE_WORD = 21502,
+  SIGHT_MSG_DURATION_LIMIT_EXCEED = 34002
 }
 
 export enum ConnectionStatusIOS {
@@ -822,27 +852,74 @@ export function setReconnectKickEnable(enabled: boolean) {
 /**
  * 获取历史消息
  *
+ * 此方法会获取该会话中，timestamp 之前或之后的、指定数量、指定消息类型（多个）的消息实体列表，返回的消息实体按照时间从新到旧排列。
+ * 返回的消息中不包含 timestamp 对应的那条消息，如果会话中的消息数量小于参数 count 的值，会将该会话中的所有消息返回。
+ *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
- * @param objectName 消息对象名称，可以用 MessageObjectNames
- *     获取消息类型对应的对象名称
- * @param oldestMessageId 最近一条消息的 ID
+ * @param objectNames 对象名称数组，仅当该参数为数组时调用该方法
+ * @param timestamp 当前的消息时间戳
  * @param count 数量
+ * @param isForward 是否向前获取
  */
 export function getHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
-  objectName = "",
-  oldestMessageId = -1,
-  count = 10
+  objectNames: MessageObjectName[],
+  timestamp: number,
+  count: number,
+  isForward: boolean
+): Promise<Message[]>;
+
+/**
+ * 获取历史消息
+ *
+ * 此方法会获取该会话中，baseMessageId 之前或之后的、指定数量、消息类型和查询方向的最新消息实体，返回的消息实体按照时间从新到旧排列。
+ * 返回的消息中不包含 baseMessageId 对应的那条消息，如果会话中的消息数量小于参数 count 的值，会将该会话中的所有消息返回。
+ *
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param objectName 消息对象名称，可以用 MessageObjectNames 获取消息类型对应的对象名称
+ * @param baseMessageId 最近一条消息的 ID
+ * @param count 数量
+ * @param isForward 是否向前获取
+ */
+export function getHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  objectName: string,
+  baseMessageId: number,
+  count: number,
+  isForward: boolean
+): Promise<Message[]>;
+
+export function getHistoryMessages(
+  conversationType: ConversationType,
+  targetId: string,
+  objectName: string | MessageObjectName[] = null,
+  baseMessageId = -1,
+  count = 10,
+  isForward = true
 ): Promise<Message[]> {
-  return RCIMClient.getHistoryMessages(
-    conversationType,
-    targetId,
-    objectName,
-    oldestMessageId,
-    count
-  );
+  if (Array.isArray(objectName)) {
+    return RCIMClient.getHistoryMessagesByTimestamp(
+      conversationType,
+      targetId,
+      objectName,
+      baseMessageId,
+      count,
+      isForward
+    );
+  } else {
+    return RCIMClient.getHistoryMessages(
+      conversationType,
+      targetId,
+      objectName,
+      baseMessageId,
+      count,
+      isForward
+    );
+  }
 }
 
 /**
@@ -978,11 +1055,11 @@ export function searchConversations(
 /**
  * 搜索消息
  *
- * @param conversationType
- * @param targetId
- * @param keyword
- * @param count
- * @param startTime
+ * @param conversationType 会话类型
+ * @param targetId 目标 ID
+ * @param keyword 关键字
+ * @param count 获取数量
+ * @param startTime 开始时间
  */
 export function searchMessages(
   conversationType: ConversationType,
@@ -1177,30 +1254,18 @@ export function removeConversation(
 }
 
 /**
- * 会话提醒状态
- */
-export enum ConversationNotificationStatus {
-  DO_NOT_DISTURB,
-  NOTIFY
-}
-
-/**
  * 设置会话消息提醒状态
  *
  * @param conversationType 会话类型
  * @param targetId 目标 ID
- * @param notificationStatus 会话提醒状态
+ * @param isBlock 是否屏蔽
  */
 export function setConversationNotificationStatus(
   conversationType: ConversationType,
   targetId: string,
-  notificationStatus: ConversationNotificationStatus
+  isBlock: boolean
 ): Promise<Conversation> {
-  return RCIMClient.setConversationNotificationStatus(
-    conversationType,
-    targetId,
-    notificationStatus
-  );
+  return RCIMClient.setConversationNotificationStatus(conversationType, targetId, isBlock);
 }
 
 /**
@@ -1212,7 +1277,7 @@ export function setConversationNotificationStatus(
 export function getConversationNotificationStatus(
   conversationType: ConversationType,
   targetId: string
-): Promise<ConversationNotificationStatus> {
+): Promise<boolean> {
   return RCIMClient.getConversationNotificationStatus(conversationType, targetId);
 }
 
