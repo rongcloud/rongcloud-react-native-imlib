@@ -1,5 +1,6 @@
 # rongcloud-react-native-imlib
-融云 IMLib 的 React Native 原生模块，支持 Android + iOS
+
+融云 React Native IMLib 是以 IMLib SDK 2.9.12 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。
 
 ## 文档
 
