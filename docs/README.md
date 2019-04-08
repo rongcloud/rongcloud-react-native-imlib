@@ -177,7 +177,6 @@ disconnect(false);
 ### 发送消息
 
 融云支持向单聊、群组及聊天室中发送文字消息、图片消息、语音消息、文件消息、富文本消息、地理位置消息以及自定义消息。
-融云 React Native SDK 不提供语音录制、转码功能，开发者需要自已实现语音消息录制、转码，通过融云内置的语音消息进行发送。
 
 #### 发送文本消息
 
@@ -246,6 +245,23 @@ const content = {
   longitude: 108,
   name: "海龙大厦",
   thumbnail: "http://example.com/thum.jpg"
+};
+
+sendMessage({ conversationType, targetId, content }, callback);
+```
+
+#### 发送语音信息
+
+融云 React Native SDK 不提供语音录制、转码功能，开发者需要自已实现语音消息录制、转码，通过融云内置的语音消息进行发送。
+
+```javascript
+import { sendMessage } from "rongcloud-react-native-imlib";
+
+const content = {
+  type: "voice",
+  data: "audio raw data", // iOS 使用二进制数据的方式发送
+  local: "audio path", // Android 使用文件方式发送
+  duration: 9 // 语音持续时间，单位：秒
 };
 
 sendMessage({ conversationType, targetId, content }, callback);
@@ -455,6 +471,40 @@ setNotificationQuietHours(startTime, spanMinutes);
 
 // 移除全局消息免打扰
 removeNotificationQuietHours();
+```
+
+## @ 功能
+
+群组中支持 @ 消息功能，满足您 @ 指定用户或 @ 所有人的需求，只需要在 `MessageContent` 中添加 `mentionedInfo` 字段。
+
+```javascript
+import { sendMessage, MentionedType } from "rongcloud-react-native-imlib";
+
+const content = {
+  type: "text",
+  content: "Hello",
+  mentionedInfo: {
+    type: MentionedType.PART, // @ 指定的用户
+    userIdList: ["userId"]
+  }
+};
+
+sendMessage({ conversationType, targetId, content }, callback);
+```
+
+收到 @ 消息时，在 `Conversation` 里的 `hasUnreadMentioned` 会被设为 `true`。
+
+```javascript
+const conversation = await getConversation(conversationType, targetId);
+console.log(conversation.hasUnreadMentioned);
+```
+
+您可以用 `getUnreadMentionedMessages` 获取会话里所有未读 @ 消息
+
+```javascript
+import { getUnreadMentionedMessages } from "rongcloud-react-native-imlib";
+
+const messages = await getUnreadMentionedMessages(conversationType, targetId);
 ```
 
 ## 黑名单管理
@@ -858,5 +908,17 @@ const callback = {
 const userIds = ["user1", "user2"];
 
 sendDirectionalMessage({ conversationType, targetId, content }, userIds, callback);
+```
+
+### 离线消息设置
+
+设置当前用户离线消息存储时间，以天为单位。
+
+```javascript
+import { setOfflineMessageDuration, getOfflineMessageDuration } from "rongcloud-react-native-imlib";
+
+setOfflineMessageDuration(days);
+
+const duration = await getOfflineMessageDuration();
 ```
 

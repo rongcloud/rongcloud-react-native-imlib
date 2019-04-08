@@ -19,6 +19,7 @@ import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
+import io.rong.imlib.model.MentionedInfo.MentionedType;
 import io.rong.imlib.model.Message.ReceivedStatus;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.imlib.typingmessage.TypingStatus;
@@ -131,6 +132,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void init(String key) {
         eventEmitter = reactContext.getJSModule(RCTDeviceEventEmitter.class);
+        RCPushReceiver.eventEmitter = eventEmitter;
         RongIMClient.init(reactContext, key);
     }
 
@@ -385,6 +387,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             switch (contentType) {
                 case "text":
                     messageContent = TextMessage.obtain(map.getString("content"));
+                    if (map.hasKey("extra")) {
+                        ((TextMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
                 case "image":
                     Uri uri = Utils.getFileUri(reactContext, map.getString("local"));
@@ -392,21 +397,50 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     if (map.hasKey("isFull")) {
                         ((ImageMessage) messageContent).setIsFull(map.getBoolean("isFull"));
                     }
+                    if (map.hasKey("extra")) {
+                        ((ImageMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
                 case "file":
                     messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
+                    if (map.hasKey("extra")) {
+                        ((FileMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
                 case "location":
                     Uri thumbnail = Utils.getFileUri(reactContext, map.getString("thumbnail"));
                     messageContent = LocationMessage.obtain(
                         map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
+                    if (map.hasKey("extra")) {
+                        ((LocationMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
                 case "voice":
                     Uri voice = Utils.getFileUri(reactContext, map.getString("local"));
                     messageContent = VoiceMessage.obtain(voice, map.getInt("duration"));
+                    if (map.hasKey("extra")) {
+                        ((VoiceMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
             }
         }
+
+        ReadableMap userInfoMap = map.getMap("userInfo");
+        if (messageContent != null && userInfoMap != null) {
+            UserInfo userInfo = new UserInfo(
+                userInfoMap.getString("userId"), userInfoMap.getString("name"), Uri.parse(userInfoMap.getString("portraitUrl")));
+            messageContent.setUserInfo(userInfo);
+        }
+
+        ReadableMap mentionedMap = map.getMap("mentionedInfo");
+        if (messageContent != null && mentionedMap != null) {
+            MentionedType type = MentionedType.valueOf(mentionedMap.getInt("type"));
+            ArrayList<String> userIdList = arrayToStringList(mentionedMap.getArray("userIdList"));
+            String content = mentionedMap.getString("mentionedContent");
+            MentionedInfo mentionedInfo = new MentionedInfo(type, userIdList, content);
+            messageContent.setMentionedInfo(mentionedInfo);
+        }
+
         return messageContent;
     }
 
@@ -638,6 +672,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     private WritableMap conversationToMap(Conversation conversation) {
+        if (conversation == null) {
+            return null;
+        }
         WritableMap map = Arguments.createMap();
         map.putInt("conversationType", conversation.getConversationType().getValue());
         map.putString("conversationTitle", conversation.getConversationTitle());
@@ -646,13 +683,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         map.putString("draft", conversation.getDraft());
         map.putString("targetId", conversation.getTargetId());
         map.putString("objectName", conversation.getObjectName());
-        map.putInt("lastestMessageId", conversation.getLatestMessageId());
-        map.putMap("lastestMessage", messageContentToMap(conversation.getObjectName(), conversation.getLatestMessage()));
+        map.putInt("latestMessageId", conversation.getLatestMessageId());
+        map.putMap("latestMessage", messageContentToMap(conversation.getObjectName(), conversation.getLatestMessage()));
         map.putInt("receivedStatus", conversation.getReceivedStatus().getFlag());
         map.putDouble("receivedTime", conversation.getReceivedTime());
         map.putInt("sentStatus", conversation.getSentStatus().getValue());
         map.putDouble("sentTime", conversation.getSentTime());
         map.putString("senderUserId", conversation.getSenderUserId());
+        map.putInt("mentionedCount", conversation.getMentionedCount());
+        map.putBoolean("hasUnreadMentioned", conversation.getMentionedCount() > 0);
         return map;
     }
 
@@ -1531,6 +1570,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     private ArrayList<String> arrayToStringList(ReadableArray array) {
+        if (array == null) {
+            return null;
+        }
         ArrayList<String> list = new ArrayList<>(array.size());
         for (int i = 0; i < array.size(); i += 1) {
             list.set(i, array.getString(i));
@@ -1673,5 +1715,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().evaluateCustomService(
                 kefuId, value, CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
         }
+    }
+
+    @ReactMethod
+    public void getCurrentUserId(Promise promise) {
+        promise.resolve(RongIMClient.getInstance().getCurrentUserId());
     }
 }

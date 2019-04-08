@@ -13,7 +13,7 @@ export default class extends React.PureComponent {
     message: "连接结果：",
     status: 0,
     token:
-      "FrdcuKklUMoGh+VkhUxezXxpRjANxKgfakOnYLFljI9gLUrCB690FgW7+nh1NhEYZUsv73YwHabXQU7yFrr8ow=="
+      "Mp1SlOClkC5imMrnO5xIsAoSTn8t701T7AbwThntqeIQasCHd35DQRg6FtTrjEPC/GN4Ijv1uf2D3sMjvYRkgQ=="
   };
 
   componentDidMount() {

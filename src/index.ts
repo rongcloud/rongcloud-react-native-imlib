@@ -182,30 +182,64 @@ export enum SentStatus {
 }
 
 /**
+ * 用户信息
+ */
+export type UserInfo = {
+  userId: string;
+  name: string;
+  portraitUrl: string;
+};
+
+/**
+ * 消息提醒类型
+ */
+export enum MentionedType {
+  ALL = 1,
+  PART
+}
+
+/**
+ * 提醒信息
+ */
+export type MentionedInfo = {
+  type: MentionedType;
+  userIdList: string[];
+  mentionedContent: string;
+};
+
+/**
+ * 消息内容
+ */
+export interface MessageContent {
+  userInfo?: UserInfo;
+  mentionedInfo?: MentionedInfo;
+}
+
+/**
  * 文本消息
  */
-export type TextMessage = {
+export interface TextMessage extends MessageContent {
   type: "text";
   content: string;
   extra?: string;
-};
+}
 
 /**
  * 图片消息
  */
-export type ImageMessage = {
+export interface ImageMessage extends MessageContent {
   type: "image";
   local: string;
   remote?: string;
   thumbnail?: string;
   isFull?: string;
   extra?: string;
-};
+}
 
 /**
  * 文件消息
  */
-export type FileMessage = {
+export interface FileMessage extends MessageContent {
   type: "file";
   local: string;
   remote?: string;
@@ -213,43 +247,43 @@ export type FileMessage = {
   size?: number;
   fileType?: string;
   extra?: string;
-};
+}
 
 /**
  * 位置消息
  */
-export type LocationMessage = {
+export interface LocationMessage extends MessageContent {
   type: "location";
   name: string;
   latitude: number;
   longitude: number;
   thumbnail?: string;
   extra?: string;
-};
+}
 
 /**
  * 语音消息
  */
-export type VoiceMessage = {
+export interface VoiceMessage extends MessageContent {
   type: "voice";
   data: string;
   local: string;
   duration: number;
-};
+}
 
 /**
  * 命令消息
  */
-export type CommandMessage = {
+export interface CommandMessage extends MessageContent {
   type: "command";
   name: string;
   data: string;
-};
+}
 
 /**
  * 群组通知消息
  */
-export type GroupNotificationMessage = {
+export interface GroupNotificationMessage extends MessageContent {
   type: "group-notification";
 
   /**
@@ -276,12 +310,12 @@ export type GroupNotificationMessage = {
    * 额外数据
    */
   extra: string;
-};
+}
 
 /**
  * 撤回通知消息
  */
-export type RecallNotificationMessage = {
+export interface RecallNotificationMessage extends MessageContent {
   type: "recall-notification";
 
   /**
@@ -303,17 +337,7 @@ export type RecallNotificationMessage = {
    * 是否管理员操作
    */
   isAdmin: string;
-};
-
-/**
- * 消息内容
- */
-export type MessageContent =
-  | TextMessage
-  | ImageMessage
-  | FileMessage
-  | LocationMessage
-  | VoiceMessage;
+}
 
 /**
  * 消息
@@ -1015,6 +1039,9 @@ export function deleteMessages(
   return RCIMClient.deleteMessages(typeOrIds, targetId);
 }
 
+/**
+ * 会话信息
+ */
 export type Conversation = {
   conversationType: ConversationType;
   conversationTitle: string;
@@ -1023,14 +1050,19 @@ export type Conversation = {
   draft: string;
   targetId: string;
   objectName: string;
-  lastestMessageId: number;
-  lastestMessage: MessageContent;
+  latestMessageId: number;
+  latestMessage: MessageContent;
   receivedStatus: number;
   receivedTime: number;
   sentStatus: SentStatus;
   senderUserId: string;
+  hasUnreadMentioned: boolean;
+  mentionedCount: number;
 };
 
+/**
+ * 搜索会话结果
+ */
 export type SearchConversationResult = {
   conversation: Conversation;
   matchCount: number;
@@ -2149,4 +2181,11 @@ export function leaveMessageCustomerService(
  */
 export function stopCustomerService(kefuId: string) {
   RCIMClient.stopCustomerService(kefuId);
+}
+
+/**
+ * 获取当前用户 ID
+ */
+export function getCurrentUserId(): Promise<string> {
+  return RCIMClient.getCurrentUserId();
 }
