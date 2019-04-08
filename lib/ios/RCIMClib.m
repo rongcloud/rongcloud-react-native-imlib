@@ -1587,6 +1587,7 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
     @"sentTime" : @(conversation.sentTime),
     @"sentStatus" : @(conversation.sentStatus),
     @"senderUserId" : conversation.senderUserId,
+    @"hasUnreadMentioned" : @(conversation.hasUnreadMentioned),
   };
 }
 
@@ -1677,22 +1678,24 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
 
 - (RCMessageContent *)toMessageContent:(NSDictionary *)content {
   NSString *type = content[@"type"];
+  RCMessageContent *messageContent;
+
   if ([type isEqualToString:@"text"]) {
     RCTextMessage *text = [RCTextMessage messageWithContent:content[@"content"]];
     text.extra = content[@"extra"];
-    return text;
+    messageContent = text;
   } else if ([type isEqualToString:@"image"]) {
     NSString *local = content[@"local"];
     RCImageMessage *image = [RCImageMessage
         messageWithImageURI:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
     image.extra = content[@"extra"];
-    return image;
+    messageContent = image;
   } else if ([type isEqualToString:@"file"]) {
     NSString *local = content[@"local"];
     RCFileMessage *file = [RCFileMessage
         messageWithFile:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
     file.extra = content[@"extra"];
-    return file;
+    messageContent = file;
   } else if ([type isEqualToString:@"location"]) {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
         [content[@"latitude"] doubleValue], [content[@"longitude"] doubleValue]);
@@ -1700,15 +1703,33 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
                                                                      location:coordinate
                                                                  locationName:content[@"name"]];
     location.extra = content[@"extra"];
-    return location;
+    messageContent = location;
   } else if ([type isEqualToString:@"voice"]) {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:content[@"data"] options:0];
     RCVoiceMessage *voice = [RCVoiceMessage messageWithAudio:data
                                                     duration:[content[@"duration"] intValue]];
     voice.extra = content[@"extra"];
-    return voice;
+    messageContent = voice;
   }
-  return nil;
+
+  if (messageContent) {
+    NSDictionary *userInfo = content[@"userInfo"];
+    if (userInfo) {
+      messageContent.senderUserInfo = [[RCUserInfo alloc] initWithUserId:userInfo[@"userId"]
+                                                                    name:userInfo[@"name"]
+                                                                portrait:userInfo[@"portraitUrl"]];
+    }
+
+    NSDictionary *mentionedInfo = content[@"mentionedInfo"];
+    if (mentionedInfo) {
+      messageContent.mentionedInfo =
+          [[RCMentionedInfo alloc] initWithMentionedType:[mentionedInfo[@"type"] intValue]
+                                              userIdList:mentionedInfo[@"userIdList"]
+                                        mentionedContent:mentionedInfo[@"mentionedContent"]];
+    }
+  }
+
+  return messageContent;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -1725,6 +1746,8 @@ RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)
     @"rcimlib-download-media-message",
     @"rcimlib-recall",
     @"rcimlib-customer-service",
+    @"rcimlib-notify-msg-arrived",
+    @"rcimlib-notify-msg-clicked",
   ];
 }
 

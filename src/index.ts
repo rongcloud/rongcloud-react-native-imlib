@@ -194,7 +194,14 @@ export type UserInfo = {
  * 消息提醒类型
  */
 export enum MentionedType {
+  /**
+   * 提醒所有
+   */
   ALL = 1,
+
+  /**
+   * 部分提醒
+   */
   PART
 }
 
