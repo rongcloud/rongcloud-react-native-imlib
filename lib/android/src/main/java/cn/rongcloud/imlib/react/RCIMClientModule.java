@@ -1721,4 +1721,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void getCurrentUserId(Promise promise) {
         promise.resolve(RongIMClient.getInstance().getCurrentUserId());
     }
+
+    @ReactMethod
+    public void setPushContentShowStatus(boolean status, Promise promise) {
+        RongIMClient.getInstance().setPushContentShowStatus(status, createOperationCallback(promise));
+    }
+
+    @ReactMethod
+    public void getPushContentShowStatus(Promise promise) {
+        RongIMClient.getInstance().getPushContentShowStatus(createBooleanCallback(promise));
+    }
 }

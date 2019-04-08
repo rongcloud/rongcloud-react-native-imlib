@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.rongcloud.imlib.react">
+          xmlns:tools="http://schemas.android.com/tools" package="cn.rongcloud.imlib.react">
 
   <!-- 保存图片，拍照等 -->
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -11,6 +11,7 @@
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <!-- 定位，如果您不需要定位相关的功能，可以删掉 -->
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
   <application>
 
@@ -57,5 +58,14 @@
     <!--必选： SDK 核心功能-->
 
     <!-- end -->
+
+    <receiver
+      android:name=".RCPushReceiver" tools:ignore="ExportedReceiver">
+      <intent-filter>
+        <action android:name="io.rong.push.intent.MESSAGE_ARRIVED"/>
+        <action android:name="io.rong.push.intent.MESSAGE_CLICKED"/>
+        <action android:name="io.rong.push.intent.THIRD_PARTY_PUSH_STATE"/>
+      </intent-filter>
+    </receiver>
   </application>
 </manifest>

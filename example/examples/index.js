@@ -26,6 +26,7 @@ import CreateDiscussion from "./create-discussion";
 import PublicService from "./public-service";
 import RealTimeLocation from "./realtime-location";
 import CustomerService from "./customer-service";
+import PushReceiver from "./push-receiver";
 
 const examples = [
   Connect,
@@ -52,7 +53,8 @@ const examples = [
   CreateDiscussion,
   PublicService,
   RealTimeLocation,
-  CustomerService
+  CustomerService,
+  PushReceiver
 ];
 
 export default class extends React.PureComponent {
@@ -94,5 +96,6 @@ export {
   CreateDiscussion,
   PublicService,
   RealTimeLocation,
-  CustomerService
+  CustomerService,
+  PushReceiver
 };

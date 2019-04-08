@@ -2206,3 +2206,65 @@ export function stopCustomerService(kefuId: string) {
 export function getCurrentUserId(): Promise<string> {
   return RCIMClient.getCurrentUserId();
 }
+
+/**
+ * 推送语言
+ */
+export enum PushLanguage {
+  EN_US = 1,
+  ZH_CN
+}
+
+/**
+ * 设置推送语言
+ *
+ * @param language 推送语言
+ */
+export function setPushLanguage(language: PushLanguage): Promise<void> {
+  return RCIMClient.setPushLanguage(language);
+}
+
+/**
+ * 设置是否显示内容详情
+ *
+ * @param isShowPushContent 是否显示内容详情
+ */
+export function setPushContentShowStatus(isShowPushContent: boolean): Promise<void> {
+  return RCIMClient.setPushContentShowStatus(isShowPushContent);
+}
+
+/**
+ * 查询是否显示内容详情
+ */
+export function getPushContentShowStatus(): Promise<boolean> {
+  return RCIMClient.getPushContentShowStatus();
+}
+
+/**
+ * 推送提醒消息
+ */
+export type PushNotificationMessage = {
+  pushType: string;
+  pushId: string;
+  pushTitle: string;
+  pushFlag: string;
+  pushContent: string;
+  pushData: string;
+  objectName: string;
+  senderId: string;
+  senderName: string;
+  senderPortraitUrl: string;
+  targetId: string;
+  targetUserName: string;
+  conversationType: ConversationType;
+  extra: string;
+};
+
+/**
+ * 添加推送消息到达监听函数
+ *
+ * @param listener
+ */
+export function addPushArrivedListener(listener: (message: PushNotificationMessage) => void) {
+  return eventEmitter.addListener("rcimlib-push-arrived", listener);
+}
