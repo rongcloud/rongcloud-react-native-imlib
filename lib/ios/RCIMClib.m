@@ -70,6 +70,15 @@ RCT_EXPORT_METHOD(setMessageSentStatus
   resolve(@([RCIMClient.sharedRCIMClient setMessageSentStatus:messageId sentStatus:status]));
 }
 
+RCT_EXPORT_METHOD(setMessageReceivedStatus
+                  : (int)messageId
+                  : (int)status
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(@([RCIMClient.sharedRCIMClient setMessageReceivedStatus:messageId
+                                                   receivedStatus:status]));
+}
+
 RCT_EXPORT_METHOD(sendMessage : (NSDictionary *)message : (NSString *)eventId) {
   [RCIMClient.sharedRCIMClient sendMessage:[message[@"conversationType"] intValue]
       targetId:message[@"targetId"]
@@ -1410,6 +1419,12 @@ RCT_EXPORT_METHOD(stopCustomerService : (NSString *)kefuId) {
 
 RCT_EXPORT_METHOD(selectCustomerServiceGroup : (NSString *)kefuId : (NSString *)groupId) {
   [RCIMClient.sharedRCIMClient selectCustomerServiceGroup:kefuId withGroupId:groupId];
+}
+
+RCT_EXPORT_METHOD(getCurrentUserId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  resolve(RCIMClient.sharedRCIMClient.currentUserInfo.userId);
 }
 
 - (void)onConnectionStatusChanged:(RCConnectionStatus)status {

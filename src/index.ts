@@ -606,6 +606,16 @@ export function setMessageSentStatus(messageId: number, status: SentStatus): Pro
 }
 
 /**
+ * 设置消息接收状态
+ *
+ * @param messageId 消息 ID
+ * @param status 状态
+ */
+export function setMessageReceivedStatus(messageId: number, status: number): Promise<void> {
+  return RCIMClient.setMessageReceivedStatus(messageId, status);
+}
+
+/**
  * 获取屏蔽消息提醒的会话列表
  *
  * @param conversationTypeList 消息类型列表
