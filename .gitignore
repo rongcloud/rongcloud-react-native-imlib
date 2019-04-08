@@ -6,7 +6,7 @@ build/
 lib/js/
 node_modules/
 xcuserdata/
-IMLib/
+ios/IMLib/
 
 *.iml
 .classpath
