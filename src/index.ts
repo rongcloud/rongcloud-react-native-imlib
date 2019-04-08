@@ -3,7 +3,6 @@
  */
 
 import { NativeEventEmitter, NativeModules } from "react-native";
-import { CSLeaveMessageItem } from "../lib/js";
 
 /**
  * @hidden
