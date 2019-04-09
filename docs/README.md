@@ -333,6 +333,7 @@ const messages = await getRemoteHistoryMessages(conversationType, targetId, time
 ```javascript
 import { cleanHistoryMessages } from "rongcloud-react-native-imlib";
 
+// 清除 timestamp 之前的消息
 cleanHistoryMessages(conversationType, targetId, timestamp, isCleanRemote);
 ```
 
