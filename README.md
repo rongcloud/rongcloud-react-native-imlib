@@ -4,7 +4,7 @@
 
 ## 文档
 
-- [使用指南](https://qiuxiang.github.io/react-native-rongcloud-imlib/)
+- [使用指南](https://github.com/rongcloud/rongcloud-react-native-imlib)
 - [接口文档](https://qiuxiang.github.io/react-native-rongcloud-imlib/api/modules/rcimclient.html)
 
 ## 用法
