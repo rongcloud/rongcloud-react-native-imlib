@@ -65,63 +65,13 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="rongcloud-react-native-imlib">rongcloud-react-native-imlib</h1>
-				<p>融云 IMLib 的 React Native 原生模块，支持 Android + iOS</p>
-				<h2 id="-">安装</h2>
-				<pre><code>yarn <span class="hljs-keyword">add</span><span class="bash"> rongcloud-react-native-imlib</span></code></pre><h2 id="-">集成</h2>
-				<h3 id="ios">iOS</h3>
-				<p>运行 <code>react-native link rongcloud-react-native-imlib</code> 进行自动配置（推荐），或按以下步骤在 Xcode 进行手动配置：</p>
-				<ol>
-					<li><details>
-							<summary>Project navigator ➜ 右击 <code>Libraries</code> ➜ 选择 <code>Add Files to "XXXX"...</code></summary>
-							<img src="https://user-images.githubusercontent.com/1709072/55277292-70aae500-5339-11e9-9949-713c4ba28ccb.png" width=240>
-					</details></li>
-					<li><details>
-							<summary>找到并选择添加 <code>node_modules/rongcloud-react-native-imlib/lib/ios/RCIMLib.xcodeproj</code></summary>
-							<img src="https://user-images.githubusercontent.com/1709072/55277323-c7b0ba00-5339-11e9-982e-3b87a510cca8.png" width=600>
-					</details></li>
-					<li><details>
-							<summary><code>Build Phases</code> ➜ <code>Link Binary With Libraries</code> 中选择并添加 <code>libRNIMLib.a</code></summary>
-							<img src="https://user-images.githubusercontent.com/1709072/55277356-3e4db780-533a-11e9-8f3b-141b005e449a.png" width=600>
-						</details>
-					</li>
-				</ol>
-				<p>接下来，将 IMLib SDK 引入项目：</p>
-				<ol>
-					<li><a href="https://www.rongcloud.cn/downloads">从官网下载 IMLib SDK</a></li>
-					<li>解压并把 <code>IMLib</code> 文件夹放到 <code>ios</code> 目录</li>
-					<li>把 <code>IMLib</code> 里的 <code>libopencore-amrnb.a</code> 和 <code>RongIMLib.framework</code> 拖入 Project navigator <code>Frameworks</code></li>
-					<li><details>
-							<summary><code>Build Phases</code> ➜ <code>Link Binary With Libraries</code> 里搜索并添加 <code>libsqlite3.tbd</code></summary>
-							<img src="https://user-images.githubusercontent.com/1709072/55277928-88399c00-5340-11e9-938c-f88cd832d0de.png" width=600>
-						</details>
-					</li>
-				</ol>
-				<h3 id="android">Android</h3>
-				<p>运行 <code>react-native link rongcloud-react-native-imlib</code> 进行自动配置（推荐），或按以下步骤进行手动配置：</p>
-				<ol>
-					<li><p>编辑 <code>android/settings.gradle</code> 新增：</p>
-						<pre><code class="language-gradle"><span class="hljs-keyword">include</span> <span class="hljs-string">':rongcloud-react-native-imlib'</span>
-<span class="hljs-keyword">project</span>(<span class="hljs-string">':rongcloud-react-native-imlib'</span>).projectDir = <span class="hljs-keyword">new</span> <span class="hljs-keyword">File</span>(rootProject.projectDir, <span class="hljs-string">'../node_modules/rongcloud-react-native-imlib/lib/android'</span>)</code></pre>
-					</li>
-					<li><p>编辑 <code>android/app/build.gradle</code>，新增：</p>
-						<pre><code><span class="hljs-keyword">dependencies</span> {
-  ...
-  <span class="hljs-keyword">compile</span> <span class="hljs-keyword">project</span>(<span class="hljs-string">':rongcloud-react-native-imlib'</span>)
-}</code></pre></li>
-					<li><p>编辑 <code>MainApplication.java</code>：</p>
-						<p>导入 RCIMLibPackage</p>
-						<pre><code class="language-java"><span class="hljs-keyword">import</span> cn.rongcloud.imlib.react.RCIMLibPackage;</code></pre>
-						<p>添加 RCIMLibPackage</p>
-						<pre><code class="language-java"><span class="hljs-meta">@Override</span>
-<span class="hljs-function"><span class="hljs-keyword">protected</span> List&lt;ReactPackage&gt; <span class="hljs-title">getPackages</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> Arrays.asList(
-            <span class="hljs-keyword">new</span> MainReactPackage(),
-            <span class="hljs-keyword">new</span> RCIMLibPackage()
-    );
-}</code></pre>
-					</li>
-				</ol>
-				<h2 id="-">使用</h2>
+				<p>融云 React Native IMLib 是以 IMLib SDK 2.9.12 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。</p>
+				<h2 id="-">文档</h2>
+				<ul>
+					<li><a href="https://github.com/rongcloud/rongcloud-react-native-imlib">使用指南</a></li>
+					<li><a href="https://qiuxiang.github.io/react-native-rongcloud-imlib/api/modules/rcimclient.html">接口文档</a></li>
+				</ul>
+				<h2 id="-">用法</h2>
 				<h3 id="-">初始化并连接融云服务</h3>
 				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { init, connect } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
 
@@ -157,8 +107,7 @@ sendMessage(
 				<pre><code>yarn
 yarn build
 yarn <span class="hljs-keyword">run</span><span class="bash">-ios</span>
-yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></code></pre><h2 id="-"><a href="docs/modules/rcimclient.md">接口文档</a></h2>
-				<h2 id="-">项目结构</h2>
+yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></code></pre><h2 id="-">项目结构</h2>
 				<pre><code>├── android (Android 示例应用)
 ├── docs (接口文档)
 ├── example (React Native 示例)
