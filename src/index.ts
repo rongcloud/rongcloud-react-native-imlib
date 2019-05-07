@@ -800,6 +800,7 @@ export enum ConnectErrorCode {
  * 错误代码
  */
 export enum ErrorCode {
+  PARAMETER_ERROR = -3,
   ERRORCODE_UNKNOWN = -1,
   REJECTED_BY_BLACKLIST = 405,
   ERRORCODE_TIMEOUT = 5004,
