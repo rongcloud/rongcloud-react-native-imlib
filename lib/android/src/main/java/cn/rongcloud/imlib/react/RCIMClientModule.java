@@ -739,8 +739,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             @Override
             public void onSuccess(List<Conversation> conversations) {
                 WritableArray array = Arguments.createArray();
-                for (Conversation conversation : conversations) {
-                    array.pushMap(conversationToMap(conversation));
+                if (conversations != null) {
+                    for (Conversation conversation : conversations) {
+                        array.pushMap(conversationToMap(conversation));
+                    }
                 }
                 promise.resolve(array);
             }
