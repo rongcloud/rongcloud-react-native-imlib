@@ -8,6 +8,7 @@ import {
   recallMessage,
   cancelSendMediaMessage
 } from "rongcloud-react-native-imlib";
+import config from "../config";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations, messageTypes } from "./constants";
 
@@ -24,7 +25,7 @@ export default class extends React.PureComponent {
   state = {
     conversationType: 1,
     messageType: "text",
-    targetId: "vh6a0VoDJ",
+    targetId: config.targetUserId,
     pushContent: "",
     content: {},
     result: ""

@@ -11,12 +11,7 @@ export default class extends React.PureComponent {
   static route = "PushReceiver";
   static navigationOptions = { title: "接收推送消息" };
 
-  state = {
-    conversationType: 1,
-    targetId: "vh6a0VoDJ",
-    typingContentType: "正在输入",
-    result: ""
-  };
+  state = { result: "" };
 
   componentDidMount() {
     this.listener = addPushArrivedListener(message =>

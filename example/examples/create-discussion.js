@@ -9,6 +9,7 @@ import {
   setDiscussionInviteStatus,
   setDiscussionName
 } from "rongcloud-react-native-imlib";
+import config from "../config";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({
@@ -22,7 +23,7 @@ export default class extends React.PureComponent {
 
   state = {
     name: "标题什么的",
-    userList: "vh6a0VoDJ",
+    userList: config.targetUserId,
     discussionId: "aa327807-da31-4971-9c81-a5142042d6b4",
     result: []
   };

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Picker, Platform, ScrollView, StyleSheet, Text, TextInput, Button } from "react-native";
 import { getHistoryMessages, MessageObjectNames } from "rongcloud-react-native-imlib";
+import config from "../config";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
 
@@ -15,7 +16,7 @@ export default class extends React.PureComponent {
 
   state = {
     conversationType: 1,
-    targetId: "vh6a0VoDJ",
+    targetId: config.targetUserId,
     messageType: "",
     oldestMessageId: "-1",
     count: "10",

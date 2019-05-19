@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { getUnreadCount } from "rongcloud-react-native-imlib";
+import config from "../config";
 import FormItem from "./form-item";
 import { conversations } from "./constants";
 
@@ -16,7 +17,7 @@ export default class extends React.PureComponent {
   state = {
     conversationTypes: "1, 2",
     conversationType: "1",
-    targetId: "vh6a0VoDJ",
+    targetId: config.targetUserId,
     result: ""
   };
 

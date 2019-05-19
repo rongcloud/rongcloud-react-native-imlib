@@ -9,13 +9,14 @@ import {
   setConversationToTop
 } from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
+import config from "../config";
 import { conversations } from "./constants";
 
 export default class extends React.PureComponent {
   static route = "GetConversation";
   static navigationOptions = { title: "获取会话" };
 
-  state = { conversationType: 1, targetId: "vh6a0VoDJ", result: "" };
+  state = { conversationType: 1, targetId: config.targetUserId, result: "" };
 
   setTargetId = targetId => this.setState({ targetId });
 

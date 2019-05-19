@@ -5,6 +5,7 @@ import {
   setConversationNotificationStatus
 } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
+import config from "../config";
 import { conversations, conversationNotificationStatus } from "./constants";
 
 const style = StyleSheet.create({
@@ -19,7 +20,7 @@ export default class extends React.PureComponent {
 
   state = {
     conversationType: 1,
-    targetId: "vh6a0VoDJ",
+    targetId: config.targetUserId,
     status: "false",
     result: ""
   };

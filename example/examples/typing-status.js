@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button, TextInput } from "react-native";
 import { sendTypingStatus, addTypingStatusListener } from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
+import config from "../config";
 import { conversations } from "./constants";
 
 export default class extends React.PureComponent {
@@ -10,7 +11,7 @@ export default class extends React.PureComponent {
 
   state = {
     conversationType: 1,
-    targetId: "vh6a0VoDJ",
+    targetId: config.targetUserId,
     typingContentType: "正在输入",
     result: ""
   };
