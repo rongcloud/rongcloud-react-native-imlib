@@ -1,6 +1,5 @@
 package cn.rongcloud.imlib.react;
 
-import android.net.Uri;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 import io.rong.imlib.CustomServiceConfig;
@@ -19,14 +18,17 @@ import io.rong.imlib.model.ChatRoomInfo.ChatRoomMemberOrder;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
-import io.rong.imlib.model.MentionedInfo.MentionedType;
 import io.rong.imlib.model.Message.ReceivedStatus;
 import io.rong.imlib.model.Message.SentStatus;
 import io.rong.imlib.typingmessage.TypingStatus;
-import io.rong.message.*;
+import io.rong.message.MediaMessageContent;
+import io.rong.message.RecallNotificationMessage;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+
+import static cn.rongcloud.imlib.react.Convert.*;
+import static cn.rongcloud.imlib.react.Utils.*;
 
 @SuppressWarnings("unused")
 public class RCIMClientModule extends ReactContextBaseJavaModule {
@@ -36,12 +38,13 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     RCIMClientModule(final ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+        Convert.reactContext = reactContext;
 
         RongIMClient.setOnReceiveMessageListener(new OnReceiveMessageListener() {
             @Override
             public boolean onReceived(Message message, int left) {
                 WritableMap map = Arguments.createMap();
-                map.putMap("message", messageToMap(message));
+                map.putMap("message", toJSON(message));
                 map.putInt("left", left);
                 eventEmitter.emit("rcimlib-receive-message", map);
                 return false;
@@ -77,7 +80,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setReadReceiptListener(new ReadReceiptListener() {
             @Override
             public void onReadReceiptReceived(Message message) {
-                eventEmitter.emit("rcimlib-read-receipt-received", messageToMap(message));
+                eventEmitter.emit("rcimlib-read-receipt-received", toJSON(message));
             }
 
             @Override
@@ -136,115 +139,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.init(reactContext, key);
     }
 
-    private WritableMap createEventMap(String eventId, String type) {
-        WritableMap map = Arguments.createMap();
-        map.putString("eventId", eventId);
-        map.putString("type", type);
-        return map;
-    }
-
-    private WritableMap messageToMap(Message message) {
-        WritableMap map = Arguments.createMap();
-        map.putInt("conversationType", message.getConversationType().getValue());
-        map.putString("targetId", message.getTargetId());
-        map.putString("messageUId", message.getUId());
-        map.putInt("messageId", message.getMessageId());
-        map.putInt("messageDirection", message.getMessageDirection().getValue());
-        map.putString("senderUserId", message.getSenderUserId());
-        map.putDouble("sentTime", (double) message.getSentTime());
-        map.putDouble("receivedTime", (double) message.getReceivedTime());
-        map.putInt("sentStatus", message.getSentStatus().getValue());
-        map.putString("extra", message.getExtra());
-        map.putString("objectName", message.getObjectName());
-        String objectName = message.getObjectName();
-        map.putMap("content", messageContentToMap(objectName, message.getContent()));
-        return map;
-    }
-
-    private WritableMap messageContentToMap(String objectName, MessageContent content) {
-        WritableMap map = Arguments.createMap();
-        switch (objectName) {
-            case "RC:TxtMsg":
-                TextMessage text = (TextMessage) content;
-                map.putString("type", "text");
-                map.putString("content", text.getContent());
-                map.putString("extra", text.getExtra());
-                break;
-            case "RC:ImgMsg": {
-                ImageMessage image = (ImageMessage) content;
-                String local = "";
-                Uri localUri = image.getLocalUri();
-                if (localUri != null) {
-                    local = localUri.toString();
-                }
-                String remote = "";
-                Uri remoteUri = image.getRemoteUri();
-                if (remoteUri != null) {
-                    remote = remoteUri.toString();
-                }
-                String thumbnail = "";
-                Uri thumbnailUri = image.getThumUri();
-                if (remoteUri != null) {
-                    thumbnail = thumbnailUri.toString();
-                }
-                map.putString("type", "image");
-                map.putString("local", local);
-                map.putString("remote", remote);
-                map.putString("thumbnail", thumbnail);
-                map.putBoolean("isFull", image.isFull());
-                map.putString("extra", image.getExtra());
-                break;
-            }
-            case "RC:FileMsg": {
-                FileMessage file = (FileMessage) content;
-                String local = "";
-                Uri localUri = file.getLocalPath();
-                if (localUri != null) {
-                    local = localUri.toString();
-                }
-                String remote = "";
-                Uri remoteUri = file.getFileUrl();
-                if (remoteUri != null) {
-                    remote = remoteUri.toString();
-                }
-                map.putString("type", "file");
-                map.putString("local", local);
-                map.putString("remote", remote);
-                map.putString("name", file.getName());
-                map.putDouble("size", file.getSize());
-                map.putString("fileType", file.getType());
-                map.putString("extra", file.getExtra());
-                break;
-            }
-            case "RC:LBSMsg": {
-                LocationMessage location = (LocationMessage) content;
-                Uri imageUri = location.getImgUri();
-                map.putString("name", location.getPoi());
-                map.putString("thumbnail", imageUri == null ? "" : imageUri.toString());
-                map.putDouble("latitude", location.getLat());
-                map.putDouble("longitude", location.getLng());
-                map.putString("extra", location.getExtra());
-                break;
-            }
-            case "RC:VcMsg": {
-                VoiceMessage voice = (VoiceMessage) content;
-                map.putString("local", voice.getUri().toString());
-                map.putInt("duration", voice.getDuration());
-                map.putString("extra", voice.getExtra());
-                break;
-            }
-            case "RC:RcNtf": {
-                RecallNotificationMessage message = (RecallNotificationMessage) content;
-                map.putString("operatorId", message.getOperatorId());
-                map.putDouble("recallTime", message.getRecallTime());
-                map.putString("originalObjectName", message.getOriginalObjectName());
-                map.putBoolean("isAdmin", message.isAdmin());
-                break;
-            }
-        }
-        return map;
-    }
-
     @ReactMethod
     public void connect(String token, final String eventId) {
         RongIMClient.connect(token, new RongIMClient.ConnectCallback() {
@@ -284,11 +178,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setServerInfo(naviServer, fileServer);
     }
 
-    @SuppressWarnings("Duplicates")
     @ReactMethod
     public void sendMessage(ReadableMap data, final String eventId) {
         try {
-            Message message = mapToMessage(data);
+            Message message = toMessage(data);
             String pushContent = getStringFromMap(data, "pushContent");
             String pushData = getStringFromMap(data, "pushData");
             RongIMClient.getInstance().sendMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
@@ -297,11 +190,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     @ReactMethod
     public void sendMediaMessage(ReadableMap data, final String eventId) {
         try {
-            Message message = mapToMessage(data);
+            Message message = toMessage(data);
             String pushContent = getStringFromMap(data, "pushContent");
             String pushData = getStringFromMap(data, "pushData");
             RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
@@ -343,12 +235,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         };
     }
 
-    @SuppressWarnings("Duplicates")
     @ReactMethod
     public void sendDirectionalMessage(ReadableMap data, ReadableArray users, final String eventId) {
         try {
             ConversationType conversationType = ConversationType.setValue(data.getInt("conversationType"));
-            MessageContent messageContent = mapToMessageContent(data.getMap("content"));
+            MessageContent messageContent = toMessageContent(data.getMap("content"));
             String targetId = data.getString("targetId");
             String pushContent = getStringFromMap(data, "pushContent");
             String pushData = getStringFromMap(data, "pushData");
@@ -377,83 +268,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         return value;
     }
 
-    private MessageContent mapToMessageContent(ReadableMap map) {
-        if (map == null) {
-            return null;
-        }
-        String contentType = map.getString("type");
-        MessageContent messageContent = null;
-        if (contentType != null) {
-            switch (contentType) {
-                case "text":
-                    messageContent = TextMessage.obtain(map.getString("content"));
-                    if (map.hasKey("extra")) {
-                        ((TextMessage) messageContent).setExtra(map.getString("extra"));
-                    }
-                    break;
-                case "image":
-                    Uri uri = Utils.getFileUri(reactContext, map.getString("local"));
-                    messageContent = ImageMessage.obtain(uri, uri);
-                    if (map.hasKey("isFull")) {
-                        ((ImageMessage) messageContent).setIsFull(map.getBoolean("isFull"));
-                    }
-                    if (map.hasKey("extra")) {
-                        ((ImageMessage) messageContent).setExtra(map.getString("extra"));
-                    }
-                    break;
-                case "file":
-                    messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
-                    if (map.hasKey("extra")) {
-                        ((FileMessage) messageContent).setExtra(map.getString("extra"));
-                    }
-                    break;
-                case "location":
-                    Uri thumbnail = Utils.getFileUri(reactContext, map.getString("thumbnail"));
-                    messageContent = LocationMessage.obtain(
-                            map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
-                    if (map.hasKey("extra")) {
-                        ((LocationMessage) messageContent).setExtra(map.getString("extra"));
-                    }
-                    break;
-                case "voice":
-                    Uri voice = Utils.getFileUri(reactContext, map.getString("local"));
-                    messageContent = VoiceMessage.obtain(voice, map.getInt("duration"));
-                    if (map.hasKey("extra")) {
-                        ((VoiceMessage) messageContent).setExtra(map.getString("extra"));
-                    }
-                    break;
-            }
-        }
-
-        if (messageContent != null && map.hasKey("userInfo")) {
-            ReadableMap userInfoMap = map.getMap("userInfo");
-            if (userInfoMap != null) {
-                UserInfo userInfo = new UserInfo(
-                        userInfoMap.getString("userId"), userInfoMap.getString("name"), Uri.parse(userInfoMap.getString("portraitUrl")));
-                messageContent.setUserInfo(userInfo);
-            }
-        }
-
-        if (messageContent != null && map.hasKey("mentionedInfo")) {
-            ReadableMap mentionedMap = map.getMap("mentionedInfo");
-            if (mentionedMap != null) {
-                MentionedType type = MentionedType.valueOf(mentionedMap.getInt("type"));
-                ArrayList<String> userIdList = arrayToStringList(mentionedMap.getArray("userIdList"));
-                String content = mentionedMap.getString("mentionedContent");
-                MentionedInfo mentionedInfo = new MentionedInfo(type, userIdList, content);
-                messageContent.setMentionedInfo(mentionedInfo);
-            }
-        }
-
-        return messageContent;
-    }
-
-    private Message mapToMessage(ReadableMap map) {
-        ConversationType conversationType = ConversationType.setValue(map.getInt("conversationType"));
-        MessageContent content = mapToMessageContent(map.getMap("content"));
-        return Message.obtain(map.getString("targetId"), conversationType, content);
-    }
-
     @ReactMethod
     public void recallMessage(int id, final String pushContent, final Promise promise) {
         RongIMClient.getInstance().getMessage(id, new ResultCallback<Message>() {
@@ -462,7 +276,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 RongIMClient.getInstance().recallMessage(message, pushContent, new ResultCallback<RecallNotificationMessage>() {
                     @Override
                     public void onSuccess(RecallNotificationMessage message) {
-                        promise.resolve(messageContentToMap("RC:RcNtf", message));
+                        promise.resolve(toJSON("RC:RcNtf", message));
                     }
 
                     @Override
@@ -500,7 +314,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     ConversationType.setValue(type), targetId, (long) timestamp, count, 0, createMessagesCallback(promise));
         } else {
             GetMessageDirection direction = isForward ? GetMessageDirection.FRONT : GetMessageDirection.BEHIND;
-            ArrayList<String> names = arrayToStringList(objectNames);
+            ArrayList<String> names = Convert.toStringArray(objectNames);
             RongIMClient.getInstance().getHistoryMessages(
                     ConversationType.setValue(type), targetId, names, (long) timestamp, count, direction, createMessagesCallback(promise));
         }
@@ -513,51 +327,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.getInstance().getRemoteHistoryMessages(conversationType, targetId, (long) sentTime, count, callback);
     }
 
-    private ResultCallback<List<Message>> createMessagesCallback(final Promise promise) {
-        return new ResultCallback<List<Message>>() {
-            @Override
-            public void onSuccess(List<Message> messages) {
-                promise.resolve(messagesToArray(messages));
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
-    }
-
-    private ReadableArray messagesToArray(List<Message> messages) {
-        WritableArray array = Arguments.createArray();
-        if (messages != null) {
-            for (Message message : messages) {
-                array.pushMap(messageToMap(message));
-            }
-        }
-        return array;
-    }
-
-    private ResultCallback<Message> createMessageCallback(final Promise promise) {
-        return new ResultCallback<Message>() {
-            @Override
-            public void onSuccess(Message message) {
-                if (message == null) {
-                    promise.reject("", "获取消息失败");
-                } else {
-                    promise.resolve(messageToMap(message));
-                }
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
-    }
-
     @ReactMethod
     public void insertOutgoingMessage(int type, String targetId, int status, ReadableMap content, int sentTime, final Promise promise) {
-        MessageContent messageContent = mapToMessageContent(content);
+        MessageContent messageContent = toMessageContent(content);
         SentStatus sentStatus = SentStatus.setValue(status);
         ConversationType conversationType = ConversationType.setValue(type);
         if (sentTime == 0) {
@@ -571,7 +343,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void insertIncomingMessage(int type, String targetId, String senderId, int status, ReadableMap content, int sentTime, final Promise promise) {
-        MessageContent messageContent = mapToMessageContent(content);
+        MessageContent messageContent = toMessageContent(content);
         ReceivedStatus receivedStatus = new ReceivedStatus(status);
         ConversationType conversationType = ConversationType.setValue(type);
         if (sentTime == 0) {
@@ -612,7 +384,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             if (message == null) {
                 array[i] = null;
             } else {
-                array[i] = mapToMessage(message);
+                array[i] = toMessage(message);
             }
         }
         RongIMClient.getInstance().deleteRemoteMessages(
@@ -629,20 +401,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 });
     }
 
-    private ResultCallback<Boolean> createBooleanCallback(final Promise promise) {
-        return new ResultCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result) {
-                promise.resolve(result);
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
-    }
-
     private String[] toStringArray(ReadableArray items) {
         String[] array = new String[items.size()];
         for (int i = 0; i < items.size(); i += 1) {
@@ -652,17 +410,17 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void searchConversations(String keyword, ReadableArray conversationTypes, ReadableArray objectNames, final Promise promise) {
-        ConversationType[] conversationTypesArray = arrayToConversationTypes(conversationTypes);
-        String[] objectNamesArray = toStringArray(conversationTypes);
+    public void searchConversations(String keyword, ReadableArray types, ReadableArray objectNames, final Promise promise) {
+        ConversationType[] conversationTypes = toConversationTypeArray(types);
+        String[] objectNamesArray = toStringArray(types);
         RongIMClient.getInstance().searchConversations(
-                keyword, conversationTypesArray, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
+                keyword, conversationTypes, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
                     @Override
                     public void onSuccess(List<SearchConversationResult> conversations) {
                         WritableArray result = Arguments.createArray();
                         for (SearchConversationResult item : conversations) {
                             WritableMap map = Arguments.createMap();
-                            map.putMap("conversation", conversationToMap(item.getConversation()));
+                            map.putMap("conversation", toJSON(item.getConversation()));
                             map.putInt("matchCount", item.getMatchCount());
                         }
                         promise.resolve(result);
@@ -673,34 +431,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                         reject(promise, errorCode);
                     }
                 });
-    }
-
-    private WritableMap conversationToMap(Conversation conversation) {
-        if (conversation == null) {
-            return null;
-        }
-        WritableMap map = Arguments.createMap();
-        map.putInt("conversationType", conversation.getConversationType().getValue());
-        map.putString("conversationTitle", conversation.getConversationTitle());
-        map.putBoolean("isTop", conversation.isTop());
-        map.putInt("unreadMessageCount", conversation.getUnreadMessageCount());
-        map.putString("draft", conversation.getDraft());
-        map.putString("targetId", conversation.getTargetId());
-        map.putString("objectName", conversation.getObjectName());
-        map.putInt("latestMessageId", conversation.getLatestMessageId());
-        map.putMap("latestMessage", messageContentToMap(conversation.getObjectName(), conversation.getLatestMessage()));
-        map.putInt("receivedStatus", conversation.getReceivedStatus().getFlag());
-        map.putDouble("receivedTime", conversation.getReceivedTime());
-        map.putInt("sentStatus", conversation.getSentStatus().getValue());
-        map.putDouble("sentTime", conversation.getSentTime());
-        map.putString("senderUserId", conversation.getSenderUserId());
-        map.putInt("mentionedCount", conversation.getMentionedCount());
-        map.putBoolean("hasUnreadMentioned", conversation.getMentionedCount() > 0);
-        return map;
-    }
-
-    private void reject(Promise promise, ErrorCode errorcode) {
-        promise.reject(errorcode.getValue() + "", errorcode.getMessage());
     }
 
     @ReactMethod
@@ -716,7 +446,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 ConversationType.setValue(conversationType), targetId, new ResultCallback<Conversation>() {
                     @Override
                     public void onSuccess(Conversation conversation) {
-                        promise.resolve(conversationToMap(conversation));
+                        promise.resolve(toJSON(conversation));
                     }
 
                     @Override
@@ -726,37 +456,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 });
     }
 
-    private ConversationType[] arrayToConversationTypes(ReadableArray array) {
-        ConversationType[] conversationTypesArray = new ConversationType[array.size()];
-        for (int i = 0; i < array.size(); i += 1) {
-            conversationTypesArray[i] = ConversationType.setValue(array.getInt(i));
-        }
-        return conversationTypesArray;
-    }
-
-    private ResultCallback<List<Conversation>> createConversationListCallback(final Promise promise) {
-        return new ResultCallback<List<Conversation>>() {
-            @Override
-            public void onSuccess(List<Conversation> conversations) {
-                WritableArray array = Arguments.createArray();
-                if (conversations != null) {
-                    for (Conversation conversation : conversations) {
-                        array.pushMap(conversationToMap(conversation));
-                    }
-                }
-                promise.resolve(array);
-            }
-
-            @Override
-            public void onError(ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
-    }
-
     @ReactMethod
     public void getConversationList(ReadableArray conversationTypes, int count, int timestamp, final Promise promise) {
-        ConversationType[] types = arrayToConversationTypes(conversationTypes);
+        ConversationType[] types = toConversationTypeArray(conversationTypes);
         ResultCallback<List<Conversation>> callback = createConversationListCallback(promise);
         if (types.length > 0) {
             if (count > 0) {
@@ -771,7 +473,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getBlockedConversationList(ReadableArray conversationTypes, final Promise promise) {
-        ConversationType[] types = arrayToConversationTypes(conversationTypes);
+        ConversationType[] types = toConversationTypeArray(conversationTypes);
         RongIMClient.getInstance().getBlockedConversationList(createConversationListCallback(promise), types);
     }
 
@@ -779,20 +481,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     public void removeConversation(int conversationType, String targetId, final Promise promise) {
         RongIMClient.getInstance().removeConversation(
                 ConversationType.setValue(conversationType), targetId, createBooleanCallback(promise));
-    }
-
-    private ResultCallback<ConversationNotificationStatus> createConversationNotificationStatusCallback(final Promise promise) {
-        return new ResultCallback<ConversationNotificationStatus>() {
-            @Override
-            public void onSuccess(ConversationNotificationStatus status) {
-                promise.resolve(status == ConversationNotificationStatus.DO_NOT_DISTURB);
-            }
-
-            @Override
-            public void onError(ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
     }
 
     @ReactMethod
@@ -861,7 +549,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         };
         if (conversationType == 0) {
-            ConversationType[] types = arrayToConversationTypes(conversationTypes);
+            ConversationType[] types = toConversationTypeArray(conversationTypes);
             RongIMClient.getInstance().getUnreadCount(callback, types);
         } else {
             RongIMClient.getInstance().getUnreadCount(ConversationType.setValue(conversationType), targetId, callback);
@@ -887,20 +575,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                         }
                     });
         }
-    }
-
-    private OperationCallback createOperationCallback(final Promise promise) {
-        return new OperationCallback() {
-            @Override
-            public void onSuccess() {
-                promise.resolve(null);
-            }
-
-            @Override
-            public void onError(ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
     }
 
     @ReactMethod
@@ -1066,59 +740,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.getInstance().removeMemberFromDiscussion(targetId, userId, createOperationCallback(promise));
     }
 
-    private WritableArray menuItemsToArray(List<PublicServiceMenuItem> items) {
-        WritableArray menu = Arguments.createArray();
-        for (PublicServiceMenuItem menuItem : items) {
-            WritableMap menuItemMap = Arguments.createMap();
-            menuItemMap.putString("id", menuItem.getId());
-            menuItemMap.putString("name", menuItem.getName());
-            menuItemMap.putString("url", menuItem.getUrl());
-            menuItemMap.putInt("type", menuItem.getType().getValue());
-            List<PublicServiceMenuItem> subItems = menuItem.getSubMenuItems();
-            if (subItems != null && subItems.size() > 0) {
-                menuItemMap.putArray("submenu", menuItemsToArray(subItems));
-            }
-        }
-        return menu;
-    }
-
-    private WritableMap publicServiceProfileToMap(PublicServiceProfile item) {
-        if (item == null) {
-            return null;
-        }
-        WritableMap map = Arguments.createMap();
-        map.putString("id", item.getTargetId());
-        map.putString("name", item.getName());
-        map.putString("introduction", item.getIntroduction());
-        map.putString("portraitUrl", item.getPortraitUri().toString());
-        map.putBoolean("isGlobal", item.isGlobal());
-        map.putBoolean("followed", item.isFollow());
-        map.putInt("type", item.getConversationType().getValue());
-        PublicServiceMenu menu = item.getMenu();
-        if (menu != null) {
-            map.putArray("menu", menuItemsToArray(menu.getMenuItems()));
-        }
-        return map;
-    }
-
-    private ResultCallback<PublicServiceProfileList> createPublicServiceProfileListCallback(final Promise promise) {
-        return new ResultCallback<PublicServiceProfileList>() {
-            @Override
-            public void onSuccess(PublicServiceProfileList result) {
-                WritableArray array = Arguments.createArray();
-                for (PublicServiceProfile item : result.getPublicServiceData()) {
-                    array.pushMap(publicServiceProfileToMap(item));
-                }
-                promise.resolve(array);
-            }
-
-            @Override
-            public void onError(ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        };
-    }
-
     @ReactMethod
     public void searchPublicService(String keyword, int searchType, int publicServiceType, final Promise promise) {
         ResultCallback<PublicServiceProfileList> callback = createPublicServiceProfileListCallback(promise);
@@ -1149,7 +770,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 PublicServiceType.setValue(type), id, new ResultCallback<PublicServiceProfile>() {
                     @Override
                     public void onSuccess(PublicServiceProfile profile) {
-                        promise.resolve(publicServiceProfileToMap(profile));
+                        promise.resolve(toJSON(profile));
                     }
 
                     @Override
@@ -1335,7 +956,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onSuccess(List<Message> list, long syncTime) {
                         WritableMap map = Arguments.createMap();
-                        map.putArray("messages", (WritableArray) messagesToArray(list));
+                        map.putArray("messages", toJSON(list));
                         map.putDouble("syncTime", syncTime);
                         promise.resolve(map);
                     }
@@ -1415,7 +1036,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         for (int i = 0; i < messages.size(); i += 1) {
             ReadableMap map = messages.getMap(i);
             if (map != null) {
-                list.add(mapToMessage(map));
+                list.add(toMessage(map));
             }
         }
         RongIMClient.getInstance().sendReadReceiptResponse(
@@ -1495,149 +1116,13 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         });
     }
 
-    private CSCustomServiceInfo mapToCSCustomServiceInfo(ReadableMap map) {
-        CSCustomServiceInfo.Builder builder = new CSCustomServiceInfo.Builder();
-        if (map.hasKey("userId")) {
-            builder.userId(map.getString("userId"));
-        }
-        if (map.hasKey("nickName")) {
-            builder.nickName(map.getString("nickName"));
-        }
-        if (map.hasKey("loginName")) {
-            builder.loginName(map.getString("loginName"));
-        }
-        if (map.hasKey("name")) {
-            builder.name(map.getString("name"));
-        }
-        if (map.hasKey("grade")) {
-            builder.grade(map.getString("grade"));
-        }
-        if (map.hasKey("age")) {
-            builder.age(map.getString("age"));
-        }
-        if (map.hasKey("profession")) {
-            builder.profession(map.getString("profession"));
-        }
-        if (map.hasKey("portraitUrl")) {
-            builder.portraitUrl(map.getString("portraitUrl"));
-        }
-        if (map.hasKey("province")) {
-            builder.province(map.getString("province"));
-        }
-        if (map.hasKey("city")) {
-            builder.city(map.getString("city"));
-        }
-        if (map.hasKey("memo")) {
-            builder.memo(map.getString("memo"));
-        }
-        if (map.hasKey("mobileNo")) {
-            builder.mobileNo(map.getString("mobileNo"));
-        }
-        if (map.hasKey("email")) {
-            builder.email(map.getString("email"));
-        }
-        if (map.hasKey("address")) {
-            builder.address(map.getString("address"));
-        }
-        if (map.hasKey("QQ")) {
-            builder.QQ(map.getString("QQ"));
-        }
-        if (map.hasKey("weibo")) {
-            builder.weibo(map.getString("weibo"));
-        }
-        if (map.hasKey("weixin")) {
-            builder.weixin(map.getString("weixin"));
-        }
-        if (map.hasKey("page")) {
-            builder.page(map.getString("page"));
-        }
-        if (map.hasKey("referrer")) {
-            builder.referrer(map.getString("referrer"));
-        }
-        if (map.hasKey("enterUrl")) {
-            builder.enterUrl(map.getString("enterUrl"));
-        }
-        if (map.hasKey("skillId")) {
-            builder.skillId(map.getString("skillId"));
-        }
-        if (map.hasKey("listUrl")) {
-            ReadableArray array = map.getArray("listUrl");
-            assert array != null;
-            ArrayList<String> listUrl = arrayToStringList(array);
-            builder.listUrl(listUrl);
-        }
-        if (map.hasKey("define")) {
-            builder.define(map.getString("define"));
-        }
-        if (map.hasKey("productId")) {
-            builder.productId(map.getString("productId"));
-        }
-        return builder.build();
-    }
-
-    private ArrayList<String> arrayToStringList(ReadableArray array) {
-        if (array == null) {
-            return null;
-        }
-        ArrayList<String> list = new ArrayList<>(array.size());
-        for (int i = 0; i < array.size(); i += 1) {
-            list.set(i, array.getString(i));
-        }
-        return list;
-    }
-
-    private WritableMap CSLMessageItemToMap(CSLMessageItem item) {
-        WritableMap map = Arguments.createMap();
-        map.putString("name", item.getName());
-        map.putString("title", item.getTitle());
-        map.putString("defaultText", item.getDefaultText());
-        map.putString("type", item.getType());
-        map.putString("verification", item.getVerification());
-        map.putBoolean("required", item.isRequired());
-        map.putInt("max", item.getMax());
-        return map;
-    }
-
-    private WritableMap customServiceConfigToMap(CustomServiceConfig config) {
-        WritableMap map = Arguments.createMap();
-        map.putBoolean("isBlack", config.isBlack);
-        map.putString("companyName", config.companyName);
-        map.putString("companyIcon", config.companyIcon);
-        map.putString("announceClickUrl", config.announceClickUrl);
-        map.putString("announceMsg", config.announceMsg);
-        WritableArray leaveMessageNativeInfo = Arguments.createArray();
-        for (CSLMessageItem item : config.leaveMessageNativeInfo) {
-            leaveMessageNativeInfo.pushMap(CSLMessageItemToMap(item));
-        }
-        map.putArray("leaveMessageNativeInfo", leaveMessageNativeInfo);
-        map.putInt("leaveMessageType", config.leaveMessageConfigType.getValue());
-        map.putInt("userTipTime", config.userTipTime);
-        map.putString("userTipWord", config.userTipWord);
-        map.putInt("adminTipTime", config.adminTipTime);
-        map.putString("adminTipWord", config.adminTipWord);
-        map.putInt("evaEntryPoint", config.evaEntryPoint.getValue());
-        map.putInt("evaType", config.evaluateType.getValue());
-        map.putBoolean("robotSessionNoEva", config.robotSessionNoEva);
-        WritableArray humanEvaluateItems = Arguments.createArray();
-        for (CSHumanEvaluateItem item : config.humanEvaluateList) {
-            WritableMap evaItem = Arguments.createMap();
-            evaItem.putInt("value", item.getValue());
-            evaItem.putString("description", item.getDescription());
-            humanEvaluateItems.pushMap(evaItem);
-        }
-        map.putArray("humanEvaluateItems", humanEvaluateItems);
-        map.putBoolean("isReportResolveStatus", config.isReportResolveStatus);
-        map.putBoolean("isDisableLocation", config.isDisableLocation);
-        return map;
-    }
-
     @ReactMethod
     public void startCustomerService(String kefuId, ReadableMap csInfo, final String eventId) {
         RongIMClient.getInstance().startCustomService(kefuId, new ICustomServiceListener() {
             @Override
             public void onSuccess(CustomServiceConfig customServiceConfig) {
                 WritableMap map = createEventMap(eventId, "success");
-                map.putMap("config", customServiceConfigToMap(customServiceConfig));
+                map.putMap("config", toJSON(customServiceConfig));
                 eventEmitter.emit("rcimlib-customer-service", map);
             }
 
@@ -1683,7 +1168,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                 map.putArray("groups", groups);
                 eventEmitter.emit("rcimlib-customer-service", map);
             }
-        }, mapToCSCustomServiceInfo(csInfo));
+        }, toCSCustomServiceInfo(csInfo));
     }
 
     @ReactMethod

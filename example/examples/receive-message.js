@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Platform, ScrollView, StyleSheet, Text } from "react-native";
-import * as IMClient from "rongcloud-react-native-imlib";
+import { addReceiveMessageListener } from "rongcloud-react-native-imlib";
 
 const style = StyleSheet.create({
   body: { padding: 16 },
@@ -17,7 +17,7 @@ export default class extends React.PureComponent {
   state = { messages: [] };
 
   componentDidMount() {
-    this.listener = IMClient.addReceiveMessageListener(message => {
+    this.listener = addReceiveMessageListener(message => {
       console.log(message);
       this.setState({ messages: [message, ...this.state.messages] });
     });
