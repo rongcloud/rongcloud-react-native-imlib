@@ -40,8 +40,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -68,7 +66,7 @@
 				<p>融云 React Native IMLib 是以 IMLib SDK 2.9.12 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。</p>
 				<h2 id="-">文档</h2>
 				<ul>
-					<li><a href="https://github.com/rongcloud/rongcloud-react-native-imlib">使用指南</a></li>
+					<li><a href="https://www.rongcloud.cn/docs/react_native_imlib.html">使用指南</a></li>
 					<li><a href="https://qiuxiang.github.io/react-native-rongcloud-imlib/api/modules/rcimclient.html">接口文档</a></li>
 				</ul>
 				<h2 id="-">用法</h2>
@@ -84,11 +82,11 @@ addReceiveMessageListener(<span class="hljs-function"><span class="hljs-params">
   <span class="hljs-built_in">console</span>.log(message);
 });</code></pre>
 				<h3 id="-">发送消息</h3>
-				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { sendMessage, ConversationType } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { sendMessage, ConversationType, ObjectName } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
 
 <span class="hljs-keyword">const</span> conversationType = ConversationType.PRIVATE;
 <span class="hljs-keyword">const</span> targetId = <span class="hljs-string">"n19jmcy59f1q9"</span>;
-<span class="hljs-keyword">const</span> content = { <span class="hljs-attr">type</span>: <span class="hljs-string">"text"</span>, <span class="hljs-attr">content</span>: <span class="hljs-string">"这是一个文本消息"</span> };
+<span class="hljs-keyword">const</span> content = { <span class="hljs-attr">objectName</span>: ObjectName.Text, <span class="hljs-attr">content</span>: <span class="hljs-string">"这是一个文本消息"</span> };
 
 sendMessage(
   { conversationType, targetId, content },
@@ -124,13 +122,484 @@ yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></co
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/rcimclient.html">RCIMClient</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/csevaentrypoint.html" class="tsd-kind-icon">CSEva<wbr>Entry<wbr>Point</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/csmode.html" class="tsd-kind-icon">CSMode</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/csresolvestatus.html" class="tsd-kind-icon">CSResolve<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/chatroommemberorder.html" class="tsd-kind-icon">Chat<wbr>Room<wbr>Member<wbr>Order</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/connecterrorcode.html" class="tsd-kind-icon">Connect<wbr>Error<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/connectionstatusandroid.html" class="tsd-kind-icon">Connection<wbr>Status<wbr>Android</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/connectionstatusios.html" class="tsd-kind-icon">Connection<wbr>StatusIOS</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/conversationtype.html" class="tsd-kind-icon">Conversation<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/errorcode.html" class="tsd-kind-icon">Error<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/leavemessagetype.html" class="tsd-kind-icon">Leave<wbr>Message<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/mentionedtype.html" class="tsd-kind-icon">Mentioned<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/messagedirection.html" class="tsd-kind-icon">Message<wbr>Direction</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/messageobjectnames.html" class="tsd-kind-icon">Message<wbr>Object<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/objectname.html" class="tsd-kind-icon">Object<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/publicservicemenuitemtype.html" class="tsd-kind-icon">Public<wbr>Service<wbr>Menu<wbr>Item<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/publicservicetype.html" class="tsd-kind-icon">Public<wbr>Service<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/pushlanguage.html" class="tsd-kind-icon">Push<wbr>Language</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/realtimelocationstatus.html" class="tsd-kind-icon">Real<wbr>Time<wbr>Location<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/searchtype.html" class="tsd-kind-icon">Search<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/sentstatus.html" class="tsd-kind-icon">Sent<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/timestamporder.html" class="tsd-kind-icon">Timestamp<wbr>Order</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/cscallback.html" class="tsd-kind-icon">CSCallback</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/csconfig.html" class="tsd-kind-icon">CSConfig</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/csgroupitem.html" class="tsd-kind-icon">CSGroup<wbr>Item</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/csinfo.html" class="tsd-kind-icon">CSInfo</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/csleavemessageitem.html" class="tsd-kind-icon">CSLeave<wbr>Message<wbr>Item</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/chatroominfo.html" class="tsd-kind-icon">Chat<wbr>Room<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/commandmessage.html" class="tsd-kind-icon">Command<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/conversation.html" class="tsd-kind-icon">Conversation</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/discussion.html" class="tsd-kind-icon">Discussion</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/filemessage.html" class="tsd-kind-icon">File<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/groupnotificationmessage.html" class="tsd-kind-icon">Group<wbr>Notification<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/imagemessage.html" class="tsd-kind-icon">Image<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/locationmessage.html" class="tsd-kind-icon">Location<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mediamessagecallback.html" class="tsd-kind-icon">Media<wbr>Message<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/memberinfo.html" class="tsd-kind-icon">Member<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mentionedinfo.html" class="tsd-kind-icon">Mentioned<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/message.html" class="tsd-kind-icon">Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/messagecontent.html" class="tsd-kind-icon">Message<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/publicservicemenuitem.html" class="tsd-kind-icon">Public<wbr>Service<wbr>Menu<wbr>Item</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/publicserviceprofile.html" class="tsd-kind-icon">Public<wbr>Service<wbr>Profile</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/pushnotificationmessage.html" class="tsd-kind-icon">Push<wbr>Notification<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/recallnotificationmessage.html" class="tsd-kind-icon">Recall<wbr>Notification<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/receiptrequest.html" class="tsd-kind-icon">Receipt<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/receiptresponse.html" class="tsd-kind-icon">Receipt<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/receivemessage.html" class="tsd-kind-icon">Receive<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/searchconversationresult.html" class="tsd-kind-icon">Search<wbr>Conversation<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/sentmessage.html" class="tsd-kind-icon">Sent<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/sentmessagecallback.html" class="tsd-kind-icon">Sent<wbr>Message<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/textmessage.html" class="tsd-kind-icon">Text<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/typingstatus.html" class="tsd-kind-icon">Typing<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/userinfo.html" class="tsd-kind-icon">User<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/voicemessage.html" class="tsd-kind-icon">Voice<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#connectionstatus" class="tsd-kind-icon">Connection<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addconnectionstatuslistener" class="tsd-kind-icon">add<wbr>Connection<wbr>Status<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addloginfolistener" class="tsd-kind-icon">add<wbr>Log<wbr>Info<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addmembertodiscussion" class="tsd-kind-icon">add<wbr>Member<wbr>ToDiscussion</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addpusharrivedlistener" class="tsd-kind-icon">add<wbr>Push<wbr>Arrived<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addreadreceiptreceivedlistener" class="tsd-kind-icon">add<wbr>Read<wbr>Receipt<wbr>Received<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addrecallmessagelistener" class="tsd-kind-icon">add<wbr>Recall<wbr>Message<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addreceiptrequestlistener" class="tsd-kind-icon">add<wbr>Receipt<wbr>Request<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addreceiptresponselistener" class="tsd-kind-icon">add<wbr>Receipt<wbr>Response<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addreceivemessagelistener" class="tsd-kind-icon">add<wbr>Receive<wbr>Message<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addtoblacklist" class="tsd-kind-icon">add<wbr>ToBlacklist</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addtypingstatuslistener" class="tsd-kind-icon">add<wbr>Typing<wbr>Status<wbr>Listener</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#canceldownloadmediamessage" class="tsd-kind-icon">cancel<wbr>Download<wbr>Media<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cancelsendmediamessage" class="tsd-kind-icon">cancel<wbr>Send<wbr>Media<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cleanhistorymessages" class="tsd-kind-icon">clean<wbr>History<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cleanremotehistorymessages" class="tsd-kind-icon">clean<wbr>Remote<wbr>History<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#clearmessages" class="tsd-kind-icon">clear<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#clearmessagesunreadstatus" class="tsd-kind-icon">clear<wbr>Messages<wbr>Unread<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#cleartextmessagedraft" class="tsd-kind-icon">clear<wbr>Text<wbr>Message<wbr>Draft</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#connect" class="tsd-kind-icon">connect</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#creatediscussion" class="tsd-kind-icon">create<wbr>Discussion</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#deletemessages" class="tsd-kind-icon">delete<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#deleteremotemessages" class="tsd-kind-icon">delete<wbr>Remote<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#disconnect" class="tsd-kind-icon">disconnect</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#downloadmediamessage" class="tsd-kind-icon">download<wbr>Media<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#evaluatecustomerservice" class="tsd-kind-icon">evaluate<wbr>Customer<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getblacklist" class="tsd-kind-icon">get<wbr>Blacklist</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getblackliststatus" class="tsd-kind-icon">get<wbr>Blacklist<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getblockedconversationlist" class="tsd-kind-icon">get<wbr>Blocked<wbr>Conversation<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getchatroominfo" class="tsd-kind-icon">get<wbr>Chat<wbr>Room<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getconnectionstatus" class="tsd-kind-icon">get<wbr>Connection<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getconversation" class="tsd-kind-icon">get<wbr>Conversation</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getconversationlist" class="tsd-kind-icon">get<wbr>Conversation<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getconversationnotificationstatus" class="tsd-kind-icon">get<wbr>Conversation<wbr>Notification<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getcurrentuserid" class="tsd-kind-icon">get<wbr>Current<wbr>User<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getdiscussion" class="tsd-kind-icon">get<wbr>Discussion</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getfirstunreadmessage" class="tsd-kind-icon">get<wbr>First<wbr>Unread<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gethistorymessages" class="tsd-kind-icon">get<wbr>History<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmessage" class="tsd-kind-icon">get<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmessagebyuid" class="tsd-kind-icon">get<wbr>Message<wbr>ByUId</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmessagecount" class="tsd-kind-icon">get<wbr>Message<wbr>Count</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getmessagesendtime" class="tsd-kind-icon">get<wbr>Message<wbr>Send<wbr>Time</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getnotificationquiethours" class="tsd-kind-icon">get<wbr>Notification<wbr>Quiet<wbr>Hours</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getofflinemessageduration" class="tsd-kind-icon">get<wbr>Offline<wbr>Message<wbr>Duration</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getpublicservicelist" class="tsd-kind-icon">get<wbr>Public<wbr>Service<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getpublicserviceprofile" class="tsd-kind-icon">get<wbr>Public<wbr>Service<wbr>Profile</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getpushcontentshowstatus" class="tsd-kind-icon">get<wbr>Push<wbr>Content<wbr>Show<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getrealtimelocationparticipants" class="tsd-kind-icon">get<wbr>Real<wbr>Time<wbr>Location<wbr>Participants</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getrealtimelocationstatus" class="tsd-kind-icon">get<wbr>Real<wbr>Time<wbr>Location<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getremotechatroomhistorymessages" class="tsd-kind-icon">get<wbr>Remote<wbr>Chat<wbr>Room<wbr>History<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getremotehistorymessages" class="tsd-kind-icon">get<wbr>Remote<wbr>History<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettextmessagedraft" class="tsd-kind-icon">get<wbr>Text<wbr>Message<wbr>Draft</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettopconversationlist" class="tsd-kind-icon">get<wbr>Top<wbr>Conversation<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#gettotalunreadcount" class="tsd-kind-icon">get<wbr>Total<wbr>Unread<wbr>Count</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getunreadcount" class="tsd-kind-icon">get<wbr>Unread<wbr>Count</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getunreadmentionedmessages" class="tsd-kind-icon">get<wbr>Unread<wbr>Mentioned<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#init" class="tsd-kind-icon">init</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#insertincomingmessage" class="tsd-kind-icon">insert<wbr>Incoming<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#insertoutgoingmessage" class="tsd-kind-icon">insert<wbr>Outgoing<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#joinchatroom" class="tsd-kind-icon">join<wbr>Chat<wbr>Room</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#joinexistchatroom" class="tsd-kind-icon">join<wbr>Exist<wbr>Chat<wbr>Room</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#joinrealtimelocation" class="tsd-kind-icon">join<wbr>Real<wbr>Time<wbr>Location</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#leavemessagecustomerservice" class="tsd-kind-icon">leave<wbr>Message<wbr>Customer<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#quitchatroom" class="tsd-kind-icon">quit<wbr>Chat<wbr>Room</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#quitdiscussion" class="tsd-kind-icon">quit<wbr>Discussion</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#quitrealtimelocation" class="tsd-kind-icon">quit<wbr>Real<wbr>Time<wbr>Location</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#recallmessage" class="tsd-kind-icon">recall<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#removeconversation" class="tsd-kind-icon">remove<wbr>Conversation</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#removefromblacklist" class="tsd-kind-icon">remove<wbr>From<wbr>Blacklist</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#removememberfromdiscussion" class="tsd-kind-icon">remove<wbr>Member<wbr>From<wbr>Discussion</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#removenotificationquiethours" class="tsd-kind-icon">remove<wbr>Notification<wbr>Quiet<wbr>Hours</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#savetextmessagedraft" class="tsd-kind-icon">save<wbr>Text<wbr>Message<wbr>Draft</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#searchconversations" class="tsd-kind-icon">search<wbr>Conversations</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#searchmessages" class="tsd-kind-icon">search<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#searchpublicservice" class="tsd-kind-icon">search<wbr>Public<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#selectcustomerservicegroup" class="tsd-kind-icon">select<wbr>Customer<wbr>Service<wbr>Group</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#senddirectionalmessage" class="tsd-kind-icon">send<wbr>Directional<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendmediamessage" class="tsd-kind-icon">send<wbr>Media<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendmessage" class="tsd-kind-icon">send<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendreadreceiptmessage" class="tsd-kind-icon">send<wbr>Read<wbr>Receipt<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendreadreceiptrequest" class="tsd-kind-icon">send<wbr>Read<wbr>Receipt<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendreadreceiptresponse" class="tsd-kind-icon">send<wbr>Read<wbr>Receipt<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sendtypingstatus" class="tsd-kind-icon">send<wbr>Typing<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setconversationnotificationstatus" class="tsd-kind-icon">set<wbr>Conversation<wbr>Notification<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setconversationtotop" class="tsd-kind-icon">set<wbr>Conversation<wbr>ToTop</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setdevicetoken" class="tsd-kind-icon">set<wbr>Device<wbr>Token</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setdiscussioninvitestatus" class="tsd-kind-icon">set<wbr>Discussion<wbr>Invite<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setdiscussionname" class="tsd-kind-icon">set<wbr>Discussion<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setmessageextra" class="tsd-kind-icon">set<wbr>Message<wbr>Extra</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setmessagereceivedstatus" class="tsd-kind-icon">set<wbr>Message<wbr>Received<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setmessagesentstatus" class="tsd-kind-icon">set<wbr>Message<wbr>Sent<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setnotificationquiethours" class="tsd-kind-icon">set<wbr>Notification<wbr>Quiet<wbr>Hours</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setofflinemessageduration" class="tsd-kind-icon">set<wbr>Offline<wbr>Message<wbr>Duration</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setpushcontentshowstatus" class="tsd-kind-icon">set<wbr>Push<wbr>Content<wbr>Show<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setpushlanguage" class="tsd-kind-icon">set<wbr>Push<wbr>Language</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setreconnectkickenable" class="tsd-kind-icon">set<wbr>Reconnect<wbr>Kick<wbr>Enable</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setserverinfo" class="tsd-kind-icon">set<wbr>Server<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#setstatisticserver" class="tsd-kind-icon">set<wbr>Statistic<wbr>Server</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#startcustomerservice" class="tsd-kind-icon">start<wbr>Customer<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#startrealtimelocation" class="tsd-kind-icon">start<wbr>Real<wbr>Time<wbr>Location</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#stopcustomerservice" class="tsd-kind-icon">stop<wbr>Customer<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#subscribepublicservice" class="tsd-kind-icon">subscribe<wbr>Public<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#switchtohumanmode" class="tsd-kind-icon">switch<wbr>ToHuman<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#syncconversationreadstatus" class="tsd-kind-icon">sync<wbr>Conversation<wbr>Read<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#unsubscribepublicservice" class="tsd-kind-icon">unsubscribe<wbr>Public<wbr>Service</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

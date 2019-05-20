@@ -181,12 +181,12 @@ export function addReceiveMessageListener(listener: (message: ReceiveMessage) =>
 /**
  * 发送消息回调
  */
-export type SentMessageCallback = {
+export interface SentMessageCallback {
   success?: (messageId: number) => void;
   progress?: (progress: number, messageId: number) => void;
   cancel?: () => void;
   error?: (errorCode: ErrorCode, messageId: number) => void;
-};
+}
 
 function handleSendMessageCallback(callback: SentMessageCallback): string {
   const eventId = Math.random().toString();
@@ -399,12 +399,12 @@ export function cancelDownloadMediaMessage(messageId: number): Promise<void> {
   return RCIMClient.cancelDownloadMediaMessage(messageId);
 }
 
-export type MediaMessageCallback = {
+export interface MediaMessageCallback {
   progress?: (progress: number) => void;
   success?: (path: string) => void;
   error?: (errorCode: number) => void;
   cancel?: () => void;
-};
+}
 
 /**
  * 下载媒体消息
@@ -1321,14 +1321,14 @@ export async function setOfflineMessageDuration(duration: number): Promise<numbe
 /**
  * 发起客服聊天回调
  */
-export type CSCallback = {
+export interface CSCallback {
   success?: (config: CSConfig) => void;
   error?: (code: number, message: string) => void;
   modeChanged?: (mode: CSMode) => void;
   pullEvaluation?: (dialogId: string) => void;
   quit?: (message: string) => void;
   selectGroup?: (groups: CSGroupItem[]) => void;
-};
+}
 
 /**
  * 发起客服聊天
