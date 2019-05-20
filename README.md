@@ -1,11 +1,11 @@
-# rongcloud-react-native-imlib
+# rongcloud-react-native-imlib [![npm version][version-badge]][npm]
 
 融云 React Native IMLib 是以 IMLib SDK 2.9.12 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。
 
 ## 文档
 
 - [使用指南](https://www.rongcloud.cn/docs/react_native_imlib.html)
-- [接口文档](https://qiuxiang.github.io/react-native-rongcloud-imlib/api/modules/rcimclient.html)
+- [接口文档](https://qiuxiang.github.io/react-native-rongcloud-imlib/api/globals.html)
 
 ## 用法
 
@@ -72,3 +72,6 @@ yarn run-android
 │   └── ios (iOS 原生模块)
 └── src (接口实现)
 ```
+
+[npm]: https://www.npmjs.com/package/rongcloud-react-native-imlib
+[version-badge]: https://badge.fury.io/js/rongcloud-react-native-imlib.svg
