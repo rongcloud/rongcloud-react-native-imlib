@@ -71,15 +71,122 @@ export interface MentionedInfo {
  * 消息内容
  */
 export interface MessageContent {
+  objectName?: ObjectName;
   userInfo?: UserInfo;
   mentionedInfo?: MentionedInfo;
+}
+
+/**
+ * 消息对象名称
+ */
+export enum ObjectName {
+  /**
+   * 文本消息
+   */
+  Text = "RC:TxtMsg",
+
+  /**
+   * 文件消息
+   */
+  File = "RC:FileMsg",
+
+  /**
+   * 图片消息
+   */
+  Image = "RC:ImgMsg",
+
+  /**
+   * 位置信息
+   */
+  Location = "RC:LBSMsg",
+
+  /**
+   * 语音消息
+   */
+  Voice = "RC:VcMsg",
+
+  /**
+   * 小视频消息
+   */
+  Sight = "RC:SightMsg",
+
+  /**
+   * 命令消息
+   */
+  Command = "RC:CmdMsg",
+
+  /**
+   * 公众服务单图文消息
+   */
+  PublicServiceRich = "RC:PSImgTxtMsg",
+
+  /**
+   * 公众服务多图文消息
+   */
+  PublicServiceMultiRich = "RC:PSMultiImgTxtMsg",
+
+  /**
+   * 好友通知消息
+   */
+  ContactNotification = "RC:ContactNtf",
+
+  /**
+   * 资料通知消息
+   */
+  ProfileNotification = "RC:ProfileNtf",
+
+  /**
+   * 通用命令通知消息
+   */
+  CommandNotification = "RC:CmdNtf",
+
+  /**
+   * 提示条通知消息
+   */
+  InformationNotification = "RC:InfoNtf",
+
+  /**
+   * 群组通知消息
+   */
+  GroupNotification = "RC:GrpNtf",
+
+  /**
+   * 已读通知消息
+   */
+  ReadReceipt = "RC:ReadNtf",
+
+  /**
+   * 公众服务命令消息
+   */
+  PublicServiceCommand = "RC:PSCmd",
+
+  /**
+   * 对方正在输入状态消息
+   */
+  TypingStatus = "RC:TypSts",
+
+  /**
+   * 群消息已读状态回执
+   */
+  ReadReceiptResponse = "RC:RRRspMsg"
+}
+
+/**
+ * 消息对象名称枚举
+ */
+export enum MessageObjectNames {
+  text = "RC:TxtMsg",
+  image = "RC:ImgMsg",
+  file = "RC:FileMsg",
+  location = "RC:LocMsg",
+  voice = "RC:VcMsg"
 }
 
 /**
  * 文本消息
  */
 export interface TextMessage extends MessageContent {
-  type: "text";
+  objectName: ObjectName.Text;
   content: string;
   extra?: string;
 }
@@ -88,7 +195,7 @@ export interface TextMessage extends MessageContent {
  * 图片消息
  */
 export interface ImageMessage extends MessageContent {
-  type: "image";
+  objectName: ObjectName.Image;
   local: string;
   remote?: string;
   thumbnail?: string;
@@ -100,7 +207,7 @@ export interface ImageMessage extends MessageContent {
  * 文件消息
  */
 export interface FileMessage extends MessageContent {
-  type: "file";
+  objectName: ObjectName.File;
   local: string;
   remote?: string;
   name?: string;
@@ -113,7 +220,7 @@ export interface FileMessage extends MessageContent {
  * 位置消息
  */
 export interface LocationMessage extends MessageContent {
-  type: "location";
+  objectName: ObjectName.Location;
   name: string;
   latitude: number;
   longitude: number;
@@ -125,7 +232,7 @@ export interface LocationMessage extends MessageContent {
  * 语音消息
  */
 export interface VoiceMessage extends MessageContent {
-  type: "voice";
+  objectName: ObjectName.Voice;
   data: string;
   local: string;
   duration: number;
@@ -135,7 +242,7 @@ export interface VoiceMessage extends MessageContent {
  * 命令消息
  */
 export interface CommandMessage extends MessageContent {
-  type: "command";
+  objectName: ObjectName.Command;
   name: string;
   data: string;
 }
@@ -144,7 +251,7 @@ export interface CommandMessage extends MessageContent {
  * 群组通知消息
  */
 export interface GroupNotificationMessage extends MessageContent {
-  type: "group-notification";
+  objectName: ObjectName.GroupNotification;
 
   /**
    * 群组通知的操作名称
@@ -176,8 +283,6 @@ export interface GroupNotificationMessage extends MessageContent {
  * 撤回通知消息
  */
 export interface RecallNotificationMessage extends MessageContent {
-  type: "recall-notification";
-
   /**
    * 撤回消息的用户 ID
    */
@@ -403,7 +508,7 @@ export interface SentMessage {
   /**
    * 消息内容
    */
-  content: TextMessage;
+  content: MessageContent;
 
   /**
    * 推送内容，用于显示
@@ -414,28 +519,6 @@ export interface SentMessage {
    * 推送数据，不显示
    */
   pushData: string;
-}
-
-/**
- * 消息对象名称
- */
-export type MessageObjectName =
-  | "RC:TxtMsg"
-  | "RC:FileMsg"
-  | "RC:ImgMsg"
-  | "RC:LBSMsg"
-  | "RC:VcMsg"
-  | string;
-
-/**
- * 消息对象名称枚举
- */
-export enum MessageObjectNames {
-  text = "RC:TxtMsg",
-  image = "RC:ImgMsg",
-  file = "RC:FileMsg",
-  location = "RC:LocMsg",
-  voice = "RC:VcMsg"
 }
 
 /**

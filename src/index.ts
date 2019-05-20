@@ -4,7 +4,7 @@ import {
   ConversationType,
   ErrorCode,
   Message,
-  MessageObjectName,
+  ObjectName,
   PublicServiceType,
   RecallNotificationMessage,
   ReceiptRequest,
@@ -31,7 +31,8 @@ import {
   CSResolveStatus,
   CSLeaveMessageItem,
   PushLanguage,
-  PushNotificationMessage
+  PushNotificationMessage,
+  MessageObjectNames
 } from "./types";
 
 export * from "./types";
@@ -218,6 +219,7 @@ function handleSendMessageCallback(callback: SentMessageCallback): string {
  * @param callback 回调
  */
 export function sendMessage(message: SentMessage, callback: SentMessageCallback = {}) {
+  message.content = handleMessageContent(message.content);
   RCIMClient.sendMessage(message, handleSendMessageCallback(callback));
 }
 
@@ -228,6 +230,7 @@ export function sendMessage(message: SentMessage, callback: SentMessageCallback 
  * @param callback 回调
  */
 export function sendMediaMessage(message: SentMessage, callback: SentMessageCallback = {}) {
+  message.content = handleMessageContent(message.content);
   RCIMClient.sendMediaMessage(message, handleSendMessageCallback(callback));
 }
 
@@ -243,6 +246,7 @@ export function sendDirectionalMessage(
   userIdList: string[],
   callback: SentMessageCallback
 ) {
+  message.content = handleMessageContent(message.content);
   RCIMClient.sendDirectionalMessage(message, handleSendMessageCallback(callback));
 }
 
@@ -470,7 +474,7 @@ export function setReconnectKickEnable(enabled: boolean) {
 export function getHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
-  objectNames: MessageObjectName[],
+  objectNames: ObjectName[],
   timestamp: number,
   count: number,
   isForward: boolean
@@ -501,7 +505,7 @@ export function getHistoryMessages(
 export function getHistoryMessages(
   conversationType: ConversationType,
   targetId: string,
-  objectName: string | MessageObjectName[] = null,
+  objectName: string | ObjectName[] = null,
   baseMessageId = -1,
   count = 10,
   isForward = true
@@ -528,6 +532,17 @@ export function getHistoryMessages(
 }
 
 /**
+ * 消息内容兼容性处理
+ */
+function handleMessageContent(content: MessageContent) {
+  if (!content.objectName) {
+    // @ts-ignore
+    content.objectName = MessageObjectNames[content.type];
+  }
+  return content;
+}
+
+/**
  * 向本地会话插入一条发送消息
  *
  * @param conversationType
@@ -547,7 +562,7 @@ export function insertOutgoingMessage(
     conversationType,
     targetId,
     sentStatus,
-    messageContent,
+    handleMessageContent(messageContent),
     sentTime
   );
 }
@@ -575,7 +590,7 @@ export function insertIncomingMessage(
     targetId,
     senderUserId,
     receivedStatus,
-    messageContent,
+    handleMessageContent(messageContent),
     sentTime
   );
 }
@@ -631,7 +646,7 @@ export function deleteMessages(
 export function searchConversations(
   keyword: string,
   conversationTypes: ConversationType[],
-  objectNames: MessageObjectName[]
+  objectNames: ObjectName[]
 ): Promise<SearchConversationResult[]> {
   return RCIMClient.searchConversations(keyword, conversationTypes, objectNames);
 }

@@ -31,11 +31,11 @@ addReceiveMessageListener(message => {
 ### 发送消息
 
 ```javascript
-import { sendMessage, ConversationType } from "rongcloud-react-native-imlib";
+import { sendMessage, ConversationType, ObjectName } from "rongcloud-react-native-imlib";
 
 const conversationType = ConversationType.PRIVATE;
 const targetId = "n19jmcy59f1q9";
-const content = { type: "text", content: "这是一个文本消息" };
+const content = { objectName: ObjectName.Text, content: "这是一个文本消息" };
 
 sendMessage(
   { conversationType, targetId, content },

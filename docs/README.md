@@ -181,11 +181,11 @@ disconnect(false);
 #### 发送文本消息
 
 ```javascript
-import { sendMessage, ConversationType } from "rongcloud-react-native-imlib";
+import { sendMessage, ConversationType, ObjectName } from "rongcloud-react-native-imlib";
 
 const conversationType = ConversationType.PRIVATE;
 const targetId = "userId"; // 根据会话类型的不同，可以是用户 ID、讨论组 ID、组群 ID 等
-const content = { type: "text", content: "Hello" };
+const content = { objectName: ObjectName.Text, content: "Hello" };
 const callback = {
   success(messageId) {
     console.log("发送成功：" + messageId);
@@ -201,9 +201,9 @@ sendMessage({ conversationType, targetId, content }, callback);
 #### 发送图片信息
 
 ```javascript
-import { sendMediaMessage, cancelSendMediaMessage } from "rongcloud-react-native-imlib";
+import { sendMediaMessage, cancelSendMediaMessage, ObjectName } from "rongcloud-react-native-imlib";
 
-const content = { type: "image", local: "file:///image_path" };
+const content = { objectName: ObjectName.Image, local: "file:///image_path" };
 const callback = {
   success(messageId) {
     console.log("发送成功：" + messageId);
@@ -228,19 +228,19 @@ sendMediaMessage({ conversationType, targetId, content }, callback);
 #### 发送文件
 
 ```javascript
-import { sendMediaMessage } from "rongcloud-react-native-imlib";
+import { sendMediaMessage, ObjectName } from "rongcloud-react-native-imlib";
 
-const content = { type: "file", local: "file:///image_path" };
+const content = { objectName: ObjectName.File, local: "file:///image_path" };
 sendMediaMessage({ conversationType, targetId, content }, callback);
 ```
 
 #### 发送位置信息
 
 ```javascript
-import { sendMessage } from "rongcloud-react-native-imlib";
+import { sendMessage, ObjectName } from "rongcloud-react-native-imlib";
 
 const content = {
-  type: "location",
+  objectName: ObjectName.Location,
   latitude: 34,
   longitude: 108,
   name: "海龙大厦",
@@ -255,10 +255,10 @@ sendMessage({ conversationType, targetId, content }, callback);
 融云 React Native SDK 不提供语音录制、转码功能，开发者需要自已实现语音消息录制、转码，通过融云内置的语音消息进行发送。
 
 ```javascript
-import { sendMessage } from "rongcloud-react-native-imlib";
+import { sendMessage, ObjectName } from "rongcloud-react-native-imlib";
 
 const content = {
-  type: "voice",
+  objectName: ObjectName.Voice,
   data: "audio raw data", // iOS 使用二进制数据的方式发送
   local: "audio path", // Android 使用文件方式发送
   duration: 9 // 语音持续时间，单位：秒
@@ -282,7 +282,7 @@ const listener = addReceiveMessageListener(message => {
 ### 获取本地消息历史
 
 ```javascript
-import { getHistoryMessages } from "rongcloud-react-native-imlib";
+import { getHistoryMessages, ObjectName } from "rongcloud-react-native-imlib";
 
 // 获取指定会话消息，默认获取最新 10 条
 const messages = await getHistoryMessages(conversationType, targetId);
@@ -294,7 +294,7 @@ const messages = await getHistoryMessages(conversationType, targetId, "", messag
 const messages = await getHistoryMessages(
   conversationType,
   targetId,
-  "RC:TxtMsg",
+  ObjectName.Text,
   messageId,
   20,
   false
@@ -307,7 +307,7 @@ const messages = await getHistoryMessages(conversationType, targetId, [], timest
 const messages = await getHistoryMessages(
   conversationType,
   targetId,
-  ["RC:TxtMsg", "RC:ImgMsg"],
+  [ObjectName.Text, ObjectName.Image],
   timestamp,
   20,
   false
@@ -345,10 +345,11 @@ cleanHistoryMessages(conversationType, targetId, timestamp, isCleanRemote);
 import {
   insertIncomingMessage,
   insertOutgoingMessage,
-  SentStatus
+  SentStatus,
+  ObjectName
 } from "rongcloud-react-native-imlib";
 
-const content = { type: "text", content: "Hello" };
+const content = { objectName: ObjectName.Text, content: "Hello" };
 
 // 插入一条发送消息
 const message = await insertOutgoingMessage(conversationType, targetId, SentStatus.SENT, content);
@@ -416,10 +417,10 @@ const conversations = await getTopConversationList();
 ### 搜索会话
 
 ```javascript
-import { searchConversations, ConversationType } from "rongcloud-react-native-imlib";
+import { searchConversations, ConversationType, ObjectName } from "rongcloud-react-native-imlib";
 
 const conversationTypes = [ConversationType.PRIVATE];
-const objectNames = ["RC:TxtMsg", "RC:ImgMsg"];
+const objectNames = [ObjectName.Text, ObjectName.Image];
 
 const conversations = await searchConversations(keyword, conversationTypes, objectNames);
 ```
@@ -479,10 +480,10 @@ removeNotificationQuietHours();
 群组中支持 @ 消息功能，满足您 @ 指定用户或 @ 所有人的需求，只需要在 `MessageContent` 中添加 `mentionedInfo` 字段。
 
 ```javascript
-import { sendMessage, MentionedType } from "rongcloud-react-native-imlib";
+import { sendMessage, MentionedType, ObjectName } from "rongcloud-react-native-imlib";
 
 const content = {
-  type: "text",
+  objectName: ObjectName,
   content: "Hello",
   mentionedInfo: {
     type: MentionedType.PART, // @ 指定的用户
@@ -892,11 +893,11 @@ addTypingStatusListener(({ conversationType, targetId, userId, typingContentType
 注：群定向消息不存储到云端，通过“单群聊消息云存储”服务无法获取到定向消息。
 
 ```javascript
-import { sendDirectionalMessage } from "rongcloud-react-native-imlib";
+import { sendDirectionalMessage, ObjectName } from "rongcloud-react-native-imlib";
 
 const conversationType = ConversationType.PRIVATE;
 const targetId = "groupId"; // 只能是组群 ID
-const content = { type: "text", content: "Hello" };
+const content = { objectName: ObjectName.Text, content: "Hello" };
 const callback = {
   success(messageId) {
     console.log("发送成功：" + messageId);
@@ -922,4 +923,3 @@ setOfflineMessageDuration(days);
 
 const duration = await getOfflineMessageDuration();
 ```
-

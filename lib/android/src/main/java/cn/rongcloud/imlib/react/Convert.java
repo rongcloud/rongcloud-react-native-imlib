@@ -36,12 +36,13 @@ class Convert {
         return map;
     }
 
+    /** @noinspection Duplicates*/
     static WritableMap toJSON(String objectName, MessageContent content) {
         WritableMap map = Arguments.createMap();
+        map.putString("objectName", objectName);
         switch (objectName) {
             case "RC:TxtMsg":
                 TextMessage text = (TextMessage) content;
-                map.putString("type", "text");
                 map.putString("content", text.getContent());
                 map.putString("extra", text.getExtra());
                 break;
@@ -62,7 +63,6 @@ class Convert {
                 if (remoteUri != null) {
                     thumbnail = thumbnailUri.toString();
                 }
-                map.putString("type", "image");
                 map.putString("local", local);
                 map.putString("remote", remote);
                 map.putString("thumbnail", thumbnail);
@@ -82,7 +82,6 @@ class Convert {
                 if (remoteUri != null) {
                     remote = remoteUri.toString();
                 }
-                map.putString("type", "file");
                 map.putString("local", local);
                 map.putString("remote", remote);
                 map.putString("name", file.getName());
@@ -281,17 +280,17 @@ class Convert {
         if (map == null) {
             return null;
         }
-        String contentType = map.getString("type");
+        String objectName = map.getString("objectName");
         MessageContent messageContent = null;
-        if (contentType != null) {
-            switch (contentType) {
-                case "text":
+        if (objectName != null) {
+            switch (objectName) {
+                case "RC:TxtMsg":
                     messageContent = TextMessage.obtain(map.getString("content"));
                     if (map.hasKey("extra")) {
                         ((TextMessage) messageContent).setExtra(map.getString("extra"));
                     }
                     break;
-                case "image":
+                case "RC:ImgMsg":
                     Uri uri = Utils.getFileUri(reactContext, map.getString("local"));
                     messageContent = ImageMessage.obtain(uri, uri);
                     if (map.hasKey("isFull")) {
@@ -301,13 +300,13 @@ class Convert {
                         ((ImageMessage) messageContent).setExtra(map.getString("extra"));
                     }
                     break;
-                case "file":
+                case "RC:FileMsg":
                     messageContent = FileMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
                     if (map.hasKey("extra")) {
                         ((FileMessage) messageContent).setExtra(map.getString("extra"));
                     }
                     break;
-                case "location":
+                case "RC:LBSMsg":
                     Uri thumbnail = Utils.getFileUri(reactContext, map.getString("thumbnail"));
                     messageContent = LocationMessage.obtain(
                             map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
@@ -315,12 +314,15 @@ class Convert {
                         ((LocationMessage) messageContent).setExtra(map.getString("extra"));
                     }
                     break;
-                case "voice":
+                case "RC:VcMsg":
                     Uri voice = Utils.getFileUri(reactContext, map.getString("local"));
                     messageContent = VoiceMessage.obtain(voice, map.getInt("duration"));
                     if (map.hasKey("extra")) {
                         ((VoiceMessage) messageContent).setExtra(map.getString("extra"));
                     }
+                    break;
+                case "RC:CmdMsg":
+                    messageContent = CommandMessage.obtain(map.getString("name"), map.getString("data"));
                     break;
             }
         }
