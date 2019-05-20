@@ -18,6 +18,10 @@ export default class extends React.PureComponent {
 
   componentDidMount() {
     this.listener = addReceiveMessageListener(message => {
+      const { content } = message.message;
+      if (content.data && content.data.length > 999) {
+        content.data = content.data.substr(0, 100) + "...";
+      }
       console.log(message);
       this.setState({ messages: [message, ...this.state.messages] });
     });

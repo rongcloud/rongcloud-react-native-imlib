@@ -1627,7 +1627,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   if ([content isKindOfClass:[RCImageMessage class]]) {
     RCImageMessage *image = (RCImageMessage *)content;
     return @{
-      @"type" : @"image",
+      @"type" : @"RC:ImgMsg",
       @"local" : image.localPath ? image.localPath : @"",
       @"remote" : image.remoteUrl ? image.remoteUrl : @"",
       @"isFull" : @(image.isFull),
@@ -1635,12 +1635,15 @@ RCT_EXPORT_METHOD(getCurrentUserId
     };
   } else if ([content isKindOfClass:[RCTextMessage class]]) {
     RCTextMessage *text = (RCTextMessage *)content;
-    return
-        @{@"type" : @"text", @"content" : text.content, @"extra" : text.extra ? text.extra : @""};
+    return @{
+      @"type" : @"RC:TxtMsg",
+      @"content" : text.content,
+      @"extra" : text.extra ? text.extra : @""
+    };
   } else if ([content isKindOfClass:[RCFileMessage class]]) {
     RCFileMessage *file = (RCFileMessage *)content;
     return @{
-      @"type" : @"file",
+      @"type" : @"RC:FileMsg",
       @"local" : file.localPath ? file.localPath : @"",
       @"remote" : file.remoteUrl ? file.remoteUrl : @"",
       @"name" : file.name,
@@ -1651,7 +1654,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCDiscussionNotificationMessage class]]) {
     RCDiscussionNotificationMessage *message = (RCDiscussionNotificationMessage *)content;
     return @{
-      @"type" : @"discussion-notification",
+      @"type" : @"RC:DizNtf",
       @"notificationType" : @(message.type),
       @"operatorId" : message.operatorId,
       @"extension" : message.extension,
@@ -1659,7 +1662,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCLocationMessage class]]) {
     RCLocationMessage *message = (RCLocationMessage *)content;
     return @{
-      @"type" : @"voice",
+      @"type" : @"RC:LBSMsg",
       @"latitude" : @(message.location.latitude),
       @"longitude" : @(message.location.longitude),
       @"name" : message.locationName,
@@ -1673,7 +1676,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
       data = [message.wavAudioData base64EncodedStringWithOptions:0];
     }
     return @{
-      @"type" : @"voice",
+      @"type" : @"RC:VcMsg",
       @"data" : data,
       @"duration" : @(message.duration),
       @"extra" : message.extra ? message.extra : @"",
@@ -1681,7 +1684,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCRecallNotificationMessage class]]) {
     RCRecallNotificationMessage *message = (RCRecallNotificationMessage *)content;
     return @{
-      @"type" : @"recall-notification",
+      @"type" : @"RC:RcNtf",
       @"operatorId" : message.operatorId,
       @"recallTime" : @(message.recallTime),
       @"originalObjectName" : message.originalObjectName,
@@ -1692,26 +1695,26 @@ RCT_EXPORT_METHOD(getCurrentUserId
 }
 
 - (RCMessageContent *)toMessageContent:(NSDictionary *)content {
-  NSString *type = content[@"type"];
+  NSString *objectName = content[@"objectName"];
   RCMessageContent *messageContent;
 
-  if ([type isEqualToString:@"text"]) {
+  if ([objectName isEqualToString:@"RC:TxtMsg"]) {
     RCTextMessage *text = [RCTextMessage messageWithContent:content[@"content"]];
     text.extra = content[@"extra"];
     messageContent = text;
-  } else if ([type isEqualToString:@"image"]) {
+  } else if ([objectName isEqualToString:@"RC:ImgMsg"]) {
     NSString *local = content[@"local"];
     RCImageMessage *image = [RCImageMessage
         messageWithImageURI:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
     image.extra = content[@"extra"];
     messageContent = image;
-  } else if ([type isEqualToString:@"file"]) {
+  } else if ([objectName isEqualToString:@"RC:FileMsg"]) {
     NSString *local = content[@"local"];
     RCFileMessage *file = [RCFileMessage
         messageWithFile:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
     file.extra = content[@"extra"];
     messageContent = file;
-  } else if ([type isEqualToString:@"location"]) {
+  } else if ([objectName isEqualToString:@"RC:LBSMsg"]) {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(
         [content[@"latitude"] doubleValue], [content[@"longitude"] doubleValue]);
     RCLocationMessage *location = [RCLocationMessage messageWithLocationImage:nil
@@ -1719,12 +1722,14 @@ RCT_EXPORT_METHOD(getCurrentUserId
                                                                  locationName:content[@"name"]];
     location.extra = content[@"extra"];
     messageContent = location;
-  } else if ([type isEqualToString:@"voice"]) {
+  } else if ([objectName isEqualToString:@"RC:VcMsg"]) {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:content[@"data"] options:0];
     RCVoiceMessage *voice = [RCVoiceMessage messageWithAudio:data
                                                     duration:[content[@"duration"] intValue]];
     voice.extra = content[@"extra"];
     messageContent = voice;
+  } else if ([objectName isEqualToString:@"RC:CmdMsg"]) {
+    messageContent = [RCCommandMessage messageWithName:content[@"name"] data:content[@"data"]];
   }
 
   if (messageContent) {
