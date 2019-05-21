@@ -27,17 +27,12 @@
   },
   "devDependencies": {
     "@types/react-navigation": "^3.0.5",
-    "prettier": "^1.16.4",
     "react": "16.8.4",
     "react-native": "0.59.1",
     "react-native-document-picker": "^2.3.0",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-image-picker": "^0.28.0",
-    "react-navigation": "^3.5.1",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-external-module-name": "^2.0.0",
-    "typedoc-plugin-markdown": "^1.1.27",
-    "typescript": "^3.3.4000"
+    "react-navigation": "^3.5.1"
   },
   "rnpm": {
     "android": {
