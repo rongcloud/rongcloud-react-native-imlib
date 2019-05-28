@@ -6,7 +6,8 @@ import {
   sendMessage,
   sendMediaMessage,
   recallMessage,
-  cancelSendMediaMessage
+  cancelSendMediaMessage,
+  ObjectName
 } from "rongcloud-react-native-imlib";
 import config from "../config";
 import { Body, FormItem, Result, Select } from "../components";
@@ -24,7 +25,7 @@ export default class extends React.PureComponent {
 
   state = {
     conversationType: 1,
-    messageType: "text",
+    messageType: ObjectName.Text,
     targetId: config.targetUserId,
     pushContent: "",
     content: {},
@@ -36,14 +37,16 @@ export default class extends React.PureComponent {
   setPushContent = pushContent => this.setState({ pushContent });
   setConversationType = conversationType => this.setState({ conversationType });
   setVoice = voice =>
-    this.setState({ content: { type: "voice", data: voice, local: voice, duration: 2 } });
+    this.setState({
+      content: { objectName: ObjectName.Voice, data: voice, local: voice, duration: 2 }
+    });
 
   setMessageType = messageType => {
     this.setState({ messageType });
     if (messageType === "location") {
       this.setState({
         content: {
-          type: "location",
+          objectName: ObjectName.Location,
           latitude: 23,
           longitude: 102,
           name: "海龙大厦",
@@ -56,7 +59,7 @@ export default class extends React.PureComponent {
   pickImage = () => {
     showImagePicker({}, ({ uri }) => {
       if (uri) {
-        this.setState({ content: { type: "image", local: uri, isFull: true } });
+        this.setState({ content: { objectName: ObjectName.Image, local: uri, isFull: true } });
       }
     });
   };
@@ -64,7 +67,7 @@ export default class extends React.PureComponent {
   pickFile = () => {
     DocumentPicker.show({ filetype: [DocumentPickerUtil.allFiles()] }, (error, response) => {
       if (response) {
-        this.setState({ content: { type: "file", local: response.uri } });
+        this.setState({ content: { objectName: ObjectName.File, local: response.uri } });
       }
     });
   };
@@ -86,7 +89,7 @@ export default class extends React.PureComponent {
       },
       error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
     };
-    if (content.type === "image" || content.type === "file") {
+    if (content.objectName === ObjectName.Image || content.objectName === ObjectName.File) {
       sendMediaMessage(message, callback);
     } else {
       sendMessage(message, callback);
@@ -105,13 +108,13 @@ export default class extends React.PureComponent {
 
   renderContent() {
     const { messageType, content } = this.state;
-    if (messageType === "text") {
+    if (messageType === ObjectName.Text) {
       return (
         <FormItem label="文本内容">
           <TextInput onChangeText={this.setTextContent} placeholder="请输入文本内容" />
         </FormItem>
       );
-    } else if (messageType === "image") {
+    } else if (messageType === ObjectName.Image) {
       return (
         <FormItem>
           <Button title="选择图片" onPress={this.pickImage} />
@@ -120,7 +123,7 @@ export default class extends React.PureComponent {
           )}
         </FormItem>
       );
-    } else if (messageType === "file") {
+    } else if (messageType === ObjectName.File) {
       return (
         <View>
           <FormItem>
@@ -133,7 +136,7 @@ export default class extends React.PureComponent {
           )}
         </View>
       );
-    } else if (messageType === "voice") {
+    } else if (messageType === ObjectName.Voice) {
       return (
         <View>
           <FormItem label="音频">

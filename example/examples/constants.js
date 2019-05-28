@@ -2,7 +2,8 @@ import {
   ConversationType,
   PublicServiceType,
   SearchType,
-  SentStatus
+  SentStatus,
+  ObjectName
 } from "rongcloud-react-native-imlib";
 
 export const conversations = {
@@ -14,11 +15,11 @@ export const conversations = {
 };
 
 export const messageTypes = {
-  text: "文本消息",
-  image: "图片消息",
-  file: "文件消息",
-  location: "位置信息",
-  voice: "语音消息"
+  [ObjectName.Text]: "文本消息",
+  [ObjectName.Image]: "图片消息",
+  [ObjectName.File]: "文件消息",
+  [ObjectName.Location]: "位置信息",
+  [ObjectName.Voice]: "语音消息"
 };
 
 export const sentStatus = {

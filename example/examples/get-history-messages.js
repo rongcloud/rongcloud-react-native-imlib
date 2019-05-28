@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Picker, Platform, ScrollView, StyleSheet, Text, TextInput, Button } from "react-native";
-import { getHistoryMessages, MessageObjectNames } from "rongcloud-react-native-imlib";
+import { getHistoryMessages } from "rongcloud-react-native-imlib";
 import config from "../config";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
@@ -29,11 +29,10 @@ export default class extends React.PureComponent {
 
   getHistoryMessages = async () => {
     const { conversationType, targetId, messageType, oldestMessageId, count } = this.state;
-    console.log(messageType);
     const messages = await getHistoryMessages(
       conversationType,
       targetId,
-      MessageObjectNames[messageType],
+      [messageType],
       parseInt(oldestMessageId),
       parseInt(count)
     );
