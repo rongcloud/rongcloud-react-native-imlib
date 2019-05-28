@@ -314,7 +314,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                     ConversationType.setValue(type), targetId, (long) timestamp, count, 0, createMessagesCallback(promise));
         } else {
             GetMessageDirection direction = isForward ? GetMessageDirection.FRONT : GetMessageDirection.BEHIND;
-            ArrayList<String> names = Convert.toStringArray(objectNames);
+            ArrayList<String> names = Convert.toStringList(objectNames);
             RongIMClient.getInstance().getHistoryMessages(
                     ConversationType.setValue(type), targetId, names, (long) timestamp, count, direction, createMessagesCallback(promise));
         }
@@ -399,14 +399,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                         reject(promise, errorCode);
                     }
                 });
-    }
-
-    private String[] toStringArray(ReadableArray items) {
-        String[] array = new String[items.size()];
-        for (int i = 0; i < items.size(); i += 1) {
-            array[i] = items.getString(i);
-        }
-        return array;
     }
 
     @ReactMethod
@@ -728,11 +720,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void addMemberToDiscussion(String targetId, ReadableArray userList, final Promise promise) {
-        ArrayList<String> array = new ArrayList<>();
-        for (int i = 0; i < userList.size(); i += 1) {
-            array.add(userList.getString(i));
-        }
-        RongIMClient.getInstance().addMemberToDiscussion(targetId, array, createOperationCallback(promise));
+        RongIMClient.getInstance().addMemberToDiscussion(
+                targetId, toStringList(userList), createOperationCallback(promise));
     }
 
     @ReactMethod

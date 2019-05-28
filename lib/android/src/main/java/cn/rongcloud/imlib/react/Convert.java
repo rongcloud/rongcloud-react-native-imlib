@@ -36,7 +36,9 @@ class Convert {
         return map;
     }
 
-    /** @noinspection Duplicates*/
+    /**
+     * @noinspection Duplicates
+     */
     static WritableMap toJSON(String objectName, MessageContent content) {
         WritableMap map = Arguments.createMap();
         map.putString("objectName", objectName);
@@ -251,13 +253,21 @@ class Convert {
         return map;
     }
 
-    static ArrayList<String> toStringArray(ReadableArray array) {
+    static String[] toStringArray(ReadableArray items) {
+        String[] array = new String[items.size()];
+        for (int i = 0; i < items.size(); i += 1) {
+            array[i] = items.getString(i);
+        }
+        return array;
+    }
+
+    static ArrayList<String> toStringList(ReadableArray array) {
         if (array == null) {
             return null;
         }
-        ArrayList<String> list = new ArrayList<>(array.size());
+        ArrayList<String> list = new ArrayList<>();
         for (int i = 0; i < array.size(); i += 1) {
-            list.set(i, array.getString(i));
+            list.add(array.getString(i));
         }
         return list;
     }
@@ -340,7 +350,7 @@ class Convert {
             ReadableMap mentionedMap = map.getMap("mentionedInfo");
             if (mentionedMap != null) {
                 MentionedType type = MentionedType.valueOf(mentionedMap.getInt("type"));
-                ArrayList<String> userIdList = toStringArray(mentionedMap.getArray("userIdList"));
+                ArrayList<String> userIdList = toStringList(mentionedMap.getArray("userIdList"));
                 String content = mentionedMap.getString("mentionedContent");
                 MentionedInfo mentionedInfo = new MentionedInfo(type, userIdList, content);
                 messageContent.setMentionedInfo(mentionedInfo);
@@ -418,7 +428,7 @@ class Convert {
         if (map.hasKey("listUrl")) {
             ReadableArray array = map.getArray("listUrl");
             assert array != null;
-            ArrayList<String> listUrl = toStringArray(array);
+            ArrayList<String> listUrl = toStringList(array);
             builder.listUrl(listUrl);
         }
         if (map.hasKey("define")) {
