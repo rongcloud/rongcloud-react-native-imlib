@@ -55,7 +55,7 @@ sendMessage(
 2. 解压并把 `IMLib` 文件夹放到 `ios` 目录
 
 ```
-yarn add typescript -D
+yarn global add typescript
 yarn build
 yarn run-ios
 yarn run-android
