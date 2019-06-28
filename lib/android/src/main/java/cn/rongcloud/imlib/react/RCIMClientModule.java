@@ -186,7 +186,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             String pushData = getStringFromMap(data, "pushData");
             RongIMClient.getInstance().sendMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
         } catch (Exception e) {
-            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
+            e.printStackTrace();
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR, e.getMessage());
         }
     }
 
@@ -198,7 +199,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             String pushData = getStringFromMap(data, "pushData");
             RongIMClient.getInstance().sendMediaMessage(message, pushContent, pushData, createSendMessageCallback(eventId));
         } catch (Exception e) {
-            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
+            e.printStackTrace();
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR, e.getMessage());
         }
     }
 
@@ -221,8 +223,8 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
 
             @Override
-            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
-                onSendMessageError(eventId, message, errorCode);
+            public void onError(Message message, ErrorCode errorCode) {
+                onSendMessageError(eventId, message, errorCode, errorCode.getMessage());
             }
 
             @Override
@@ -247,13 +249,15 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             RongIMClient.getInstance().sendDirectionalMessage(
                     conversationType, targetId, messageContent, array, pushContent, pushData, createSendMessageCallback(eventId));
         } catch (Exception e) {
-            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR);
+            e.printStackTrace();
+            onSendMessageError(eventId, null, ErrorCode.PARAMETER_ERROR, e.getMessage());
         }
     }
 
-    private void onSendMessageError(String eventId, Message message, RongIMClient.ErrorCode errorCode) {
+    private void onSendMessageError(String eventId, Message message, RongIMClient.ErrorCode errorCode, String errorMessage) {
         WritableMap map = createEventMap(eventId, "error");
         map.putInt("errorCode", errorCode.getValue());
+        map.putString("errorMessage", errorMessage);
         if (message != null) {
             map.putInt("messageId", message.getMessageId());
         }

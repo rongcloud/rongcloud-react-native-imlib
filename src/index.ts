@@ -185,7 +185,7 @@ export interface SentMessageCallback {
   success?: (messageId: number) => void;
   progress?: (progress: number, messageId: number) => void;
   cancel?: () => void;
-  error?: (errorCode: ErrorCode, messageId: number) => void;
+  error?: (errorCode: ErrorCode, messageId: number, errorMessage?: string) => void;
 }
 
 function handleSendMessageCallback(callback: SentMessageCallback): string {
@@ -198,7 +198,7 @@ function handleSendMessageCallback(callback: SentMessageCallback): string {
           success && success(data.messageId);
           listener.remove();
         } else if (data.type === "error") {
-          error && error(data.errorCode, data.messageId);
+          error && error(data.errorCode, data.messageId, data.errorMessage);
           listener.remove();
         } else if (data.type === "cancel") {
           cancel && cancel();
