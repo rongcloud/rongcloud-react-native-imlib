@@ -3,6 +3,7 @@ package cn.rongcloud.imlib.react;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -59,12 +60,25 @@ class Utils {
     static Uri getFileUri(Context context, String s) {
         Uri uri = Uri.parse(s);
         if (s.startsWith("content://")) {
+            // 如果 uri 里存在完整的路径，则提取出来直接使用
+            String storageDirectory = Environment.getExternalStorageDirectory().toString();
+            int index = s.indexOf(storageDirectory);
+            if (index != -1) {
+                String path = s.substring(index);
+                return Uri.parse("file://" + path);
+            }
+
             String[] types = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
             Cursor cursor = context.getContentResolver().query(uri, types, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
-                String path = cursor.getString(cursor.getColumnIndex(types[0]));
-                String filename = cursor.getString(cursor.getColumnIndex(types[1]));
+                int pathIndex = cursor.getColumnIndex(types[0]);
+                String path = null;
+                if (pathIndex != -1) {
+                    path = cursor.getString(pathIndex);
+                }
+                int fileNameIndex = cursor.getColumnIndex(types[1]);
+                String filename = cursor.getString(fileNameIndex);
                 cursor.close();
                 if (path == null) {
                     path = Utils.getPathFromUri(context, uri, filename);

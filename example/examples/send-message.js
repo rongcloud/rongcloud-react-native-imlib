@@ -87,7 +87,7 @@ export default class extends React.PureComponent {
       cancel: () => {
         this.setState({ result: "取消发送" });
       },
-      error: errorCode => this.setState({ result: "消息发送失败：" + errorCode })
+      error: (errorCode, messageId, message) => this.setState({ result: `消息发送失败：${errorCode}，${message}` })
     };
     if (content.objectName === ObjectName.Image || content.objectName === ObjectName.File) {
       sendMediaMessage(message, callback);
