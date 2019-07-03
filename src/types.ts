@@ -248,6 +248,46 @@ export interface CommandMessage extends MessageContent {
 }
 
 /**
+ * 命令通知消息
+ */
+export interface CommandNotificationMessage extends MessageContent {
+  objectName: ObjectName.CommandNotification;
+  name: string;
+  data: string;
+}
+
+/**
+ * 好友通知消息
+ */
+export interface ContactNotificationMessage extends MessageContent {
+  objectName: ObjectName.ContactNotification;
+  sourceUserId: string;
+  targetUserId: string;
+  message: string;
+  operation: string;
+  extra: string;
+}
+
+/**
+ * 资料通知消息
+ */
+export interface ProfileNotificationMessage extends MessageContent {
+  objectName: ObjectName.ProfileNotification;
+  data: string;
+  operation: string;
+  extra: string;
+}
+
+/**
+ * 提示条通知消息
+ */
+export interface InfomationNotificationMessage extends MessageContent {
+  objectName: ObjectName.InformationNotification;
+  message: string;
+  extra: string;
+}
+
+/**
  * 群组通知消息
  */
 export interface GroupNotificationMessage extends MessageContent {
@@ -280,6 +320,24 @@ export interface GroupNotificationMessage extends MessageContent {
 }
 
 /**
+ * 已读通知消息
+ */
+export interface ReadReceiptMessage extends MessageContent {
+  objectName: ObjectName.ReadReceipt;
+  type: number; // TODO: 需要定义枚举类型 ReadReceiptType
+  messageUId: string;
+  lastMessageSendTime: number;
+}
+
+/**
+ * 已读通知消息
+ */
+export interface PublicServiceCommandMessage extends MessageContent {
+  objectName: ObjectName.PublicServiceCommand;
+  extra: string;
+}
+
+/**
  * 撤回通知消息
  */
 export interface RecallNotificationMessage extends MessageContent {
@@ -302,6 +360,15 @@ export interface RecallNotificationMessage extends MessageContent {
    * 是否管理员操作
    */
   isAdmin: string;
+}
+
+/**
+ * 输入状态消息
+ */
+export interface TypingStatusMessage extends MessageContent {
+  objectName: ObjectName.TypingStatus;
+  data: string;
+  typingContentType: string;
 }
 
 /**

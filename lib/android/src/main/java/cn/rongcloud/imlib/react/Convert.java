@@ -6,6 +6,7 @@ import io.rong.imlib.CustomServiceConfig;
 import io.rong.imlib.model.*;
 import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.MentionedInfo.MentionedType;
+import io.rong.imlib.typingmessage.TypingStatusMessage;
 import io.rong.message.*;
 import io.rong.push.PushType;
 import io.rong.push.notification.PushNotificationMessage;
@@ -115,6 +116,67 @@ class Convert {
                 map.putDouble("recallTime", message.getRecallTime());
                 map.putString("originalObjectName", message.getOriginalObjectName());
                 map.putBoolean("isAdmin", message.isAdmin());
+                break;
+            }
+            case "RC:CmdNtf": {
+                CommandNotificationMessage message = (CommandNotificationMessage) content;
+                map.putString("data", message.getData());
+                map.putString("name", message.getName());
+                break;
+            }
+            case "RC:CmdMsg": {
+                CommandMessage message = (CommandMessage) content;
+                map.putString("data", message.getData());
+                map.putString("name", message.getName());
+                break;
+            }
+            case "RC:ContactNtf": {
+                ContactNotificationMessage message = (ContactNotificationMessage) content;
+                map.putString("extra", message.getExtra());
+                map.putString("message", message.getMessage());
+                map.putString("operation", message.getOperation());
+                map.putString("sourceUserId", message.getSourceUserId());
+                map.putString("targetUserId", message.getTargetUserId());
+                break;
+            }
+            case "RC:ProfileNtf": {
+                ProfileNotificationMessage message = (ProfileNotificationMessage) content;
+                map.putString("extra", message.getExtra());
+                map.putString("data", message.getData());
+                map.putString("operation", message.getOperation());
+                break;
+            }
+            case "RC:InfoNtf": {
+                InformationNotificationMessage message = (InformationNotificationMessage) content;
+                map.putString("extra", message.getExtra());
+                map.putString("message", message.getMessage());
+                break;
+            }
+            case "RC:GrpNtf": {
+                GroupNotificationMessage message = (GroupNotificationMessage) content;
+                map.putString("extra", message.getExtra());
+                map.putString("message", message.getMessage());
+                map.putString("data", message.getData());
+                map.putString("operation", message.getOperation());
+                map.putString("operatorUserId", message.getOperatorUserId());
+                break;
+            }
+            case "RC:ReadNtf": {
+                ReadReceiptMessage message = (ReadReceiptMessage) content;
+                map.putInt("type", message.getType().getValue());
+                map.putString("messageUId", message.getMessageUId());
+                map.putDouble("lastMessageSendTime", message.getLastMessageSendTime());
+                break;
+            }
+            case "RC:PSCmd": {
+                PublicServiceCommandMessage message = (PublicServiceCommandMessage) content;
+                map.putString("extra", message.getExtra());
+                break;
+            }
+            case "RC:TypSts": {
+                TypingStatusMessage message = (TypingStatusMessage) content;
+                map.putString("data", message.getData());
+                map.putString("typingContentType", message.getTypingContentType());
                 break;
             }
         }
@@ -333,6 +395,29 @@ class Convert {
                     break;
                 case "RC:CmdMsg":
                     messageContent = CommandMessage.obtain(map.getString("name"), map.getString("data"));
+                    break;
+                case "RC:CmdNtf":
+                    messageContent = CommandNotificationMessage.obtain(map.getString("name"), map.getString("data"));
+                    break;
+                case "RC:ContactNtf":
+                    messageContent = ContactNotificationMessage.obtain(
+                            map.getString("operation"),
+                            map.getString("sourceUserId"),
+                            map.getString("targetUserId"),
+                            map.getString("message"));
+                    break;
+                case "RC:InfoNtf":
+                    messageContent = InformationNotificationMessage.obtain(map.getString("message"));
+                    break;
+                case "RC:GrpNtf":
+                    messageContent = GroupNotificationMessage.obtain(
+                            map.getString("operatorUserId"),
+                            map.getString("operation"),
+                            map.getString("data"),
+                            map.getString("message"));
+                    break;
+                case "RC:ReadNtf":
+                    messageContent = ReadReceiptMessage.obtain((long) map.getDouble("sentTime"));
                     break;
             }
         }
