@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SearchConversationResult | rongcloud-react-native-imlib</title>
+	<title>ContactNotificationMessage | rongcloud-react-native-imlib</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="searchconversationresult.html">SearchConversationResult</a>
+					<a href="contactnotificationmessage.html">ContactNotificationMessage</a>
 				</li>
 			</ul>
-			<h1>Interface SearchConversationResult</h1>
+			<h1>Interface ContactNotificationMessage</h1>
 		</div>
 	</div>
 </header>
@@ -67,7 +67,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>搜索会话结果</p>
+						<p>好友通知消息</p>
 					</div>
 				</div>
 			</section>
@@ -75,7 +75,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SearchConversationResult</span>
+						<a href="messagecontent.html" class="tsd-signature-type">MessageContent</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ContactNotificationMessage</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -86,8 +91,14 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="searchconversationresult.html#conversation" class="tsd-kind-icon">conversation</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="searchconversationresult.html#matchcount" class="tsd-kind-icon">match<wbr>Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="contactnotificationmessage.html#extra" class="tsd-kind-icon">extra</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="contactnotificationmessage.html#mentionedinfo" class="tsd-kind-icon">mentioned<wbr>Info</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="contactnotificationmessage.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="contactnotificationmessage.html#objectname" class="tsd-kind-icon">object<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="contactnotificationmessage.html#operation" class="tsd-kind-icon">operation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="contactnotificationmessage.html#sourceuserid" class="tsd-kind-icon">source<wbr>User<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="contactnotificationmessage.html#targetuserid" class="tsd-kind-icon">target<wbr>User<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="contactnotificationmessage.html#userinfo" class="tsd-kind-icon">user<wbr>Info</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,22 +107,85 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="conversation" class="tsd-anchor"></a>
-					<h3>conversation</h3>
-					<div class="tsd-signature tsd-kind-icon">conversation<span class="tsd-signature-symbol">:</span> <a href="conversation.html" class="tsd-signature-type">Conversation</a></div>
+					<a name="extra" class="tsd-anchor"></a>
+					<h3>extra</h3>
+					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L763">types.ts:763</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L268">types.ts:268</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="mentionedinfo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mentioned<wbr>Info</h3>
+					<div class="tsd-signature tsd-kind-icon">mentioned<wbr>Info<span class="tsd-signature-symbol">:</span> <a href="mentionedinfo.html" class="tsd-signature-type">MentionedInfo</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#mentionedinfo">mentionedInfo</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L76">types.ts:76</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="matchcount" class="tsd-anchor"></a>
-					<h3>match<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">match<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="message" class="tsd-anchor"></a>
+					<h3>message</h3>
+					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L764">types.ts:764</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L266">types.ts:266</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="objectname" class="tsd-anchor"></a>
+					<h3>object<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">object<wbr>Name<span class="tsd-signature-symbol">:</span> <a href="../enums/objectname.html#contactnotification" class="tsd-signature-type">ContactNotification</a></div>
+					<aside class="tsd-sources">
+						<p>Overrides <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#objectname">objectName</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L263">types.ts:263</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="operation" class="tsd-anchor"></a>
+					<h3>operation</h3>
+					<div class="tsd-signature tsd-kind-icon">operation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L267">types.ts:267</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="sourceuserid" class="tsd-anchor"></a>
+					<h3>source<wbr>User<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">source<wbr>User<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L264">types.ts:264</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="targetuserid" class="tsd-anchor"></a>
+					<h3>target<wbr>User<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>User<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L265">types.ts:265</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="userinfo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> user<wbr>Info</h3>
+					<div class="tsd-signature tsd-kind-icon">user<wbr>Info<span class="tsd-signature-symbol">:</span> <a href="userinfo.html" class="tsd-signature-type">UserInfo</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#userinfo">userInfo</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/257a3a7/src/types.ts#L75">types.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -130,13 +204,31 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="searchconversationresult.html" class="tsd-kind-icon">Search<wbr>Conversation<wbr>Result</a>
+						<a href="contactnotificationmessage.html" class="tsd-kind-icon">Contact<wbr>Notification<wbr>Message</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="searchconversationresult.html#conversation" class="tsd-kind-icon">conversation</a>
+								<a href="contactnotificationmessage.html#extra" class="tsd-kind-icon">extra</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="contactnotificationmessage.html#mentionedinfo" class="tsd-kind-icon">mentioned<wbr>Info</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="searchconversationresult.html#matchcount" class="tsd-kind-icon">match<wbr>Count</a>
+								<a href="contactnotificationmessage.html#message" class="tsd-kind-icon">message</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="contactnotificationmessage.html#objectname" class="tsd-kind-icon">object<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="contactnotificationmessage.html#operation" class="tsd-kind-icon">operation</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="contactnotificationmessage.html#sourceuserid" class="tsd-kind-icon">source<wbr>User<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="contactnotificationmessage.html#targetuserid" class="tsd-kind-icon">target<wbr>User<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="contactnotificationmessage.html#userinfo" class="tsd-kind-icon">user<wbr>Info</a>
 							</li>
 						</ul>
 					</li>
