@@ -1627,7 +1627,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   if ([content isKindOfClass:[RCImageMessage class]]) {
     RCImageMessage *image = (RCImageMessage *)content;
     return @{
-      @"type" : @"RC:ImgMsg",
+      @"objectName" : @"RC:ImgMsg",
       @"local" : image.localPath ? image.localPath : @"",
       @"remote" : image.remoteUrl ? image.remoteUrl : @"",
       @"isFull" : @(image.isFull),
@@ -1636,14 +1636,14 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCTextMessage class]]) {
     RCTextMessage *text = (RCTextMessage *)content;
     return @{
-      @"type" : @"RC:TxtMsg",
+      @"objectName" : @"RC:TxtMsg",
       @"content" : text.content,
       @"extra" : text.extra ? text.extra : @""
     };
   } else if ([content isKindOfClass:[RCFileMessage class]]) {
     RCFileMessage *file = (RCFileMessage *)content;
     return @{
-      @"type" : @"RC:FileMsg",
+      @"objectName" : @"RC:FileMsg",
       @"local" : file.localPath ? file.localPath : @"",
       @"remote" : file.remoteUrl ? file.remoteUrl : @"",
       @"name" : file.name,
@@ -1654,7 +1654,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCDiscussionNotificationMessage class]]) {
     RCDiscussionNotificationMessage *message = (RCDiscussionNotificationMessage *)content;
     return @{
-      @"type" : @"RC:DizNtf",
+      @"objectName" : @"RC:DizNtf",
       @"notificationType" : @(message.type),
       @"operatorId" : message.operatorId,
       @"extension" : message.extension,
@@ -1662,7 +1662,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCLocationMessage class]]) {
     RCLocationMessage *message = (RCLocationMessage *)content;
     return @{
-      @"type" : @"RC:LBSMsg",
+      @"objectName" : @"RC:LBSMsg",
       @"latitude" : @(message.location.latitude),
       @"longitude" : @(message.location.longitude),
       @"name" : message.locationName,
@@ -1676,7 +1676,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
       data = [message.wavAudioData base64EncodedStringWithOptions:0];
     }
     return @{
-      @"type" : @"RC:VcMsg",
+      @"objectName" : @"RC:VcMsg",
       @"data" : data,
       @"duration" : @(message.duration),
       @"extra" : message.extra ? message.extra : @"",
@@ -1684,13 +1684,55 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCRecallNotificationMessage class]]) {
     RCRecallNotificationMessage *message = (RCRecallNotificationMessage *)content;
     return @{
-      @"type" : @"RC:RcNtf",
+      @"objectName" : @"RC:RcNtf",
       @"operatorId" : message.operatorId,
       @"recallTime" : @(message.recallTime),
       @"originalObjectName" : message.originalObjectName,
       @"isAdmin" : @(message.isAdmin),
     };
+  } else if ([content isKindOfClass:[RCContactNotificationMessage class]]) {
+    RCContactNotificationMessage *message = (RCContactNotificationMessage *)content;
+    return @{
+      @"objectName" : @"RC:ContactNtf",
+      @"sourceUserId" : message.sourceUserId,
+      @"targetUserId" : message.targetUserId,
+      @"message" : message.message,
+      @"operation" : message.operation,
+      @"extra" : message.extra ? message.extra : @""
+    };
+  } else if ([content isKindOfClass:[RCCommandNotificationMessage class]]) {
+    RCCommandNotificationMessage *message = (RCCommandNotificationMessage *)content;
+    return @{@"objectName" : @"RC:CmdNtf", @"name" : message.name, @"data" : message.data};
+  } else if ([content isKindOfClass:[RCProfileNotificationMessage class]]) {
+    RCProfileNotificationMessage *message = (RCProfileNotificationMessage *)content;
+    return @{
+      @"objectName" : @"RC:ProfileNtf",
+      @"operation" : message.operation,
+      @"data" : message.data,
+      @"extra" : message.extra ? message.extra : @""
+    };
+  } else if ([content isKindOfClass:[RCInformationNotificationMessage class]]) {
+    RCInformationNotificationMessage *message = (RCInformationNotificationMessage *)content;
+    return @{
+      @"objectName" : @"RC:InfoNtf",
+      @"message" : message.message,
+      @"extra" : message.extra ? message.extra : @""
+    };
+  } else if ([content isKindOfClass:[RCGroupNotificationMessage class]]) {
+    RCGroupNotificationMessage *message = (RCGroupNotificationMessage *)content;
+    return @{
+      @"objectName" : @"RC:GrpNtf",
+      @"operation" : message.operation,
+      @"operatorUserId" : message.operatorUserId,
+      @"message" : message.message,
+      @"data" : message.data,
+      @"extra" : message.extra ? message.extra : @""
+    };
+  } else if ([content isKindOfClass:[RCPublicServiceCommandMessage class]]) {
+    RCPublicServiceCommandMessage *message = (RCPublicServiceCommandMessage *)content;
+    return @{@"objectName" : @"RC:PSCmd", @"extra" : message.extra ? message.extra : @""};
   }
+
   return @{@"error" : @"Content type not yet supported"};
 }
 
