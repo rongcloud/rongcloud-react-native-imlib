@@ -1,6 +1,12 @@
 import * as React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { addConnectionStatusListener, connect, disconnect, setReconnectKickEnable } from "rongcloud-react-native-imlib";
+import {
+  addConnectionStatusListener,
+  connect,
+  disconnect,
+  setReconnectKickEnable
+} from "rongcloud-react-native-imlib";
+import config from "../config";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({ body: { padding: 16 }, message: { marginTop: 16 } });
@@ -12,8 +18,7 @@ export default class extends React.PureComponent {
   state = {
     message: "连接结果：",
     status: 0,
-    token:
-      "GyiWR3+J9MN2nnQKAKTQj6+YsUIoF3ojin3K277sfOlzmwyaFIqt4ywGjGYzfknK8p3EwTTEBuTpBvu3HvGkH6tdpZUyLdaH"
+    token: config.token
   };
 
   componentDidMount() {
