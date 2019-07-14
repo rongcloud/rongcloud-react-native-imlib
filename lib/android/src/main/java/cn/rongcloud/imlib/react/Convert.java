@@ -405,6 +405,9 @@ class Convert {
                             map.getString("sourceUserId"),
                             map.getString("targetUserId"),
                             map.getString("message"));
+                    if (map.hasKey("extra")) {
+                        ((ContactNotificationMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
                 case "RC:InfoNtf":
                     messageContent = InformationNotificationMessage.obtain(map.getString("message"));

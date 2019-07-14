@@ -1772,6 +1772,13 @@ RCT_EXPORT_METHOD(getCurrentUserId
     messageContent = voice;
   } else if ([objectName isEqualToString:@"RC:CmdMsg"]) {
     messageContent = [RCCommandMessage messageWithName:content[@"name"] data:content[@"data"]];
+  } else if ([objectName isEqualToString:@"RC:ContactNtf"]) {
+    messageContent =
+        [RCContactNotificationMessage notificationWithOperation:content[@"operation"]
+                                                   sourceUserId:content[@"sourceUserId"]
+                                                   targetUserId:content[@"targetUserId"]
+                                                        message:content[@"message"]
+                                                          extra:content[@"extra"]];
   }
 
   if (messageContent) {
