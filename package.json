@@ -29,16 +29,11 @@
   "devDependencies": {
     "@types/react-navigation": "^3.0.5",
     "react": "16.8.4",
-    "react-native": "0.59.1",
+    "react-native": "0.60.4",
     "react-native-document-picker": "^2.3.0",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-image-picker": "^0.28.0",
     "react-navigation": "^3.5.1"
-  },
-  "rnpm": {
-    "android": {
-      "sourceDir": "lib/android"
-    }
   },
   "prettier": {
     "printWidth": 100
