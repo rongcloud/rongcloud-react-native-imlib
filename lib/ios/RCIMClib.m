@@ -1731,6 +1731,26 @@ RCT_EXPORT_METHOD(getCurrentUserId
   } else if ([content isKindOfClass:[RCPublicServiceCommandMessage class]]) {
     RCPublicServiceCommandMessage *message = (RCPublicServiceCommandMessage *)content;
     return @{@"objectName" : @"RC:PSCmd", @"extra" : message.extra ? message.extra : @""};
+  } else if ([content isKindOfClass:[RCHQVoiceMessage class]]) {
+    RCHQVoiceMessage *message = (RCHQVoiceMessage *)content;
+    return @{
+      @"objectName" : @"RC:HQVCMsg",
+      @"local" : message.localPath,
+      @"remote" : message.remoteUrl,
+      @"duration" : @(message.duration),
+      @"extra" : message.extra ? message.extra : @"",
+    };
+  } else if ([content isKindOfClass:[RCGIFMessage class]]) {
+    RCGIFMessage *message = (RCGIFMessage *)content;
+    return @{
+      @"objectName" : @"RC:GIFMsg",
+      @"local" : message.localPath,
+      @"remote" : message.remoteUrl,
+      @"width" : @(message.width),
+      @"height" : @(message.height),
+      @"gifDataSize" : @(message.gifDataSize),
+      @"extra" : message.extra ? message.extra : @"",
+    };
   }
 
   return @{@"error" : @"Content type not yet supported"};
@@ -1779,6 +1799,15 @@ RCT_EXPORT_METHOD(getCurrentUserId
                                                    targetUserId:content[@"targetUserId"]
                                                         message:content[@"message"]
                                                           extra:content[@"extra"]];
+  } else if ([objectName isEqualToString:@"RC:HQVCMsg"]) {
+    NSString *local = content[@"local"];
+    RCHQVoiceMessage *message = [RCHQVoiceMessage
+        messageWithPath:[local stringByReplacingOccurrencesOfString:@"file://" withString:@""]
+               duration:[content[@"duration"] intValue]];
+    message.extra = content[@"extra"];
+    messageContent = message;
+  } else if ([objectName isEqualToString:@"RC:GIFMsg"]) {
+    // TODO: RCGIFMessage
   }
 
   if (messageContent) {

@@ -96,6 +96,11 @@ export enum ObjectName {
   Image = "RC:ImgMsg",
 
   /**
+   * GIF 图片消息
+   */
+  GIF = "RC:GIFMsg",
+
+  /**
    * 位置信息
    */
   Location = "RC:LBSMsg",
@@ -104,6 +109,11 @@ export enum ObjectName {
    * 语音消息
    */
   Voice = "RC:VcMsg",
+
+  /**
+   * 高质量语音消息
+   */
+  HQVoice = "RC:HQVCMsg",
 
   /**
    * 小视频消息
@@ -204,6 +214,19 @@ export interface ImageMessage extends MessageContent {
 }
 
 /**
+ * GIF 图片消息
+ */
+export interface GIFMessage extends MessageContent {
+  objectName: ObjectName.GIF;
+  local: string;
+  remote?: string;
+  width: number;
+  height: number;
+  gifDataSize: number;
+  extra?: string;
+}
+
+/**
  * 文件消息
  */
 export interface FileMessage extends MessageContent {
@@ -235,6 +258,16 @@ export interface VoiceMessage extends MessageContent {
   objectName: ObjectName.Voice;
   data: string;
   local: string;
+  duration: number;
+}
+
+/**
+ * 高质量语音消息
+ */
+export interface HQVoiceMessage extends MessageContent {
+  objectName: ObjectName.HQVoice;
+  local: string;
+  remote?: string;
   duration: number;
 }
 

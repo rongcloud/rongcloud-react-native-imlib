@@ -1,7 +1,9 @@
 package cn.rongcloud.imlib.react;
 
 import android.net.Uri;
+
 import com.facebook.react.bridge.*;
+
 import io.rong.imlib.CustomServiceConfig;
 import io.rong.imlib.model.*;
 import io.rong.imlib.model.Conversation.ConversationType;
@@ -177,6 +179,44 @@ class Convert {
                 TypingStatusMessage message = (TypingStatusMessage) content;
                 map.putString("data", message.getData());
                 map.putString("typingContentType", message.getTypingContentType());
+                break;
+            }
+            case "RC:HQVCMsg": {
+                HQVoiceMessage message = (HQVoiceMessage) content;
+                String local = "";
+                Uri localUri = message.getLocalPath();
+                if (localUri != null) {
+                    local = localUri.toString();
+                }
+                String remote = "";
+                Uri remoteUri = message.getMediaUrl();
+                if (remoteUri != null) {
+                    remote = remoteUri.toString();
+                }
+                map.putString("local", local);
+                map.putString("remote", remote);
+                map.putInt("duration", message.getDuration());
+                map.putString("extra", message.getExtra());
+                break;
+            }
+            case "RC:GIFMsg": {
+                GIFMessage message = (GIFMessage) content;
+                String local = "";
+                Uri localUri = message.getLocalPath();
+                if (localUri != null) {
+                    local = localUri.toString();
+                }
+                String remote = "";
+                Uri remoteUri = message.getRemoteUri();
+                if (remoteUri != null) {
+                    remote = remoteUri.toString();
+                }
+                map.putString("local", local);
+                map.putString("remote", remote);
+                map.putDouble("gifDataSize", message.getGifDataSize());
+                map.putInt("width", message.getWidth());
+                map.putInt("height", message.getHeight());
+                map.putString("extra", message.getExtra());
                 break;
             }
         }
@@ -421,6 +461,19 @@ class Convert {
                     break;
                 case "RC:ReadNtf":
                     messageContent = ReadReceiptMessage.obtain((long) map.getDouble("sentTime"));
+                    break;
+                case "RC:HQVCMsg":
+                    messageContent = HQVoiceMessage.obtain(
+                            Utils.getFileUri(reactContext, map.getString("local")), map.getInt("duration"));
+                    if (map.hasKey("extra")) {
+                        ((HQVoiceMessage) messageContent).setExtra(map.getString("extra"));
+                    }
+                    break;
+                case "RC:GIFMsg":
+                    messageContent = GIFMessage.obtain(Utils.getFileUri(reactContext, map.getString("local")));
+                    if (map.hasKey("extra")) {
+                        ((GIFMessage) messageContent).setExtra(map.getString("extra"));
+                    }
                     break;
             }
         }
