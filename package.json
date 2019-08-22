@@ -4,6 +4,11 @@
   "version": "0.3.3",
   "license": "MIT",
   "main": "lib/js",
+  "author": {
+    "name": "rongcloud",
+    "email": "support@rongcloud.cn"
+  },
+  "homepage": "https://www.rongcloud.cn",
   "files": [
     "lib/js",
     "lib/ios",
