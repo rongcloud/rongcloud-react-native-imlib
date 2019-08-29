@@ -62,26 +62,38 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="rongcloud-react-native-imlib-npm-version">rongcloud-react-native-imlib <a href="https://www.npmjs.com/package/rongcloud-react-native-imlib"><img src="https://badge.fury.io/js/rongcloud-react-native-imlib.svg" alt="npm version"></a></h1>
+				<a href="#rongcloud-react-native-imlib-a-hrefhttpswwwnpmjscompackagerongcloud-react-native-imlibimg-srchttpsbadgefuryiojsrongcloud-react-native-imlibsvg-altnpm-versiona" id="rongcloud-react-native-imlib-a-hrefhttpswwwnpmjscompackagerongcloud-react-native-imlibimg-srchttpsbadgefuryiojsrongcloud-react-native-imlibsvg-altnpm-versiona" style="color: inherit; text-decoration: none;">
+					<h1>rongcloud-react-native-imlib <a href="https://www.npmjs.com/package/rongcloud-react-native-imlib"><img src="https://badge.fury.io/js/rongcloud-react-native-imlib.svg" alt="npm version"></a></h1>
+				</a>
 				<p>融云 React Native IMLib 是以 IMLib SDK 2.9.12 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。</p>
-				<h2 id="-">文档</h2>
+				<a href="#文档" id="文档" style="color: inherit; text-decoration: none;">
+					<h2>文档</h2>
+				</a>
 				<ul>
 					<li><a href="https://www.rongcloud.cn/docs/react_native_imlib.html">使用指南</a></li>
 					<li><a href="https://qiuxiang.github.io/react-native-rongcloud-imlib/api/globals.html">接口文档</a></li>
 				</ul>
-				<h2 id="-">用法</h2>
-				<h3 id="-">初始化并连接融云服务</h3>
+				<a href="#用法" id="用法" style="color: inherit; text-decoration: none;">
+					<h2>用法</h2>
+				</a>
+				<a href="#初始化并连接融云服务" id="初始化并连接融云服务" style="color: inherit; text-decoration: none;">
+					<h3>初始化并连接融云服务</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { init, connect } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
 
 init(<span class="hljs-string">"n19jmcy59f1q9"</span>);
 connect(<span class="hljs-string">"FrdcuKklUMakOnYLFljI9gLUrCB73YwHabXQU7yFrr8ow=="</span>);</code></pre>
-				<h3 id="-">监听消息</h3>
+				<a href="#监听消息" id="监听消息" style="color: inherit; text-decoration: none;">
+					<h3>监听消息</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { addReceiveMessageListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
 
 addReceiveMessageListener(<span class="hljs-function"><span class="hljs-params">message</span> =&gt;</span> {
   <span class="hljs-built_in">console</span>.log(message);
 });</code></pre>
-				<h3 id="-">发送消息</h3>
+				<a href="#发送消息" id="发送消息" style="color: inherit; text-decoration: none;">
+					<h3>发送消息</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { sendMessage, ConversationType, ObjectName } <span class="hljs-keyword">from</span> <span class="hljs-string">"rongcloud-react-native-imlib"</span>;
 
 <span class="hljs-keyword">const</span> conversationType = ConversationType.PRIVATE;
@@ -96,7 +108,9 @@ sendMessage(
   }
 );</code></pre>
 				<p>更多示例请参考 <a href="example/examples">examples</a>。</p>
-				<h2 id="-">运行示例</h2>
+				<a href="#运行示例" id="运行示例" style="color: inherit; text-decoration: none;">
+					<h2>运行示例</h2>
+				</a>
 				<p>如果要运行 iOS 示例，需要进行以下操作：</p>
 				<ol>
 					<li><a href="https://www.rongcloud.cn/downloads">从官网下载 IMLib SDK</a></li>
@@ -105,7 +119,10 @@ sendMessage(
 				<pre><code>yarn global <span class="hljs-keyword">add</span><span class="bash"> typescript</span>
 yarn build
 yarn <span class="hljs-keyword">run</span><span class="bash">-ios</span>
-yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></code></pre><h2 id="-">项目结构</h2>
+yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></code></pre>
+				<a href="#项目结构" id="项目结构" style="color: inherit; text-decoration: none;">
+					<h2>项目结构</h2>
+				</a>
 				<pre><code>├── android (Android 示例应用)
 ├── docs (接口文档)
 ├── example (React Native 示例)
@@ -226,7 +243,13 @@ yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></co
 						<a href="interfaces/filemessage.html" class="tsd-kind-icon">File<wbr>Message</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/gifmessage.html" class="tsd-kind-icon">GIFMessage</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/groupnotificationmessage.html" class="tsd-kind-icon">Group<wbr>Notification<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/hqvoicemessage.html" class="tsd-kind-icon">HQVoice<wbr>Message</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/imagemessage.html" class="tsd-kind-icon">Image<wbr>Message</a>
@@ -638,6 +661,7 @@ yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></co
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -686,7 +710,7 @@ yarn <span class="hljs-keyword">run</span><span class="bash">-android</span></co
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

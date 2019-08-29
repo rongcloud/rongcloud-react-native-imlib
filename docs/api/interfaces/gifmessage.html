@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SentMessage | rongcloud-react-native-imlib</title>
+	<title>GIFMessage | rongcloud-react-native-imlib</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="sentmessage.html">SentMessage</a>
+					<a href="gifmessage.html">GIFMessage</a>
 				</li>
 			</ul>
-			<h1>Interface SentMessage</h1>
+			<h1>Interface GIFMessage</h1>
 		</div>
 	</div>
 </header>
@@ -67,7 +67,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>要发送的消息</p>
+						<p>GIF 图片消息</p>
 					</div>
 				</div>
 			</section>
@@ -75,7 +75,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SentMessage</span>
+						<a href="messagecontent.html" class="tsd-signature-type">MessageContent</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">GIFMessage</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -86,11 +91,15 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="sentmessage.html#content" class="tsd-kind-icon">content</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="sentmessage.html#conversationtype" class="tsd-kind-icon">conversation<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="sentmessage.html#pushcontent" class="tsd-kind-icon">push<wbr>Content</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="sentmessage.html#pushdata" class="tsd-kind-icon">push<wbr>Data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="sentmessage.html#targetid" class="tsd-kind-icon">target<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#extra" class="tsd-kind-icon">extra</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#gifdatasize" class="tsd-kind-icon">gif<wbr>Data<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#local" class="tsd-kind-icon">local</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="gifmessage.html#mentionedinfo" class="tsd-kind-icon">mentioned<wbr>Info</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="gifmessage.html#objectname" class="tsd-kind-icon">object<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#remote" class="tsd-kind-icon">remote</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="gifmessage.html#userinfo" class="tsd-kind-icon">user<wbr>Info</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="gifmessage.html#width" class="tsd-kind-icon">width</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,79 +108,97 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="content" class="tsd-anchor"></a>
-					<h3>content</h3>
-					<div class="tsd-signature tsd-kind-icon">content<span class="tsd-signature-symbol">:</span> <a href="messagecontent.html" class="tsd-signature-type">MessageContent</a></div>
+					<a name="extra" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> extra</h3>
+					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L611">types.ts:611</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L226">types.ts:226</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>消息内容</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="conversationtype" class="tsd-anchor"></a>
-					<h3>conversation<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">conversation<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/conversationtype.html" class="tsd-signature-type">ConversationType</a></div>
+					<a name="gifdatasize" class="tsd-anchor"></a>
+					<h3>gif<wbr>Data<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">gif<wbr>Data<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L601">types.ts:601</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L225">types.ts:225</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>会话类型</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pushcontent" class="tsd-anchor"></a>
-					<h3>push<wbr>Content</h3>
-					<div class="tsd-signature tsd-kind-icon">push<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="height" class="tsd-anchor"></a>
+					<h3>height</h3>
+					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L616">types.ts:616</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L224">types.ts:224</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>推送内容，用于显示</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pushdata" class="tsd-anchor"></a>
-					<h3>push<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">push<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="local" class="tsd-anchor"></a>
+					<h3>local</h3>
+					<div class="tsd-signature tsd-kind-icon">local<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L621">types.ts:621</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L221">types.ts:221</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>推送数据，不显示</p>
-						</div>
-					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="mentionedinfo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mentioned<wbr>Info</h3>
+					<div class="tsd-signature tsd-kind-icon">mentioned<wbr>Info<span class="tsd-signature-symbol">:</span> <a href="mentionedinfo.html" class="tsd-signature-type">MentionedInfo</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#mentionedinfo">mentionedInfo</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L76">types.ts:76</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="objectname" class="tsd-anchor"></a>
+					<h3>object<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">object<wbr>Name<span class="tsd-signature-symbol">:</span> <a href="../enums/objectname.html#gif" class="tsd-signature-type">GIF</a></div>
+					<aside class="tsd-sources">
+						<p>Overrides <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#objectname">objectName</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L220">types.ts:220</a></li>
+						</ul>
+					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="targetid" class="tsd-anchor"></a>
-					<h3>target<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">target<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="remote" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> remote</h3>
+					<div class="tsd-signature tsd-kind-icon">remote<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L606">types.ts:606</a></li>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L222">types.ts:222</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>目标 ID</p>
-						</div>
-					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="userinfo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> user<wbr>Info</h3>
+					<div class="tsd-signature tsd-kind-icon">user<wbr>Info<span class="tsd-signature-symbol">:</span> <a href="userinfo.html" class="tsd-signature-type">UserInfo</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="messagecontent.html">MessageContent</a>.<a href="messagecontent.html#userinfo">userInfo</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L75">types.ts:75</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="width" class="tsd-anchor"></a>
+					<h3>width</h3>
+					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rongcloud/rongcloud-react-native-imlib/blob/e0b0a02/src/types.ts#L223">types.ts:223</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -188,22 +215,34 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="sentmessage.html" class="tsd-kind-icon">Sent<wbr>Message</a>
+						<a href="gifmessage.html" class="tsd-kind-icon">GIFMessage</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="sentmessage.html#content" class="tsd-kind-icon">content</a>
+								<a href="gifmessage.html#extra" class="tsd-kind-icon">extra</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="sentmessage.html#conversationtype" class="tsd-kind-icon">conversation<wbr>Type</a>
+								<a href="gifmessage.html#gifdatasize" class="tsd-kind-icon">gif<wbr>Data<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="sentmessage.html#pushcontent" class="tsd-kind-icon">push<wbr>Content</a>
+								<a href="gifmessage.html#height" class="tsd-kind-icon">height</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="sentmessage.html#pushdata" class="tsd-kind-icon">push<wbr>Data</a>
+								<a href="gifmessage.html#local" class="tsd-kind-icon">local</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="gifmessage.html#mentionedinfo" class="tsd-kind-icon">mentioned<wbr>Info</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="gifmessage.html#objectname" class="tsd-kind-icon">object<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="sentmessage.html#targetid" class="tsd-kind-icon">target<wbr>Id</a>
+								<a href="gifmessage.html#remote" class="tsd-kind-icon">remote</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="gifmessage.html#userinfo" class="tsd-kind-icon">user<wbr>Info</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="gifmessage.html#width" class="tsd-kind-icon">width</a>
 							</li>
 						</ul>
 					</li>
