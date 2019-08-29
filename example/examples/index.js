@@ -4,6 +4,7 @@ import Example from "./example";
 import Connect from "./connect";
 import ReceiveMessage from "./receive-message";
 import SendMessage from "./send-message";
+import Audio from "./audio";
 import TypingStatus from "./typing-status";
 import GetMessage from "./get-message";
 import ReadReceipt from "./read-receipt";
@@ -32,6 +33,7 @@ const examples = [
   Connect,
   ReceiveMessage,
   SendMessage,
+  Audio,
   TypingStatus,
   GetMessage,
   ReadReceipt,
@@ -75,6 +77,7 @@ export {
   Connect,
   ReceiveMessage,
   SendMessage,
+  Audio,
   TypingStatus,
   GetMessage,
   ReadReceipt,

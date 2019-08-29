@@ -10,8 +10,4 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
 init(config.appKey);
 connect(config.token);
 
-export default createAppContainer(
-  createStackNavigator(examples, {
-    initialRouteName: "default"
-  })
-);
+export default createAppContainer(createStackNavigator(examples, { initialRouteName: "default" }));
