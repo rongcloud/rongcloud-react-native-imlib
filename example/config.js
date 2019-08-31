@@ -1,8 +1,10 @@
 const config = {
-  appKey: "n19jmcy59f1q9",
-  token:
-    "GyiWR3+J9MN2nnQKAKTQj6+YsUIoF3ojin3K277sfOlzmwyaFIqt4ywGjGYzfknK8p3EwTTEBuTpBvu3HvGkH6tdpZUyLdaH",
-  targetUserId: "xl6SV85zy"
+  appKey: "x18ywvqfxcn2c",
+  token: "EUhncMg3/j04qLDDRtS5B7kZW4yz4nFqmZjhrKfS8k63ns+u8LmPVw/szPnWklg6XNFWWoABLv/TxXnAGa8R0Q==",
+  targetUserId: "foo"
+  // token:
+  //   "WI+h1b/dUhDyBV1rdoB2qrkZW4yz4nFqmZjhrKfS8k63ns+u8LmPV8lMvbP+fGrnEIZZkxNHcgXgdBtxg39g/w==",
+  // targetUserId: "7c00"
 };
 
 export default config;
