@@ -653,7 +653,11 @@ RCT_EXPORT_METHOD(getConversation
                   : (RCTPromiseRejectBlock)reject) {
   RCConversation *conversation = [RCIMClient.sharedRCIMClient getConversation:conversationType
                                                                      targetId:targetId];
-  resolve([self fromConversation:conversation]);
+  if (conversation) {
+    resolve([self fromConversation:conversation]);
+  } else {
+    resolve(nil);
+  }
 }
 
 RCT_EXPORT_METHOD(removeConversation
@@ -1687,7 +1691,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
       @"objectName" : @"RC:RcNtf",
       @"operatorId" : message.operatorId,
       @"recallTime" : @(message.recallTime),
-      @"originalObjectName" : message.originalObjectName,
+      @"originalObjectName" : message.originalObjectName ? message.originalObjectName : @"",
       @"isAdmin" : @(message.isAdmin),
     };
   } else if ([content isKindOfClass:[RCContactNotificationMessage class]]) {
