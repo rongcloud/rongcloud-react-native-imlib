@@ -408,7 +408,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void searchConversations(String keyword, ReadableArray types, ReadableArray objectNames, final Promise promise) {
         ConversationType[] conversationTypes = toConversationTypeArray(types);
-        String[] objectNamesArray = toStringArray(types);
+        String[] objectNamesArray = toStringArray(objectNames);
         RongIMClient.getInstance().searchConversations(
                 keyword, conversationTypes, objectNamesArray, new ResultCallback<List<SearchConversationResult>>() {
                     @Override
@@ -418,6 +418,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
                             WritableMap map = Arguments.createMap();
                             map.putMap("conversation", toJSON(item.getConversation()));
                             map.putInt("matchCount", item.getMatchCount());
+                            result.pushMap(map);
                         }
                         promise.resolve(result);
                     }
