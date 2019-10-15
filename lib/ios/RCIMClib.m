@@ -989,7 +989,7 @@ RCT_EXPORT_METHOD(getChatRoomInfo
       }];
 }
 
-RCT_EXPORT_METHOD(getRemoteChatroomHistoryMessages
+RCT_EXPORT_METHOD(getRemoteChatRoomHistoryMessages
                   : (NSString *)targetId
                   : (double)recordTime
                   : (double)count
