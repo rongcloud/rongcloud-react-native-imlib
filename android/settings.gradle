@@ -1,4 +1,4 @@
-rootProject.name = 'rongcloud-imlib-example'
+rootProject.name = 'RongCloudIMLib'
 include ':react-native-rongcloud-imlib'
 project(':react-native-rongcloud-imlib').projectDir = new File(rootProject.projectDir, '../lib/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)

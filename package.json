@@ -34,13 +34,14 @@
   },
   "devDependencies": {
     "@types/react-navigation": "^3.0.5",
-    "react": "16.8.6",
-    "react-native": "0.60.4",
-    "react-native-audio-recorder-player": "^2.2.3",
-    "react-native-document-picker": "^2.3.0",
+    "react": "16.9.0",
+    "react-native": "0.61.2",
+    "react-native-audio-recorder-player": "^2.4.3",
+    "react-native-document-picker": "^3.2.4",
     "react-native-gesture-handler": "^1.1.0",
-    "react-native-image-picker": "^0.28.0",
-    "react-navigation": "^3.5.1"
+    "react-native-image-picker": "^1.1.0",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.10.2"
   },
   "prettier": {
     "printWidth": 100

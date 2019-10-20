@@ -1,4 +1,5 @@
-import { createAppContainer, createStackNavigator } from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 import { PermissionsAndroid } from "react-native";
 import { init, connect } from "rongcloud-react-native-imlib";
 import config from "./config";
