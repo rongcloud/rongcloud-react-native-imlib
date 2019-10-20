@@ -1053,6 +1053,11 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setMessageReceivedStatus(int messageId, int status, final Promise promise) {
+        RongIMClient.getInstance().setMessageReceivedStatus(messageId, new ReceivedStatus(status), createBooleanCallback(promise));
+    }
+
+    @ReactMethod
     public void getNotificationQuietHours(String startTime, int spanMinutes, Promise promise) {
         RongIMClient.getInstance().setNotificationQuietHours(startTime, spanMinutes, createOperationCallback(promise));
     }
