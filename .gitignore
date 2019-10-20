@@ -6,12 +6,13 @@ build/
 lib/js/
 node_modules/
 xcuserdata/
-ios/IMLib/
+*.xcworkspace/
+Pods/
 
 *.iml
 .classpath
 .project
 gradle.properties
 local.properties
-yarn.lock
+*.lock
 package-lock.json
