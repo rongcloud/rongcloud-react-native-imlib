@@ -234,6 +234,7 @@ class Convert {
         map.putDouble("sentTime", (double) message.getSentTime());
         map.putDouble("receivedTime", (double) message.getReceivedTime());
         map.putInt("sentStatus", message.getSentStatus().getValue());
+        map.putInt("receivedStatus", message.getReceivedStatus().getFlag());
         map.putString("extra", message.getExtra());
         map.putString("objectName", message.getObjectName());
         String objectName = message.getObjectName();

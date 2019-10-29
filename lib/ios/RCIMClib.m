@@ -1620,6 +1620,7 @@ RCT_EXPORT_METHOD(getCurrentUserId
     @"messageDirection" : @(message.messageDirection),
     @"senderUserId" : message.senderUserId,
     @"sentTime" : @(message.sentTime),
+    @"sentStatus" : @(message.sentStatus),
     @"receivedStatus" : @(message.receivedStatus),
     @"receivedTime" : @(message.receivedTime),
     @"content" : [self fromMessageContent:message.content],
