@@ -37,7 +37,7 @@ jobs:
 
     - stage: "build test for example"
       language: objective-c
-      osx_image: xcode10.1
+      osx_image: xcode11.2
       cache: *ios-cache
       before_install:
       script:
@@ -46,11 +46,10 @@ jobs:
         - yarn add typescript
         - yarn build
         - cd ios
-        - wget http://downloads.rongcloud.cn/Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev.zip
-        - unzip -q Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev.zip
-        - mv Rong_Cloud_iOS_IMLib_SDK_v2_9_12_Dev/IMLib IMLib
-        - xcodebuild -project RongCloudIMLib.xcodeproj -scheme RongCloudIMLib -sdk iphonesimulator -quiet
+        - pod install --repo-update
+        - cd ..
+        - yarn run-ios
 
 stages:
   - name: "build test for example"
-    # if: branch = master
+    if: branch = master
