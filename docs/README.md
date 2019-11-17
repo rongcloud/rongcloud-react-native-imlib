@@ -31,7 +31,20 @@ Token 的主要作用是身份授权和安全，因此不能通过客户端直�
 yarn add rongcloud-react-native-imlib
 ```
 
-### Android
+### RN >= 0.60
+
+对于 Android 不需要进行任何配置，对于 iOS：
+```
+react-native link rongcloud-react-native-imlib
+cd ios
+pod install
+```
+
+### RN < 0.60
+
+#### Android
+
+对于 RN 0.60 以上版本，不需要进行任何配置。以下是针对低于 RN 0.60 的配置方法：
 
 运行 `react-native link rongcloud-react-native-imlib` 进行自动配置（推荐），或按以下步骤进行手动配置：
 
@@ -71,7 +84,7 @@ yarn add rongcloud-react-native-imlib
    }
    ```
 
-### iOS
+#### iOS
 
 运行 `react-native link rongcloud-react-native-imlib` 进行自动配置（推荐），或按以下步骤在 Xcode 进行手动配置：
 
@@ -141,12 +154,7 @@ function onTokenIncorrect() {
   console.log("Token 不正确或已过期");
 }
 
-connect(
-  token,
-  onSuccess,
-  onError,
-  onTokenIncorrect
-);
+connect(token, onSuccess, onError, onTokenIncorrect);
 ```
 
 ### 监听连接状态
