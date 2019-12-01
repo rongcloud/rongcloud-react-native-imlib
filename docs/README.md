@@ -96,7 +96,7 @@ pod install
 
    <img src="https://user-images.githubusercontent.com/1709072/55277323-c7b0ba00-5339-11e9-982e-3b87a510cca8.png" width=600>
 
-3. `Build Phases` ➜ `Link Binary With Libraries` 中选择并添加 `libRNIMLib.a`
+3. `Build Phases` ➜ `Link Binary With Libraries` 中选择并添加 `libRCIMLib.a`
 
    <img src="https://user-images.githubusercontent.com/1709072/55277356-3e4db780-533a-11e9-8f3b-141b005e449a.png" width=600>
 

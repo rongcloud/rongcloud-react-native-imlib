@@ -50,18 +50,22 @@ sendMessage(
 
 ## 运行示例
 
-如果要运行 iOS 示例，需要进行以下操作：
-1. [从官网下载 IMLib SDK](https://www.rongcloud.cn/downloads)
-2. 解压并把 `IMLib` 文件夹放到 `ios` 目录
-
 ```
 yarn global add typescript
 yarn build
-yarn run-ios
+
+# android
 yarn run-android
+
+# ios
+cd ios
+pod install
+cd ..
+yarn run-ios
 ```
 
 ## 项目结构
+
 ```
 ├── android (Android 示例应用)
 ├── docs (接口文档)
