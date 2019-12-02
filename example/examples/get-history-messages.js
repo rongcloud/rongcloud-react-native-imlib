@@ -32,7 +32,7 @@ export default class extends React.PureComponent {
     const messages = await getHistoryMessages(
       conversationType,
       targetId,
-      [messageType],
+      messageType,
       parseInt(oldestMessageId),
       parseInt(count)
     );
