@@ -37,6 +37,7 @@ jobs:
 
     - stage: "build test for example"
       language: objective-c
+      os: osx
       osx_image: xcode11.2
       cache: *ios-cache
       before_install:
