@@ -8,7 +8,7 @@ export default class extends React.PureComponent {
   static navigationOptions = { title: "客服" };
 
   state = {
-    targetId: "vh6a0VoDJ",
+    targetId: "service",
     groupId: "",
     result: ""
   };
@@ -17,19 +17,16 @@ export default class extends React.PureComponent {
   setGroupId = groupId => this.setState({ groupId });
 
   start = () => {
+    const info = { nickName: "7c00" };
     const { targetId } = this.state;
-    return startCustomerService(
-      targetId,
-      {},
-      {
-        success: config => {
-          this.setState({ result: JSON.stringify(config, null, 2) });
-        },
-        error: (code, message) => {
-          this.setState({ result: `${code}, ${message}` });
-        }
+    return startCustomerService(targetId, info, {
+      success: config => {
+        this.setState({ result: JSON.stringify(config, null, 2) });
+      },
+      error: (code, message) => {
+        this.setState({ result: `${code}, ${message}` });
       }
-    );
+    });
   };
 
   render() {
