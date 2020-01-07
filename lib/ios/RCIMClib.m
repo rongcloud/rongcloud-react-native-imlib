@@ -1,4 +1,5 @@
 #import "RCIMClib.h"
+#import <React/RCTConvert.h>
 
 @implementation RCIMClib {
 }
@@ -1266,14 +1267,10 @@ RCT_EXPORT_METHOD(getRealTimeLocationStatus
 
 RCT_EXPORT_METHOD(startCustomerService
                   : (NSString *)kefuId
-                  : (NSDictionary *)info
+                  : (RCCustomerServiceInfo *)info
                   : (NSString *)eventId) {
-  RCCustomerServiceInfo *csInfo = [RCCustomerServiceInfo new];
-  csInfo.name = info[@"name"];
-  csInfo.nickName = info[@"nickName"];
-  csInfo.loginName = info[@"loginName"];
   [RCIMClient.sharedRCIMClient startCustomerService:kefuId
-      info:csInfo
+      info:info
       onSuccess:^(RCCustomerServiceConfig *config) {
         NSMutableArray *leaveMessageNativeInfo =
             [[NSMutableArray alloc] initWithCapacity:config.leaveMessageNativeInfo.count];
@@ -1297,30 +1294,32 @@ RCT_EXPORT_METHOD(startCustomerService
             @"description" : ((RCEvaluateItem *)config.humanEvaluateItems[i]).describe,
           };
         }
-        [self sendEventWithName:@"rcimlib-customer-service"
-                           body:@{
-                             @"eventId" : eventId,
-                             @"type" : @"success",
-                             @"config" : @{
-                               @"companyName" : config.companyName,
-                               @"companyUrl" : config.companyUrl,
-                               @"isBlack" : @(config.isBlack),
-                               @"announceMsg" : config.announceMsg,
-                               @"announceClickUrl" : config.announceClickUrl,
-                               @"leaveMessageType" : @(config.leaveMessageType),
-                               @"leaveMessageNativeInfo" : leaveMessageNativeInfo,
-                               @"userTipTime" : @(config.userTipTime),
-                               @"userTipWord" : config.userTipWord,
-                               @"adminTipTime" : @(config.adminTipTime),
-                               @"adminTipWord" : config.adminTipWord,
-                               @"evaType" : @(config.evaType),
-                               @"evaEntryPoint" : @(config.evaEntryPoint),
-                               @"robotSessionNoEva" : @(config.robotSessionNoEva),
-                               @"isReportResolveStatus" : @(config.reportResolveStatus),
-                               @"isDisableLocation" : @(config.disableLocation),
-                               @"humanEvaluateItems" : humanEvaluateItems,
-                             },
-                           }];
+        [self
+            sendEventWithName:@"rcimlib-customer-service"
+                         body:@{
+                           @"eventId" : eventId,
+                           @"type" : @"success",
+                           @"config" : @{
+                             @"companyName" : config.companyName ? config.companyName : @"",
+                             @"companyUrl" : config.companyUrl ? config.companyUrl : @"",
+                             @"isBlack" : @(config.isBlack),
+                             @"announceMsg" : config.announceMsg ? config.announceMsg : @"",
+                             @"announceClickUrl" : config.announceClickUrl ? config.announceClickUrl
+                                                                           : @"",
+                             @"leaveMessageType" : @(config.leaveMessageType),
+                             @"leaveMessageNativeInfo" : leaveMessageNativeInfo,
+                             @"userTipTime" : @(config.userTipTime),
+                             @"userTipWord" : config.userTipWord ? config.userTipWord : @"",
+                             @"adminTipTime" : @(config.adminTipTime),
+                             @"adminTipWord" : config.adminTipWord ? config.adminTipWord : @"",
+                             @"evaType" : @(config.evaType),
+                             @"evaEntryPoint" : @(config.evaEntryPoint),
+                             @"robotSessionNoEva" : @(config.robotSessionNoEva),
+                             @"isReportResolveStatus" : @(config.reportResolveStatus),
+                             @"isDisableLocation" : @(config.disableLocation),
+                             @"humanEvaluateItems" : humanEvaluateItems,
+                           },
+                         }];
       }
       onError:^(int errorCode, NSString *errMsg) {
         [self sendEventWithName:@"rcimlib-customer-service"

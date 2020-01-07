@@ -17,7 +17,7 @@ export default class extends React.PureComponent {
   setGroupId = groupId => this.setState({ groupId });
 
   start = () => {
-    const info = { nickName: "7c00" };
+    const info = { nickName: "7c00", referrer: "20001" };
     const { targetId } = this.state;
     return startCustomerService(targetId, info, {
       success: config => {
