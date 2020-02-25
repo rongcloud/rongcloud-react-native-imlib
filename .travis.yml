@@ -8,12 +8,13 @@ aliases:
 
   - &android-cache
     directories:
-      - ~/.cache/yarn
+      - ~/.npm
       - ~/.gradle/caches/modules-2
       - ~/.gradle/wrapper
 
   - &ios-cache
     directories:
+      - ~/.npm
       - ~/.rncache
       - ~/Library/Caches/Yarn
 
@@ -21,15 +22,15 @@ jobs:
   include:
     - stage: "build test for example"
       language: android
-      jdk: oraclejdk8
       android: *android
       before_cache:
         - rm ~/.gradle/caches/modules-2/modules-2.lock
       cache: *android-cache
       script:
         - nvm install node
-        - yarn add typescript
-        - yarn build
+        - npm i
+        - npm i typescript
+        - npm run build
         - cd android
         - TERM=dumb ./gradlew build
         - ls -lh app/build/outputs/apk/debug
@@ -38,18 +39,15 @@ jobs:
     - stage: "build test for example"
       language: objective-c
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       cache: *ios-cache
       before_install:
       script:
-        - nvm install node
-        - brew install yarn
-        - yarn add typescript
-        - yarn build
-        - cd ios
-        - pod install --repo-update
-        - cd ..
-        - yarn run-ios
+        - npm i
+        - npm i typescript
+        - npm run build
+        - cd ios && pod install && cd ..
+        - npm run run-ios
 
 stages:
   - name: "build test for example"
