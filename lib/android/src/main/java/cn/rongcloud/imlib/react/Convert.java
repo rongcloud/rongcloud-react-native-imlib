@@ -2,19 +2,49 @@ package cn.rongcloud.imlib.react;
 
 import android.net.Uri;
 
-import com.facebook.react.bridge.*;
-
-import io.rong.imlib.CustomServiceConfig;
-import io.rong.imlib.model.*;
-import io.rong.imlib.model.Conversation.ConversationType;
-import io.rong.imlib.model.MentionedInfo.MentionedType;
-import io.rong.imlib.typingmessage.TypingStatusMessage;
-import io.rong.message.*;
-import io.rong.push.PushType;
-import io.rong.push.notification.PushNotificationMessage;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imlib.CustomServiceConfig;
+import io.rong.imlib.model.CSCustomServiceInfo;
+import io.rong.imlib.model.CSLMessageItem;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Conversation.ConversationType;
+import io.rong.imlib.model.MentionedInfo;
+import io.rong.imlib.model.MentionedInfo.MentionedType;
+import io.rong.imlib.model.Message;
+import io.rong.imlib.model.MessageContent;
+import io.rong.imlib.model.PublicServiceMenu;
+import io.rong.imlib.model.PublicServiceMenuItem;
+import io.rong.imlib.model.PublicServiceProfile;
+import io.rong.imlib.model.UserInfo;
+import io.rong.imlib.typingmessage.TypingStatusMessage;
+import io.rong.message.CSHumanEvaluateItem;
+import io.rong.message.CommandMessage;
+import io.rong.message.CommandNotificationMessage;
+import io.rong.message.ContactNotificationMessage;
+import io.rong.message.FileMessage;
+import io.rong.message.GIFMessage;
+import io.rong.message.GroupNotificationMessage;
+import io.rong.message.HQVoiceMessage;
+import io.rong.message.ImageMessage;
+import io.rong.message.InformationNotificationMessage;
+import io.rong.message.LocationMessage;
+import io.rong.message.ProfileNotificationMessage;
+import io.rong.message.PublicServiceCommandMessage;
+import io.rong.message.ReadReceiptMessage;
+import io.rong.message.RecallNotificationMessage;
+import io.rong.message.TextMessage;
+import io.rong.message.VoiceMessage;
+import io.rong.push.PushType;
+import io.rong.push.notification.PushNotificationMessage;
 
 class Convert {
     static ReactApplicationContext reactContext;
@@ -422,7 +452,7 @@ class Convert {
                 case "RC:LBSMsg":
                     Uri thumbnail = Utils.getFileUri(reactContext, map.getString("thumbnail"));
                     messageContent = LocationMessage.obtain(
-                            map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
+                        map.getDouble("latitude"), map.getDouble("longitude"), map.getString("name"), thumbnail);
                     if (map.hasKey("extra")) {
                         ((LocationMessage) messageContent).setExtra(map.getString("extra"));
                     }
@@ -442,10 +472,10 @@ class Convert {
                     break;
                 case "RC:ContactNtf":
                     messageContent = ContactNotificationMessage.obtain(
-                            map.getString("operation"),
-                            map.getString("sourceUserId"),
-                            map.getString("targetUserId"),
-                            map.getString("message"));
+                        map.getString("operation"),
+                        map.getString("sourceUserId"),
+                        map.getString("targetUserId"),
+                        map.getString("message"));
                     if (map.hasKey("extra")) {
                         ((ContactNotificationMessage) messageContent).setExtra(map.getString("extra"));
                     }
@@ -455,17 +485,17 @@ class Convert {
                     break;
                 case "RC:GrpNtf":
                     messageContent = GroupNotificationMessage.obtain(
-                            map.getString("operatorUserId"),
-                            map.getString("operation"),
-                            map.getString("data"),
-                            map.getString("message"));
+                        map.getString("operatorUserId"),
+                        map.getString("operation"),
+                        map.getString("data"),
+                        map.getString("message"));
                     break;
                 case "RC:ReadNtf":
                     messageContent = ReadReceiptMessage.obtain((long) map.getDouble("sentTime"));
                     break;
                 case "RC:HQVCMsg":
                     messageContent = HQVoiceMessage.obtain(
-                            Utils.getFileUri(reactContext, map.getString("local")), map.getInt("duration"));
+                        Utils.getFileUri(reactContext, map.getString("local")), map.getInt("duration"));
                     if (map.hasKey("extra")) {
                         ((HQVoiceMessage) messageContent).setExtra(map.getString("extra"));
                     }
@@ -483,7 +513,9 @@ class Convert {
             ReadableMap userInfoMap = map.getMap("userInfo");
             if (userInfoMap != null) {
                 UserInfo userInfo = new UserInfo(
-                        userInfoMap.getString("userId"), userInfoMap.getString("name"), Uri.parse(userInfoMap.getString("portraitUrl")));
+                    userInfoMap.getString("userId"),
+                    userInfoMap.getString("name"),
+                    Uri.parse(userInfoMap.getString("portraitUrl")));
                 messageContent.setUserInfo(userInfo);
             }
         }
@@ -493,7 +525,8 @@ class Convert {
             if (mentionedMap != null) {
                 MentionedType type = MentionedType.valueOf(mentionedMap.getInt("type"));
                 ArrayList<String> userIdList = toStringList(mentionedMap.getArray("userIdList"));
-                String content = mentionedMap.getString("mentionedContent");
+                String content = mentionedMap.hasKey("mentionedContent") ?
+                    mentionedMap.getString("mentionedContent") : null;
                 MentionedInfo mentionedInfo = new MentionedInfo(type, userIdList, content);
                 messageContent.setMentionedInfo(mentionedInfo);
             }
