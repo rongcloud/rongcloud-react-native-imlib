@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, TextInput } from "react-native";
-import { startCustomerService } from "rongcloud-react-native-imlib";
+import { startCustomerService } from "rongcloud-react-native-imlib/src";
 import { Body, FormItem, Result } from "../components";
 
 export default class extends React.PureComponent {

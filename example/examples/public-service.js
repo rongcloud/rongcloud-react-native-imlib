@@ -6,7 +6,7 @@ import {
   searchPublicService,
   subscribePublicService,
   unsubscribePublicService
-} from "rongcloud-react-native-imlib";
+} from "rongcloud-react-native-imlib/src";
 import { Body, FormItem, Result, Select } from "../components";
 import { publicServiceTypes, searchTypes } from "./constants";
 

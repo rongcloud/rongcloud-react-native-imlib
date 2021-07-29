@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, TextInput, PermissionsAndroid } from "react-native";
-import { sendMediaMessage, ConversationType, ObjectName } from "rongcloud-react-native-imlib";
+import { sendMediaMessage, ConversationType, ObjectName } from "rongcloud-react-native-imlib/src";
 import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { Body, FormItem, Result, Select } from "../components";
 import config from "../config";

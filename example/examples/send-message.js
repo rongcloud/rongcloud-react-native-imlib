@@ -8,7 +8,7 @@ import {
   recallMessage,
   cancelSendMediaMessage,
   ObjectName
-} from "rongcloud-react-native-imlib";
+} from "rongcloud-react-native-imlib/src";
 import config from "../config";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations, messageTypes } from "./constants";

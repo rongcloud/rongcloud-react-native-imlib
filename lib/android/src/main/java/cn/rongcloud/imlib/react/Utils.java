@@ -15,8 +15,8 @@ import io.rong.imlib.RongIMClient.ResultCallback;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Conversation.ConversationNotificationStatus;
 import io.rong.imlib.model.Message;
-import io.rong.imlib.model.PublicServiceProfile;
-import io.rong.imlib.model.PublicServiceProfileList;
+import io.rong.imlib.publicservice.model.PublicServiceProfile;
+import io.rong.imlib.publicservice.model.PublicServiceProfileList;
 
 import java.io.*;
 import java.util.List;

@@ -3,7 +3,7 @@
   "description": "React Native RongCloud IMLib",
   "version": "0.3.12",
   "license": "MIT",
-  "main": "lib/js",
+  "main": "index.js",
   "author": {
     "name": "rongcloud",
     "email": "support@rongcloud.cn"
@@ -40,7 +40,7 @@
     "react-native-document-picker": "^3.2.4",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-image-picker": "^1.1.0",
-    "react-native-screens": "^2.0.0-beta.13",
+    "react-native-screens": "^1.0.0-alpha.23",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.10.2"
   },

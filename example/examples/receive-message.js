@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Platform, ScrollView, StyleSheet, Text } from "react-native";
-import { addReceiveMessageListener } from "rongcloud-react-native-imlib";
+import { addReceiveMessageListener } from "rongcloud-react-native-imlib/src";
 
 const style = StyleSheet.create({
   body: { padding: 16 },

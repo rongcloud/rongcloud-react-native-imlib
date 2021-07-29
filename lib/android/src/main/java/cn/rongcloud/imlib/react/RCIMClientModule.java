@@ -2,15 +2,17 @@ package cn.rongcloud.imlib.react;
 
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
-import io.rong.imlib.CustomServiceConfig;
-import io.rong.imlib.CustomServiceConfig.CSEvaSolveStatus;
-import io.rong.imlib.ICustomServiceListener;
 import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
 import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
 import io.rong.imlib.RongCommonDefine.GetMessageDirection;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.RongIMClient.*;
+import io.rong.imlib.cs.CustomServiceConfig;
+import io.rong.imlib.cs.ICustomServiceListener;
+import io.rong.imlib.cs.model.CSGroupItem;
+import io.rong.imlib.cs.model.CustomServiceMode;
+import io.rong.imlib.discussion.model.Discussion;
 import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationErrorCode;
 import io.rong.imlib.location.RealTimeLocationConstant.RealTimeLocationStatus;
 import io.rong.imlib.model.*;
@@ -20,6 +22,8 @@ import io.rong.imlib.model.Conversation.ConversationType;
 import io.rong.imlib.model.Conversation.PublicServiceType;
 import io.rong.imlib.model.Message.ReceivedStatus;
 import io.rong.imlib.model.Message.SentStatus;
+import io.rong.imlib.publicservice.model.PublicServiceProfile;
+import io.rong.imlib.publicservice.model.PublicServiceProfileList;
 import io.rong.imlib.typingmessage.TypingStatus;
 import io.rong.message.MediaMessageContent;
 import io.rong.message.RecallNotificationMessage;
@@ -150,16 +154,16 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
 
             @Override
-            public void onError(RongIMClient.ErrorCode error) {
+            public void onError(ConnectionErrorCode connectionErrorCode) {
                 WritableMap map = createEventMap(eventId, "error");
-                map.putInt("errorCode", error.getValue());
-                map.putString("errorMessage", error.getMessage());
+                map.putInt("errorCode", connectionErrorCode.getValue());
+               // map.putString("errorMessage", connectionErrorCode.getMessage());
                 eventEmitter.emit("rcimlib-connect", map);
             }
 
             @Override
-            public void onTokenIncorrect() {
-                eventEmitter.emit("rcimlib-connect", createEventMap(eventId, "tokenIncorrect"));
+            public void onDatabaseOpened(DatabaseOpenStatus databaseOpenStatus) {
+
             }
         });
     }
@@ -1200,10 +1204,10 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             String kefuId, String dialogId, int value, String suggest, int status, String tagText, String extra) {
         if (tagText == null) {
             RongIMClient.getInstance().evaluateCustomService(
-                    kefuId, value, CSEvaSolveStatus.valueOf(status), suggest, dialogId);
+                    kefuId, value, CustomServiceConfig.CSEvaSolveStatus.valueOf(status), suggest, dialogId);
         } else {
             RongIMClient.getInstance().evaluateCustomService(
-                    kefuId, value, CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
+                    kefuId, value, CustomServiceConfig.CSEvaSolveStatus.valueOf(status), tagText, suggest, dialogId, extra);
         }
     }
 

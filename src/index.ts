@@ -109,7 +109,7 @@ export function setServerInfo(naviServer: string, fileServer: string) {
  * 设置统计服务地址
  *
  * 配置数据上传地址 (非必须) 通过配置该地址，SDK
- * 会在初始化时把设备相关信息上传到私有云节点。
+ * 会在初始化时把设备相关信息上传到私有addConnectionStatusListeneraddConnectionStatusListener云节点。
  * 影响到的功能是开发者后台的广播推送功能，如果私有云客户没有配置该地址，那从后台发推送时，客户端是收不到的。
  * 普通的 IM 推送不受影响。设置数据上传服务器地址。
  * 可以支持设置 http://cn.xxx.com 或者 https://cn.xxx.com 或者 cn.xxx.com

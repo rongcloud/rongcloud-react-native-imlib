@@ -8,7 +8,7 @@ import {
   removeMemberFromDiscussion,
   setDiscussionInviteStatus,
   setDiscussionName
-} from "rongcloud-react-native-imlib";
+} from "rongcloud-react-native-imlib/src";
 import config from "../config";
 import FormItem from "./form-item";
 

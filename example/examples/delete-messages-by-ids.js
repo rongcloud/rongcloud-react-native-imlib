@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { deleteMessages } from "rongcloud-react-native-imlib";
+import { deleteMessages } from "rongcloud-react-native-imlib/src";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({

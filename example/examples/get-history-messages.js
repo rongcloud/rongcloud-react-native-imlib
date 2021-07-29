@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Picker, Platform, ScrollView, StyleSheet, Text, TextInput, Button } from "react-native";
-import { getHistoryMessages } from "rongcloud-react-native-imlib";
+import { getHistoryMessages } from "rongcloud-react-native-imlib/src";
 import config from "../config";
 import FormItem from "./form-item";
 import { conversations, messageTypes } from "./constants";
