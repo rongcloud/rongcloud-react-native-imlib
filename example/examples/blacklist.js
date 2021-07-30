@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { addToBlacklist, getBlacklist, removeFromBlacklist } from "rongcloud-react-native-imlib/src";
+import { addToBlacklist, getBlacklist, removeFromBlacklist } from "rongcloud-react-native-imlib";
 import config from "../config";
 import FormItem from "./form-item";
 

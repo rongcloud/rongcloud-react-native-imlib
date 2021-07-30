@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Picker, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { searchMessages } from "rongcloud-react-native-imlib/src";
+import { searchMessages } from "rongcloud-react-native-imlib";
 import config from "../config";
 import FormItem from "./form-item";
 import { conversations } from "./constants";

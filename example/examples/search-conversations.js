@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Platform, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { searchConversations } from "rongcloud-react-native-imlib/src";
+import { searchConversations } from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({

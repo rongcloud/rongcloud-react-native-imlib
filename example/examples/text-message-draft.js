@@ -4,7 +4,7 @@ import {
   clearTextMessageDraft,
   getTextMessageDraft,
   saveTextMessageDraft
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import { conversations } from "./constants";
 

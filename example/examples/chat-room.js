@@ -5,7 +5,7 @@ import {
   joinExistChatRoom,
   quitChatRoom,
   getChatRoomInfo
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 import FormItem from "./form-item";
 
 const style = StyleSheet.create({

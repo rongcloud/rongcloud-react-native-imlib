@@ -4,7 +4,7 @@ import {
   SearchType,
   SentStatus,
   ObjectName
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 
 export const conversations = {
   [ConversationType.PRIVATE]: "私聊",

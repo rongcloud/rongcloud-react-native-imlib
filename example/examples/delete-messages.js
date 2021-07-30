@@ -9,7 +9,7 @@ import {
   Text,
   TextInput
 } from "react-native";
-import { clearMessages, deleteMessages } from "rongcloud-react-native-imlib/src";
+import { clearMessages, deleteMessages } from "rongcloud-react-native-imlib";
 import config from "../config";
 import FormItem from "./form-item";
 import { conversations } from "./constants";

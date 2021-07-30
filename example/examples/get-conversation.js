@@ -7,7 +7,7 @@ import {
   getTopConversationList,
   getUnreadMentionedMessages,
   setConversationToTop
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import config from "../config";
 import { conversations } from "./constants";

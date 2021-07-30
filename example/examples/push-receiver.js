@@ -4,7 +4,7 @@ import {
   addPushArrivedListener,
   setPushContentShowStatus,
   getPushContentShowStatus
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 import { Body, FormItem, Result } from "../components";
 
 export default class extends React.PureComponent {

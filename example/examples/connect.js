@@ -5,7 +5,7 @@ import {
   connect,
   disconnect,
   setReconnectKickEnable
-} from "rongcloud-react-native-imlib/src";
+} from "rongcloud-react-native-imlib";
 import config from "../config";
 import FormItem from "./form-item";
 
