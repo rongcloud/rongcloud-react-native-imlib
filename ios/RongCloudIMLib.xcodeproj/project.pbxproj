@@ -17,6 +17,8 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* RongCloudIMLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RongCloudIMLibTests.m */; };
 		7428D3E488799986A3FE14BF /* libPods-RongCloudIMLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4E7A43797D69817E13B243 /* libPods-RongCloudIMLib.a */; };
+		AFE2E81D8748313622E9651A /* libPods-RongCloudIMLib-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD8617098B4466D426491548 /* libPods-RongCloudIMLib-tvOSTests.a */; };
+		D2F7078A5141B213013E27B3 /* libPods-RongCloudIMLib-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9FC3F38A7B9F4E162A00F /* libPods-RongCloudIMLib-tvOS.a */; };
 		F4CB5A69B0C81A0373BD4523 /* libPods-RongCloudIMLibTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8004E8E531A1C17427E4AA9 /* libPods-RongCloudIMLibTests.a */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,7 @@
 		00E356EE1AD99517003FC87E /* RongCloudIMLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RongCloudIMLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RongCloudIMLibTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RongCloudIMLibTests.m; sourceTree = "<group>"; };
+		04C9FC3F38A7B9F4E162A00F /* libPods-RongCloudIMLib-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RongCloudIMLib-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BF92332A2D95E7F805D8960 /* Pods-RongCloudIMLib.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib.debug.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib/Pods-RongCloudIMLib.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* RongCloudIMLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongCloudIMLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RongCloudIMLib/AppDelegate.h; sourceTree = "<group>"; };
@@ -54,11 +57,16 @@
 		2D02E4901E0B4A5D006451C7 /* RongCloudIMLib-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RongCloudIMLib-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6482C2F0B458EFFA144FD6C6 /* Pods-RongCloudIMLibTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLibTests.debug.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLibTests/Pods-RongCloudIMLibTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F4E7A43797D69817E13B243 /* libPods-RongCloudIMLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RongCloudIMLib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		74485E261913D173F12EC188 /* Pods-RongCloudIMLib-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib-tvOS/Pods-RongCloudIMLib-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		96932D3DAC4FA465D51D32FC /* Pods-RongCloudIMLib-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib-tvOSTests/Pods-RongCloudIMLib-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A3C7885F3151E267F99D3150 /* Pods-RongCloudIMLib.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib.release.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib/Pods-RongCloudIMLib.release.xcconfig"; sourceTree = "<group>"; };
 		C9CBD32619304D163FED7B30 /* Pods-RongCloudIMLibTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLibTests.release.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLibTests/Pods-RongCloudIMLibTests.release.xcconfig"; sourceTree = "<group>"; };
+		E4D8BD2FC7279BE9B75BF318 /* Pods-RongCloudIMLib-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib-tvOSTests/Pods-RongCloudIMLib-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		F255AA33CB284028960163C7 /* Pods-RongCloudIMLib-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongCloudIMLib-tvOS.release.xcconfig"; path = "Target Support Files/Pods-RongCloudIMLib-tvOS/Pods-RongCloudIMLib-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		F8004E8E531A1C17427E4AA9 /* libPods-RongCloudIMLibTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RongCloudIMLibTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD8617098B4466D426491548 /* libPods-RongCloudIMLib-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RongCloudIMLib-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2F7078A5141B213013E27B3 /* libPods-RongCloudIMLib-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFE2E81D8748313622E9651A /* libPods-RongCloudIMLib-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +143,8 @@
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				6F4E7A43797D69817E13B243 /* libPods-RongCloudIMLib.a */,
 				F8004E8E531A1C17427E4AA9 /* libPods-RongCloudIMLibTests.a */,
+				04C9FC3F38A7B9F4E162A00F /* libPods-RongCloudIMLib-tvOS.a */,
+				FD8617098B4466D426491548 /* libPods-RongCloudIMLib-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -177,6 +189,10 @@
 				A3C7885F3151E267F99D3150 /* Pods-RongCloudIMLib.release.xcconfig */,
 				6482C2F0B458EFFA144FD6C6 /* Pods-RongCloudIMLibTests.debug.xcconfig */,
 				C9CBD32619304D163FED7B30 /* Pods-RongCloudIMLibTests.release.xcconfig */,
+				74485E261913D173F12EC188 /* Pods-RongCloudIMLib-tvOS.debug.xcconfig */,
+				F255AA33CB284028960163C7 /* Pods-RongCloudIMLib-tvOS.release.xcconfig */,
+				96932D3DAC4FA465D51D32FC /* Pods-RongCloudIMLib-tvOSTests.debug.xcconfig */,
+				E4D8BD2FC7279BE9B75BF318 /* Pods-RongCloudIMLib-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -229,6 +245,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RongCloudIMLib-tvOS" */;
 			buildPhases = (
+				0334F12E2AF85F414954F22A /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -248,6 +265,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RongCloudIMLib-tvOSTests" */;
 			buildPhases = (
+				EE41862F7C4FD7A39CB86E79 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -357,6 +375,28 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		0334F12E2AF85F414954F22A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RongCloudIMLib-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -400,7 +440,6 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RongCloudIMLib/Pods-RongCloudIMLib-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/RongChatRoom/RongChatRoom.framework/RongChatRoom",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/RongCustomerService/RongCustomerService.framework/RongCustomerService",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/RongDiscussion/RongDiscussion.framework/RongDiscussion",
@@ -411,7 +450,6 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RongChatRoom.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RongCustomerService.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RongDiscussion.framework",
@@ -454,17 +492,37 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RongCloudIMLib/Pods-RongCloudIMLib-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_ROOT}/RongCloudIM/RongCloudIM/RCConfig.plist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCConfig.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RongCloudIMLib/Pods-RongCloudIMLib-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EE41862F7C4FD7A39CB86E79 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RongCloudIMLib-tvOSTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -733,6 +791,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 74485E261913D173F12EC188 /* Pods-RongCloudIMLib-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -760,6 +819,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F255AA33CB284028960163C7 /* Pods-RongCloudIMLib-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -787,6 +847,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 96932D3DAC4FA465D51D32FC /* Pods-RongCloudIMLib-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -813,6 +874,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4D8BD2FC7279BE9B75BF318 /* Pods-RongCloudIMLib-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
