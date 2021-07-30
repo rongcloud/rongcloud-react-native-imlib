@@ -37,26 +37,25 @@ RCT_EXPORT_METHOD(getConnectionStatus
 }
 
 RCT_EXPORT_METHOD(connect : (NSString *)token : (NSString *)eventId) {
-  [RCIMClient.sharedRCIMClient connectWithToken:token
-      success:^(NSString *userId) {
+  [RCIMClient.sharedRCIMClient connectWithToken:token dbOpened:nil success:^(NSString *userId) {
         [self sendEventWithName:@"rcimlib-connect"
                            body:@{@"type" : @"success", @"eventId" : eventId, @"userId" : userId}];
-      }
-      error:^(RCConnectErrorCode code) {
-        [self sendEventWithName:@"rcimlib-connect"
-                           body:@{
-                             @"type" : @"error",
-                             @"eventId" : eventId,
-                             @"errorCode" : @(code)
-                           }];
-      }
-      tokenIncorrect:^{
-        [self sendEventWithName:@"rcimlib-connect"
-                           body:@{
-                             @"type" : @"tokenIncorrect",
-                             @"eventId" : eventId,
-                           }];
-      }];
+        } error:^(RCConnectErrorCode code) {
+            if(code == RC_CONN_TOKEN_INCORRECT) {
+                [self sendEventWithName:@"rcimlib-connect"
+                                   body:@{
+                                     @"type" : @"tokenIncorrect",
+                                     @"eventId" : eventId,
+                                   }];
+            }else {
+                [self sendEventWithName:@"rcimlib-connect"
+                                   body:@{
+                                     @"type" : @"error",
+                                     @"eventId" : eventId,
+                                     @"errorCode" : @(code)
+                                   }];
+            }
+        }];
 }
 
 RCT_EXPORT_METHOD(disconnect : (BOOL)isReceivePush) {
