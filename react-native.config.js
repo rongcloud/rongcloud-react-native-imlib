@@ -1,1 +1,7 @@
-module.exports = { project: { android: { sourceDir: "lib/android" } } };
+module.exports = {
+  dependency: {
+    platforms: {
+      android: { sourceDir: "lib/android" },
+    },
+  },
+};
