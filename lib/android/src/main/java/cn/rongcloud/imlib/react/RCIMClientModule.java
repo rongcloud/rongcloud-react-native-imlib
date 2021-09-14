@@ -116,14 +116,14 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             }
         });
 
-        RongIMClient.setRCLogInfoListener(new RCLogInfoListener() {
-            @Override
-            public void onRCLogInfoOccurred(String log) {
-                if (log != null) {
-                    eventEmitter.emit("rcimlib-log", log);
-                }
-            }
-        });
+        // RongIMClient.setRCLogInfoListener(new RCLogInfoListener() {
+        //     @Override
+        //     public void onRCLogInfoOccurred(String log) {
+        //         if (log != null) {
+        //             eventEmitter.emit("rcimlib-log", log);
+        //         }
+        //     }
+        // });
 
         RongIMClient.setOnRecallMessageListener(new OnRecallMessageListener() {
             @Override
