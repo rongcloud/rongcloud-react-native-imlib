@@ -3,7 +3,6 @@
 .gradle/
 .settings/
 build/
-lib/js/
 node_modules/
 xcuserdata/
 *.xcworkspace/
