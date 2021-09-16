@@ -1,7 +1,10 @@
 package cn.rongcloud.imlib.react;
 
+import android.text.TextUtils;
+
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
+
 import io.rong.imlib.IRongCallback.IChatRoomHistoryMessageCallback;
 import io.rong.imlib.IRongCallback.IDownloadMediaMessageCallback;
 import io.rong.imlib.IRongCallback.ISendMediaMessageCallback;
@@ -29,6 +32,7 @@ import io.rong.message.MediaMessageContent;
 import io.rong.message.RecallNotificationMessage;
 
 import javax.annotation.Nonnull;
+
 import java.util.*;
 
 import static cn.rongcloud.imlib.react.Convert.*;
@@ -58,6 +62,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setConnectionStatusListener(new ConnectionStatusListener() {
             @Override
             public void onChanged(ConnectionStatus status) {
+                if (status == null) {
+                    return;
+                }
                 eventEmitter.emit("rcimlib-connection-status", status.getValue());
             }
         });
@@ -117,6 +124,9 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
         RongIMClient.setRCLogInfoListener(new RCLogInfoListener() {
             @Override
             public void onRCLogInfoOccurred(String log) {
+                if (TextUtils.isEmpty(log)) {
+                    return;
+                }
                 eventEmitter.emit("rcimlib-log", log);
             }
         });
@@ -157,7 +167,7 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
             public void onError(ConnectionErrorCode connectionErrorCode) {
                 WritableMap map = createEventMap(eventId, "error");
                 map.putInt("errorCode", connectionErrorCode.getValue());
-               // map.putString("errorMessage", connectionErrorCode.getMessage());
+                // map.putString("errorMessage", connectionErrorCode.getMessage());
                 eventEmitter.emit("rcimlib-connect", map);
             }
 
