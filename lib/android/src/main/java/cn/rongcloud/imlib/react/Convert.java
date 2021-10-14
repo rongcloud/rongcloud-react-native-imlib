@@ -95,7 +95,7 @@ class Convert {
                 }
                 String thumbnail = "";
                 Uri thumbnailUri = image.getThumUri();
-                if (remoteUri != null) {
+                if (thumbnailUri != null) {
                     thumbnail = thumbnailUri.toString();
                 }
                 map.putString("local", local);
