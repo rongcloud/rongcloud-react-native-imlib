@@ -12,6 +12,7 @@ RCT_EXPORT_METHOD(init : (NSString *)key) {
   [RCIMClient.sharedRCIMClient setReceiveMessageDelegate:self object:nil];
   [RCIMClient.sharedRCIMClient setRCLogInfoDelegate:self];
   [RCIMClient.sharedRCIMClient setRCTypingStatusDelegate:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveReadReceiptNotification:) name:RCLibDispatchReadReceiptNotification object:nil];
 }
 
 RCT_EXPORT_METHOD(setDeviceToken : (NSString *)token) {
@@ -1489,6 +1490,23 @@ RCT_EXPORT_METHOD(getCurrentUserId
                        @"messageUId" : messageUId,
                        @"users" : userIdList,
                      }];
+}
+
+// Android 单聊已读回执返回整个 RCMessage 对象
+// iOS 单聊已读回执只有会话类型，会话 id，已读时间等部分数据
+// 为了统一，需要在文档上明确给客户说明：单聊已读回执，只需要读取 会话类型 会话 id 已读时间数据，其他数据 iOS 平台没有
+- (void)didReceiveReadReceiptNotification:(NSNotification *)notification {
+    RCConversationType conversationType = (RCConversationType)[notification.userInfo[@"cType"] integerValue];
+    long long readTime = [notification.userInfo[@"messageTime"] longLongValue];
+    NSString *targetId = notification.userInfo[@"tId"];
+    NSString *senderUserId = notification.userInfo[@"fId"];
+    RCMessage *msg = [[RCMessage alloc] init];
+    msg.conversationType = conversationType;
+    msg.targetId = targetId;
+    msg.sentTime = readTime;
+    msg.senderUserId = senderUserId;
+    [self sendEventWithName:@"rcimlib-read-receipt-received"
+                       body:[self fromMessage:msg]];
 }
 
 - (NSArray *)fromPublicServiceProfileArray:(NSArray<RCPublicServiceProfile *> *)items {
