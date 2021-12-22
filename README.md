@@ -13,7 +13,7 @@
 ### 初始化并连接融云服务
 
 ```javascript
-import { init, connect } from "rongcloud-react-native-imlib";
+import { init, connect } from "@rongcloud/react-native-imlib";
 
 init("n19jmcy59f1q9");
 connect("FrdcuKklUMakOnYLFljI9gLUrCB73YwHabXQU7yFrr8ow==");
@@ -22,7 +22,7 @@ connect("FrdcuKklUMakOnYLFljI9gLUrCB73YwHabXQU7yFrr8ow==");
 ### 监听消息
 
 ```javascript
-import { addReceiveMessageListener } from "rongcloud-react-native-imlib";
+import { addReceiveMessageListener } from "@rongcloud/react-native-imlib";
 
 addReceiveMessageListener(message => {
   console.log(message);
@@ -32,7 +32,7 @@ addReceiveMessageListener(message => {
 ### 发送消息
 
 ```javascript
-import { sendMessage, ConversationType, ObjectName } from "rongcloud-react-native-imlib";
+import { sendMessage, ConversationType, ObjectName } from "@rongcloud/react-native-imlib";
 
 const conversationType = ConversationType.PRIVATE;
 const targetId = "n19jmcy59f1q9";

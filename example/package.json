@@ -1,0 +1,39 @@
+{
+  "name": "@rongcloud/react-native-imlib-example",
+  "description": "Example app for @rongcloud/react-native-imlib",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "ios": "react-native run-ios",
+    "android": "react-native run-android",
+    "release-android": "node node_modules/react-native/local-cli/cli.js run-android --variant=release",
+    "log-android": "node node_modules/react-native/local-cli/cli.js log-android"
+  },
+  "dependencies": {
+    "@react-native-picker/picker": "^2.2.1",
+    "patch-package": "^6.4.7",
+    "react": "16.13.1",
+    "react-native": "0.63.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/runtime": "^7.12.5",
+    "@react-navigation/core": "6.1.0",
+    "@react-navigation/native": "5.9.8",
+    "@types/react-navigation": "3.4.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "react": "16.13.1",
+    "react-native-audio-recorder-player": "3.3.0",
+    "react-native-document-picker": "3.5.4",
+    "react-native-gesture-handler": "^1.1.0",
+    "react-native-image-picker": "1.1.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-screens": "1.0.0-alpha.23",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.10.2",
+    "typedoc": "0.22.9",
+    "typescript": "4.4.4"
+  }
+}

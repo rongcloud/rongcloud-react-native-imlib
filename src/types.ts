@@ -41,6 +41,7 @@ export interface UserInfo {
   userId: string;
   name: string;
   portraitUrl: string;
+  extra: string;
 }
 
 /**
