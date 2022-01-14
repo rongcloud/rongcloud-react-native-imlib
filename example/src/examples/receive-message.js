@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Platform, ScrollView, StyleSheet, Text } from "react-native";
-import { addReceiveMessageListener } from "@rongcloud/react-native-imlib";
+import { setReceiveMessageListener } from "@rongcloud/react-native-imlib";
 
 const style = StyleSheet.create({
   body: { padding: 16 },
@@ -17,7 +17,7 @@ export default class extends React.PureComponent {
   state = { messages: [] };
 
   componentDidMount() {
-    this.listener = addReceiveMessageListener(message => {
+    this.listener = setReceiveMessageListener(message => {
       const { content } = message.message;
       if (content.data && content.data.length > 999) {
         content.data = content.data.substr(0, 100) + "...";

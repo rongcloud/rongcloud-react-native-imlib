@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "react-native";
 import {
-  addPushArrivedListener,
+  setPushArrivedListener,
   setPushContentShowStatus,
   getPushContentShowStatus
 } from "@rongcloud/react-native-imlib";
@@ -14,7 +14,7 @@ export default class extends React.PureComponent {
   state = { result: "" };
 
   componentDidMount() {
-    this.listener = addPushArrivedListener(message =>
+    this.listener = setPushArrivedListener(message =>
       this.setState({ result: JSON.stringify(message, null, 2) })
     );
   }

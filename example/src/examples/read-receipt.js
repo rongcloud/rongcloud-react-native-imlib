@@ -7,9 +7,9 @@ import {
   sendReadReceiptMessage,
   sendReadReceiptRequest,
   sendReadReceiptResponse,
-  addReceiptRequestListener,
-  addReceiptResponseListener,
-  addReadReceiptReceivedListener,
+  setReceiptRequestListener,
+  setReceiptResponseListener,
+  setReadReceiptReceivedListener,
 } from "@rongcloud/react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import config from "../config";
@@ -73,17 +73,17 @@ export default class extends React.PureComponent {
 
   componentDidMount() {
     // 单聊 回执
-    this.listener = addReadReceiptReceivedListener(message =>
+    this.listener = setReadReceiptReceivedListener(message =>
       this.setState({ result: JSON.stringify({ type: "ReadReceiptReceived", message }, null, 2) })
     );
 
     // 群聊 回执请求
-    this.receiptRequestListener = addReceiptRequestListener(message => {
+    this.receiptRequestListener = setReceiptRequestListener(message => {
       this.setState({ result: JSON.stringify({ type: "GroupReadReceiptRequest", message }, null, 2) })
     });
 
     // 群聊 回执响应
-    this.receiptResponseListener = addReceiptResponseListener(message => {
+    this.receiptResponseListener = setReceiptResponseListener(message => {
       this.setState({ result: JSON.stringify({ type: "GroupReadReceiptResponse", message }, null, 2) })
     });
   }

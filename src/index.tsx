@@ -67,20 +67,22 @@ export function init(appKey: string) {
 }
 
 /**
- * 添加日志信息监听函数
+ * 设置日志信息监听函数
  *
  * @param listener
  */
-export function addLogInfoListener(listener: (logInfo: string) => void) {
+export function setLogInfoListener(listener: (logInfo: string) => void) {
+  eventEmitter.removeAllListeners("rcimlib-log");
   return eventEmitter.addListener("rcimlib-log", listener);
 }
 
 /**
- * 添加消息撤回监听函数
+ * 设置消息撤回监听函数
  *
  * @param listener
  */
-export function addRecallMessageListener(listener: (messageId: string) => void) {
+export function setRecallMessageListener(listener: (messageId: string) => void) {
+  eventEmitter.removeAllListeners("rcimlib-recall");
   return eventEmitter.addListener("rcimlib-recall", listener);
 }
 
@@ -189,9 +191,10 @@ export function getConnectionStatus(): Promise<ConnectionStatus> {
 }
 
 /**
- * 添加消息监听函数
+ * 设置消息监听函数
  */
-export function addReceiveMessageListener(listener: (message: ReceiveMessage) => void) {
+export function setReceiveMessageListener(listener: (message: ReceiveMessage) => void) {
+  eventEmitter.removeAllListeners("rcimlib-receive-message");
   return eventEmitter.addListener("rcimlib-receive-message", listener);
 }
 
@@ -310,9 +313,10 @@ export function sendTypingStatus(
 }
 
 /**
- * 添加输入状态监听函数
+ * 设置输入状态监听函数
  */
-export function addTypingStatusListener(listener: (status: TypingStatus) => void) {
+export function setTypingStatusListener(listener: (status: TypingStatus) => void) {
+  eventEmitter.removeAllListeners("rcimlib-typing-status");
   return eventEmitter.addListener("rcimlib-typing-status", listener);
 }
 
@@ -387,28 +391,31 @@ export function sendReadReceiptResponse(
 }
 
 /**
- * 添加私聊阅读回执监听函数
+ * 设置私聊阅读回执监听函数
  */
-export function addReadReceiptReceivedListener(listener: (message: Message) => void) {
+export function setReadReceiptReceivedListener(listener: (message: Message) => void) {
+  eventEmitter.removeAllListeners("rcimlib-read-receipt-received");
   return eventEmitter.addListener("rcimlib-read-receipt-received", listener);
 }
 
 /**
- * 添加收到消息已读回执请求监听函数
+ * 设置收到消息已读回执请求监听函数
  *
  * 收到此请求后，如果用户阅读了对应的消息，需要调用
  * sendMessageReadReceiptResponse 接口发送已读响应
  */
-export function addReceiptRequestListener(listener: (data: ReceiptRequest) => void) {
+export function setReceiptRequestListener(listener: (data: ReceiptRequest) => void) {
+  eventEmitter.removeAllListeners("rcimlib-receipt-request");
   return eventEmitter.addListener("rcimlib-receipt-request", listener);
 }
 
 /**
- * 添加消息回执响应监听函数
+ * 设置消息回执响应监听函数
  *
  * @param listener
  */
-export function addReceiptResponseListener(listener: (data: ReceiptResponse) => void) {
+export function setReceiptResponseListener(listener: (data: ReceiptResponse) => void) {
+  eventEmitter.removeAllListeners("rcimlib-receipt-response");
   return eventEmitter.addListener("rcimlib-receipt-response", listener);
 }
 
@@ -467,9 +474,10 @@ export function downloadMediaMessage(messageId: number, callback: MediaMessageCa
 }
 
 /**
- * 添加连接状态监听函数
+ * 设置连接状态监听函数
  */
-export function addConnectionStatusListener(listener: (status: ConnectionStatus) => void) {
+export function setConnectionStatusListener(listener: (status: ConnectionStatus) => void) {
+  eventEmitter.removeAllListeners("rcimlib-connection-status");
   return eventEmitter.addListener("rcimlib-connection-status", listener);
 }
 
@@ -1503,11 +1511,12 @@ export function getPushContentShowStatus(): Promise<boolean> {
 }
 
 /**
- * 添加推送消息到达监听函数
+ * 设置推送消息到达监听函数
  *
  * @param listener
  */
-export function addPushArrivedListener(listener: (message: PushNotificationMessage) => void) {
+export function setPushArrivedListener(listener: (message: PushNotificationMessage) => void) {
+  eventEmitter.removeAllListeners("rcimlib-push-arrived");
   return eventEmitter.addListener("rcimlib-push-arrived", listener);
 }
 

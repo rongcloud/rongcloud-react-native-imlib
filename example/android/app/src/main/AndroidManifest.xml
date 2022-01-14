@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.rongcloudreactnativeimlib">
+  package="cn.rongcloud.im.rn.example">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

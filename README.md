@@ -22,9 +22,9 @@ connect("FrdcuKklUMakOnYLFljI9gLUrCB73YwHabXQU7yFrr8ow==");
 ### 监听消息
 
 ```javascript
-import { addReceiveMessageListener } from "@rongcloud/react-native-imlib";
+import { setReceiveMessageListener } from "@rongcloud/react-native-imlib";
 
-addReceiveMessageListener(message => {
+setReceiveMessageListener(message => {
   console.log(message);
 });
 ```

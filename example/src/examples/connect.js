@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import {
-  addConnectionStatusListener,
+  setConnectionStatusListener,
   connect,
   disconnect,
   setReconnectKickEnable
@@ -24,7 +24,7 @@ export default class extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.listener = addConnectionStatusListener(status => this.setState({ status }));
+    this.listener = setConnectionStatusListener(status => this.setState({ status }));
   }
 
   componentWillUnmount() {

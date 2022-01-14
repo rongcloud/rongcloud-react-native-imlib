@@ -44,7 +44,7 @@ export default class extends React.PureComponent {
       targetId,
       parseInt(sentTime),
       parseInt(count),
-      order
+      parseInt(order)
     );
     this.setState({ result: JSON.stringify(messages, null, 2) });
   };

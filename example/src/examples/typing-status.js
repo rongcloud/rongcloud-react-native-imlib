@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, TextInput } from "react-native";
-import { sendTypingStatus, addTypingStatusListener } from "@rongcloud/react-native-imlib";
+import { sendTypingStatus, setTypingStatusListener } from "@rongcloud/react-native-imlib";
 import { Body, FormItem, Result, Select } from "../components";
 import config from "../config";
 import { conversations } from "./constants";
@@ -26,8 +26,8 @@ export default class extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.listener = addTypingStatusListener((conversationType, targetId, status) =>
-      this.setState({ result: { conversationType, targetId, status } })
+    this.listener = setTypingStatusListener((status) =>
+      this.setState({ result: JSON.stringify(status) })
     );
   }
 

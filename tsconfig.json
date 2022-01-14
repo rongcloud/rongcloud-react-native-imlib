@@ -26,7 +26,8 @@
   },
   "typedocOptions": {
     "entryPoints": ["./src/index.tsx"],
+    "exclude": ["./example"],
     "out": "docs",
-    "readme": "DocCover.md"
+    "readme": "README.md"
   }
 }

@@ -755,7 +755,7 @@ RCT_EXPORT_METHOD(getUnreadMentionedMessages
   for (int i = 0; i < messages.count; i += 1) {
     array[i] = [self fromMessage:messages[i]];
   }
-  resolve(messages);
+  resolve(array);
 }
 
 RCT_EXPORT_METHOD(sendReadReceiptResponse
@@ -1866,6 +1866,7 @@ RCT_EXPORT_METHOD(getPushContentShowStatus
       @"notificationType" : @(message.type),
       @"operatorId" : message.operatorId ? message.operatorId : @"",
       @"extension" : message.extension ? message.extension : @"",
+      @"extra" : message.extra ? message.extra : @"",
       @"userInfo" : [self fromContentUserInfo:content.senderUserInfo]
     };
   } else if ([content isKindOfClass:[RCLocationMessage class]]) {
@@ -1900,6 +1901,7 @@ RCT_EXPORT_METHOD(getPushContentShowStatus
       @"recallTime" : @(message.recallTime),
       @"originalObjectName" : message.originalObjectName ? message.originalObjectName : @"",
       @"isAdmin" : @(message.isAdmin),
+      @"extra" : message.extra ? message.extra : @"",
       @"userInfo" : [self fromContentUserInfo:content.senderUserInfo]
     };
   } else if ([content isKindOfClass:[RCContactNotificationMessage class]]) {
@@ -1915,7 +1917,13 @@ RCT_EXPORT_METHOD(getPushContentShowStatus
     };
   } else if ([content isKindOfClass:[RCCommandNotificationMessage class]]) {
     RCCommandNotificationMessage *message = (RCCommandNotificationMessage *)content;
-    return @{@"objectName" : @"RC:CmdNtf", @"name" : message.name, @"data" : message.data,@"userInfo" : [self fromContentUserInfo:content.senderUserInfo]};
+    return @{
+        @"objectName" : @"RC:CmdNtf",
+        @"name" : message.name,
+        @"data" : message.data,
+        @"extra" : message.extra ? message.extra : @"",
+        @"userInfo" : [self fromContentUserInfo:content.senderUserInfo],
+    };
   } else if ([content isKindOfClass:[RCProfileNotificationMessage class]]) {
     RCProfileNotificationMessage *message = (RCProfileNotificationMessage *)content;
     return @{
@@ -1946,7 +1954,11 @@ RCT_EXPORT_METHOD(getPushContentShowStatus
     };
   } else if ([content isKindOfClass:[RCPublicServiceCommandMessage class]]) {
     RCPublicServiceCommandMessage *message = (RCPublicServiceCommandMessage *)content;
-    return @{@"objectName" : @"RC:PSCmd", @"extra" : message.extra ? message.extra : @"",@"userInfo" : [self fromContentUserInfo:content.senderUserInfo]};
+    return @{
+        @"objectName" : @"RC:PSCmd",
+        @"extra" : message.extra ? message.extra : @"",
+        @"userInfo" : [self fromContentUserInfo:content.senderUserInfo],
+    };
   } else if ([content isKindOfClass:[RCHQVoiceMessage class]]) {
     RCHQVoiceMessage *message = (RCHQVoiceMessage *)content;
     return @{

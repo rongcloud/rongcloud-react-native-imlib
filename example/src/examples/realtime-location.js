@@ -59,13 +59,9 @@ export default class extends React.PureComponent {
   };
 
   componentDidMount() {
-    // this.listener = addTypingStatusListener((conversationType, targetId, status) =>
-    //   this.setState({ result: { conversationType, targetId, status } })
-    // );
   }
 
   componentWillUnmount() {
-    // this.listener.remove();
   }
 
   render() {
