@@ -1,4 +1,11 @@
+> [!WARNING]
+> ⚠️ **暂停维护说明**
+>
+> 本仓库为早期基于 React Native IMLib V1 版本示例。鉴于 React Native IMLib V1 版本已被标记为废弃，该 Demo 已不再维护。 若您需要最新的 React Native IMLib 集成方案，请直接使用基于 React Native IMLib V2 版本 Demo：https://github.com/rongcloud/rongcloud-react-native-im-wrapper。
+
 # rongcloud-react-native-imlib [![npm version][version-badge]][npm]
+
+本项目为融云即时通讯能力库（IMLib）的 React Native 示例 Demo，基于融云 React Native IMLib V1 版本，旨在帮助开发者快速集成并全面掌握融云 IM 的核心功能。
 
 融云 React Native IMLib 是以 IMLib SDK 5.1.3 版本为基础实现的开源项目，支持 Android、iOS，开发者在集成使用过程中如遇到问题可提交到 GitHub 的 Issues 中，融云技术支持人员会在 1 个工作日内回复问题，谢谢您对融云的理解与支持。
 
